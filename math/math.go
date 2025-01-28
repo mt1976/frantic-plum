@@ -1,4 +1,4 @@
-package support
+package math
 
 import (
 	r "math/rand"

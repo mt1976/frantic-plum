@@ -12,9 +12,10 @@ import (
 // var Data ConfigurationModel
 var name = "config"
 var filename = ""
-var settingsFile = "trnsl8r_service"
+var settingsFile = "settings"
 
 func Get() *Configuration {
+
 	var thisConfig Configuration
 	filename = paths.Application().String() + paths.Config().String() + string(os.PathSeparator) + settingsFile + ".toml"
 	content, err := os.ReadFile(filename)
