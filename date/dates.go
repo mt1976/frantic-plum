@@ -31,7 +31,7 @@ func init() {
 	Format.Internal = cfg.DateFormatHuman()
 	Format.Detail = cfg.DateFormatDateTime()
 	Format.YMD = cfg.DateFormatYMD()
-	//Format.Calendar = "2006-01-02T15:04:05"
+	Format.Calendar = "2006-01-02T15:04:05"
 	Format.BackupDate = cfg.DateFormatBackup()
 	Format.BackupFolder = cfg.DateFormatBackupFolder()
 }
