@@ -44,6 +44,22 @@ type Configuration struct {
 	History struct {
 		MaxEntries int `toml:"maxEntries"`
 	} `toml:"History"`
+	Hosts []struct {
+		Name string `toml:"name"`
+		FQDN string `toml:"fqdn"`
+		IP   string `toml:"ip"`
+		Zone string `toml:"zone"`
+	} `toml:"Hosts"`
+	Security struct {
+		SessionKeyName     string `toml:"sessionKey"`
+		SessionUserIDKey   string `toml:"sessionUserIDKey"`
+		SessionUserCodeKey string `toml:"sessionUserCodeKey"`
+		SessionTokenKey    string `toml:"sessionTokenKey"`
+		SessionExpiry      int    `toml:"sessionExpiry"`
+		ServiceUserName    string `toml:"serviceUserName"`
+		ServiceUserCode    string `toml:"serviceUserCode"`
+		SessionExpiryKey   string `toml:"sessionExpiryKey"`
+	} `toml:"Security"`
 	Message struct {
 		TypeKey    string `toml:"typeKey"`
 		TitleKey   string `toml:"titleKey"`
@@ -53,4 +69,18 @@ type Configuration struct {
 	Display struct {
 		Delimiter string `toml:"delim"`
 	} `toml:"Display"`
+	Pushover struct {
+		UserKey  string `toml:"userKey"`
+		APIToken string `toml:"apiToken"`
+	} `toml:"Pushover"`
+	Status struct {
+		UNKNOWN string `toml:"unknown"`
+		ONLINE  string `toml:"online"`
+		OFFLINE string `toml:"offline"`
+		ERROR   string `toml:"error"`
+		WARNING string `toml:"warning"`
+	} `toml:"Status"`
+	AllowedOrigins []struct {
+		Name string `toml:"name"`
+	} `toml:"Origins"`
 }

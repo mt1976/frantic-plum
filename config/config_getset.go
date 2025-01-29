@@ -175,3 +175,97 @@ func (d *Configuration) TranslationPortString() string {
 func (d *Configuration) MaxEntries() int {
 	return d.History.MaxEntries
 }
+
+func (d *Configuration) PushoverUserKey() string {
+	return d.Pushover.UserKey
+}
+
+func (d *Configuration) PushoverAPIToken() string {
+	return d.Pushover.APIToken
+}
+
+func (d *Configuration) StatusUNKNOWN() string {
+	if d.Status.UNKNOWN == "" {
+		return "UNKN"
+	}
+	return d.Status.UNKNOWN
+}
+
+func (d *Configuration) StatusONLINE() string {
+	if d.Status.ONLINE == "" {
+		return "ONLN"
+	}
+	return d.Status.ONLINE
+}
+
+func (d *Configuration) StatusOFFLINE() string {
+	if d.Status.OFFLINE == "" {
+		return "OFLN"
+	}
+	return d.Status.OFFLINE
+}
+
+func (d *Configuration) StatusERROR() string {
+	if d.Status.ERROR == "" {
+		return "ERRO"
+	}
+	return d.Status.ERROR
+}
+
+func (d *Configuration) StatusWARNING() string {
+	if d.Status.WARNING == "" {
+		return "WARN"
+	}
+	return d.Status.WARNING
+}
+
+func (d *Configuration) SecurityServiceUserName() string {
+	return d.Security.ServiceUserName
+}
+
+func (d *Configuration) SecurityServiceUserCode() string {
+	return d.Security.ServiceUserCode
+}
+
+func (d *Configuration) SecuritySessionExpiryPeriod() int {
+	return d.Security.SessionExpiry
+}
+
+func (d *Configuration) SecuritySessionUserCodeKey() string {
+	return d.Security.SessionUserCodeKey
+}
+
+func (d *Configuration) SecuritySessionUserIDKey() string {
+	return d.Security.SessionUserIDKey
+}
+
+func (d *Configuration) SecuritySessionExpiryKey() string {
+	return d.Security.SessionExpiryKey
+}
+
+func (d *Configuration) SecuritySessionTokenKey() string {
+	return d.Security.SessionTokenKey
+}
+
+func (d *Configuration) SecuritySessionKey() string {
+	return d.Security.SessionKeyName
+}
+
+func (d *Configuration) GetValidOrigins() []string {
+	var origins []string
+	for _, v := range d.AllowedOrigins {
+		if v.Name != "" {
+			origins = append(origins, v.Name)
+		}
+	}
+	return origins
+}
+
+func (d *Configuration) GetValidHosts() []struct {
+	Name string "toml:\"name\""
+	FQDN string "toml:\"fqdn\""
+	IP   string "toml:\"ip\""
+	Zone string "toml:\"zone\""
+} {
+	return d.Hosts
+}
