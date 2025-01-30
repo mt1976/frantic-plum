@@ -7,7 +7,7 @@ import (
 	storm "github.com/asdine/storm/v3"
 	"github.com/asdine/storm/v3/index"
 	validator "github.com/go-playground/validator/v10"
-	"github.com/mt1976/frantic-plum/errors"
+	"github.com/mt1976/frantic-plum/commonErrors"
 	"github.com/mt1976/frantic-plum/io"
 	"github.com/mt1976/frantic-plum/logger"
 	stopwatch "github.com/mt1976/frantic-plum/timing"
@@ -97,7 +97,7 @@ func Create(data any) error {
 }
 
 func validate(data any) error {
-	err := errors.HandleGoValidatorError(dataValidator.Struct(data))
+	err := commonErrors.HandleGoValidatorError(dataValidator.Struct(data))
 	if err != nil {
 		logger.ErrorLogger.Printf("[%v] Validation  %v", strings.ToUpper(domain), err.Error())
 		return err
