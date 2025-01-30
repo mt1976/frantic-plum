@@ -126,6 +126,15 @@ func GetUUIDv2WithPayload(payload string) (string, error) {
 	return ksuid.String(), nil
 }
 
+func GetUUIDv2Payload(uuid string) string {
+	ksuid, err := ksuid.Parse(uuid)
+	if err != nil {
+		logger.ErrorLogger.Println("Error parsing KSUID:", err)
+		return ""
+	}
+	return string(ksuid.Payload())
+}
+
 func InspectUUIDv2(uuid string) string {
 	ksuid, err := ksuid.Parse(uuid)
 	if err != nil {
