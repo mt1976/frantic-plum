@@ -132,7 +132,9 @@ func GetUUIDv2Payload(uuid string) string {
 		logger.ErrorLogger.Println("Error parsing KSUID:", err)
 		return ""
 	}
-	return string(ksuid.Payload())
+	val := fmt.Sprintf("%s", ksuid.Payload())
+	val = strings.TrimLeft(strings.TrimRight(strings.Trim(val, " "), " "), " ")
+	return val
 }
 
 func InspectUUIDv2(uuid string) string {
