@@ -1,4 +1,4 @@
-package support
+package main
 
 import "github.com/mt1976/frantic-plum/config"
 

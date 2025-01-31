@@ -1,19 +1,15 @@
 package html
 
 import (
+	b64 "encoding/base64"
+	"net/url"
 	"strconv"
 	"strings"
 
-	"github.com/mt1976/frantic-plum/config"
 	"github.com/mt1976/frantic-plum/logger"
 )
 
 var name = "HTML"
-var d *config.Configuration
-
-func init() {
-	d = config.Get()
-}
 
 func ValueToInt(s string) int {
 	if s == "" {
@@ -30,4 +26,25 @@ func ValueToInt(s string) int {
 
 func ValueToBool(s string) bool {
 	return s == "on"
+}
+
+func ToPathSafe(s string) (string, error) {
+	r := url.PathEscape(s)
+	sEnc := b64.StdEncoding.EncodeToString([]byte(r))
+	return sEnc, nil
+}
+
+func FromPathSafe(s string) (string, error) {
+
+	uDec, err := b64.URLEncoding.DecodeString(s)
+	if err != nil {
+		return "", err
+	}
+
+	r, err := url.PathUnescape(string(uDec))
+	if err != nil {
+		return "", err
+	}
+
+	return r, nil
 }
