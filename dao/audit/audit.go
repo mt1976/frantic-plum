@@ -7,14 +7,14 @@ import (
 	"time"
 
 	"github.com/mt1976/frantic-plum/application"
-	"github.com/mt1976/frantic-plum/config"
+	"github.com/mt1976/frantic-plum/common"
 	"github.com/mt1976/frantic-plum/dao/database"
 	"github.com/mt1976/frantic-plum/date"
 	"github.com/mt1976/frantic-plum/logger"
 )
 
 var name = "Audit"
-var cfg *config.Configuration
+var cfg *common.Settings
 
 type Action struct {
 	code    string
@@ -23,7 +23,7 @@ type Action struct {
 }
 
 func init() {
-	cfg = config.Get()
+	cfg = common.Get()
 }
 
 func getDBVersion() int {

@@ -7,7 +7,7 @@ import (
 	"runtime"
 
 	"github.com/mt1976/frantic-plum/colours"
-	"github.com/mt1976/frantic-plum/config"
+	"github.com/mt1976/frantic-plum/common"
 	"github.com/mt1976/frantic-plum/paths"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -39,7 +39,7 @@ var Gray string
 var White string
 
 func init() {
-	cfg := config.Get()
+	cfg := common.Get()
 	//prefix := "data/logs/"
 	prefix := paths.Application().String() + paths.Logs().String() + string(os.PathSeparator)
 	name := prefix + cfg.ApplicationName() + "-"

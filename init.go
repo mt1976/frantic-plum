@@ -1,12 +1,12 @@
 package main
 
-import "github.com/mt1976/frantic-plum/config"
+import "github.com/mt1976/frantic-plum/common"
 
 var TRUE = "true"
 var FALSE = "false"
 
-var d *config.Configuration
+var d *common.Settings
 
 func init() {
-	d = config.Get()
+	d = common.Get()
 }

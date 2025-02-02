@@ -1,6 +1,6 @@
-package config
+package common
 
-type Configuration struct {
+type Settings struct {
 	Application struct {
 		Name        string `toml:"name"`
 		Prefix      string `toml:"prefix"`

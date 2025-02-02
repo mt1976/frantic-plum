@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/mt1976/appFrame/fileio"
-	"github.com/mt1976/frantic-plum/config"
+	"github.com/mt1976/frantic-plum/common"
 	"github.com/mt1976/frantic-plum/id"
 	"github.com/mt1976/frantic-plum/logger"
 	"github.com/mt1976/frantic-plum/paths"
@@ -23,7 +23,7 @@ func GetDBFileName(name string) string {
 		panic(fmt.Errorf("db name is required"))
 	}
 
-	cfg := config.Get()
+	cfg := common.Get()
 	sep := "-"
 
 	name = cfg.ApplicationName() + sep + name
@@ -38,7 +38,7 @@ func GetDBFileName(name string) string {
 }
 
 func Dump(tableName string, where paths.FileSystemPath, action string, recordID string, yy any) {
-	cfg := config.Get()
+	cfg := common.Get()
 	sep := "-"
 
 	logger.DatabaseLogger.Printf("[SUPPORT] [%v] Dump to '%v'", strings.ToUpper(tableName), where.String())
@@ -67,7 +67,7 @@ func Dump(tableName string, where paths.FileSystemPath, action string, recordID 
 func Backup(table, location string) {
 	//path := BACKUPS.path
 	sep := "-"
-	cfg := config.Get()
+	cfg := common.Get()
 	table = strings.ToLower(cfg.ApplicationName() + sep + table)
 	logger.EventLogger.Printf("Backup=[%v] [%v.db] to [%v]", strings.ToLower(table), table, location)
 

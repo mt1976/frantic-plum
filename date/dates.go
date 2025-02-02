@@ -4,13 +4,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-plum/config"
+	"github.com/mt1976/frantic-plum/common"
 	"github.com/mt1976/frantic-plum/logger"
 )
 
 var name = "DATE"
 var Format DateFormat
-var cfg *config.Configuration
+var cfg *common.Settings
 
 type DateFormat struct {
 	External     string
@@ -24,7 +24,7 @@ type DateFormat struct {
 }
 
 func init() {
-	cfg = config.Get()
+	cfg = common.Get()
 
 	Format.External = cfg.DateFormatHuman()
 	Format.DMY = cfg.DateFormatDMY2()
@@ -87,7 +87,7 @@ func StartOfDay(t time.Time) time.Time {
 		logger.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		return t
 	}
-	if cfg.ApplicationModeIs(config.MODE_DEVELOPMENT) {
+	if cfg.ApplicationModeIs(common.MODE_DEVELOPMENT) {
 		logger.InfoLogger.Printf("[%v] [DateStartOfDay] Date=[%v] Result=[%v]", strings.ToUpper(name), t, r)
 	}
 	return r
@@ -103,7 +103,7 @@ func EndOfDay(t time.Time) time.Time {
 	}
 	r = r.AddDate(0, 0, 1)
 	r = r.Add(-time.Second)
-	if cfg.ApplicationModeIs(config.MODE_DEVELOPMENT) {
+	if cfg.ApplicationModeIs(common.MODE_DEVELOPMENT) {
 		logger.InfoLogger.Printf("[%v] [DateEndOfDay] Date=[%v] Result=[%v]", strings.ToUpper(name), t, r)
 	}
 	return r
@@ -111,7 +111,7 @@ func EndOfDay(t time.Time) time.Time {
 
 func IsBeforeOrEqualTo(t1, t2 time.Time) bool {
 	// Purpose: check if a time is before or equal to a time
-	if cfg.ApplicationModeIs(config.MODE_DEVELOPMENT) {
+	if cfg.ApplicationModeIs(common.MODE_DEVELOPMENT) {
 		//	logger.InfoLogger.Printf("HLP: [HELPER] Date=[%v] Check=[%v]", DateStartOfDay(t1), DateStartOfDay(t2))
 	}
 	check := StartOfDay(t1)
