@@ -270,7 +270,7 @@ func (s *Settings) GetValidHosts() []struct {
 	return s.Hosts
 }
 
-func (s *Settings) GetValidLocales() []struct {
+func (s *Settings) GetLocales() []struct {
 	Key  string "toml:\"key\""
 	Name string "toml:\"name\""
 } {
