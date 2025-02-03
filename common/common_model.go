@@ -83,4 +83,8 @@ type Settings struct {
 	AllowedOrigins []struct {
 		Name string `toml:"name"`
 	} `toml:"Origins"`
+	Locales []struct {
+		Key  string `toml:"key"`
+		Name string `toml:"name"`
+	} `toml:"Locales"`
 }

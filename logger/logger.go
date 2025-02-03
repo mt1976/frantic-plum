@@ -39,10 +39,10 @@ var Gray string
 var White string
 
 func init() {
-	cfg := common.Get()
+	settings := common.Get()
 	//prefix := "data/logs/"
 	prefix := paths.Application().String() + paths.Logs().String() + string(os.PathSeparator)
-	name := prefix + cfg.ApplicationName() + "-"
+	name := prefix + settings.ApplicationName() + "-"
 
 	generalWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: name + "general.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
 	timingWriter := io.MultiWriter(&lumberjack.Logger{Filename: name + "timing.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})

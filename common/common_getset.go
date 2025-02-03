@@ -269,3 +269,37 @@ func (s *Settings) GetValidHosts() []struct {
 } {
 	return s.Hosts
 }
+
+func (s *Settings) GetValidLocales() []struct {
+	Key  string "toml:\"key\""
+	Name string "toml:\"name\""
+} {
+	return s.Locales
+}
+
+func (s *Settings) IsValidLocale(in string) bool {
+	for _, v := range s.Locales {
+		if v.Key == in {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *Settings) IsValidOrigin(in string) bool {
+	for _, v := range s.AllowedOrigins {
+		if v.Name == in {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *Settings) GetLocaleName(in string) string {
+	for _, v := range s.Locales {
+		if v.Key == in {
+			return v.Name
+		}
+	}
+	return ""
+}
