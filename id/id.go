@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mt1976/frantic-plum/date"
+	"github.com/mt1976/frantic-plum/html"
 	"github.com/mt1976/frantic-plum/logger"
 	"github.com/segmentio/ksuid"
 	"golang.org/x/exp/rand"
@@ -19,40 +20,12 @@ func Encode(in string) string {
 
 	out := in
 	out = strings.Replace(out, " ", "", -1)
-	out = strings.Replace(out, "_", "", -1)
-	out = strings.Replace(out, "/", "", -1)
-	out = strings.Replace(out, "\\", "", -1)
-	out = strings.Replace(out, ":", "", -1)
-	out = strings.Replace(out, ".", "", -1)
-	out = strings.Replace(out, ",", "", -1)
-	out = strings.Replace(out, ";", "", -1)
-	out = strings.Replace(out, "'", "", -1)
-	out = strings.Replace(out, "\"", "", -1)
-	out = strings.Replace(out, "(", "", -1)
-	out = strings.Replace(out, ")", "", -1)
-	out = strings.Replace(out, "[", "", -1)
-	out = strings.Replace(out, "]", "", -1)
-	out = strings.Replace(out, "{", "", -1)
-	out = strings.Replace(out, "}", "", -1)
-	out = strings.Replace(out, "<", "", -1)
-	out = strings.Replace(out, ">", "", -1)
-	out = strings.Replace(out, "?", "", -1)
-	out = strings.Replace(out, "!", "", -1)
-	out = strings.Replace(out, "@", "", -1)
-	out = strings.Replace(out, "#", "", -1)
-	out = strings.Replace(out, "$", "", -1)
-	out = strings.Replace(out, "%", "", -1)
-	out = strings.Replace(out, "^", "", -1)
-	out = strings.Replace(out, "&", "", -1)
-	out = strings.Replace(out, "*", "", -1)
-	out = strings.Replace(out, "+", "", -1)
-	out = strings.Replace(out, "=", "", -1)
-	out = strings.Replace(out, "~", "", -1)
-	out = strings.Replace(out, "`", "", -1)
-	out = strings.Replace(out, "|", "", -1)
-	out = strings.Replace(out, ":", "", -1)
-	out = strings.Replace(out, "%", "", -1)
-
+	out = strings.Trim(out, " ")
+	out, err := html.ToPathSafe(out)
+	if err != nil {
+		logger.ErrorLogger.Printf("error encoding string: %v", err.Error())
+		return ""
+	}
 	//working := out
 
 	out = base64.StdEncoding.EncodeToString([]byte(out))
@@ -63,6 +36,15 @@ func Encode(in string) string {
 	//logger.InfoLogger.Println(msg)
 
 	return out
+}
+
+func Decode(in string) string {
+	in, err := html.FromPathSafe(in)
+	if err != nil {
+		logger.ErrorLogger.Printf("error decoding string: %v", err.Error())
+		return ""
+	}
+	return in
 }
 
 func GetUUID() string {
