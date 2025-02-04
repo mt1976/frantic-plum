@@ -15,6 +15,7 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/gregdel/pushover v1.3.1 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	go.etcd.io/bbolt v1.3.4 // indirect
 	golang.org/x/net v0.34.0 // indirect
