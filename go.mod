@@ -4,23 +4,24 @@ go 1.23.5
 
 require (
 	github.com/BurntSushi/toml v1.4.0
+	github.com/galsondor/go-ascii v0.0.0-20151210013816-e2eb5175fb10
+	github.com/leekchan/accounting v1.0.0
 	github.com/rivo/uniseg v0.4.7
+	github.com/robfordww/finident v0.1.1
 	github.com/segmentio/ksuid v1.0.4
+	github.com/trisacrypto/lei v1.0.0
 	golang.org/x/exp v0.0.0-20250128182459-e0ece0dbea4c
+	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
 require (
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/galsondor/go-ascii v0.0.0-20151210013816-e2eb5175fb10 // indirect
-	github.com/leekchan/accounting v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/robfordww/finident v0.1.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
-	github.com/trisacrypto/lei v1.0.0 // indirect
+	github.com/smartystreets/goconvey v1.8.1 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
-	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 )
 
 require (
@@ -37,14 +38,6 @@ require (
 require (
 	github.com/asdine/storm/v3 v3.2.1
 	github.com/go-playground/validator/v10 v10.24.0
-	github.com/jimlawless/cfg v0.0.0-20160326141742-136e0c264d31 // indirect
-	github.com/mattn/go-colorable v0.1.14 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
-	github.com/nxadm/tail v1.4.11 // indirect
-	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/x-cray/logrus-prefixed-formatter v0.5.2 // indirect
 	golang.org/x/crypto v0.32.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/term v0.29.0 // indirect
 )
