@@ -1,10 +1,12 @@
 package timing
 
 import (
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/mt1976/frantic-plum/logger"
+	"golang.org/x/exp/rand"
 )
 
 var name = "Timing"
@@ -29,4 +31,25 @@ func (w *Stopwatch) Stop(count int) {
 	w.end = time.Now()
 	w.duraton = w.end.Sub(w.start)
 	logger.TimingLogger.Printf("Object=[%v] Action=[%v] Msg=[%v] Count=[%v] Duration=[%v]", w.table, strings.ToUpper(w.action), w.msg, count, w.duraton)
+}
+
+// SnoozeFor snoozes the application for a given amount of time
+// The function SnoozeFor takes in a polling interval and calls the snooze function with that interval.
+func SnoozeFor(inPollingInterval string) {
+	snooze(inPollingInterval)
+}
+
+// Snooze snoozes for a random period
+// The Snooze function generates a random number between 0 and 10 and then calls the snooze function
+// with that number as a string argument.
+func Snooze() {
+	rand.Seed(uint64(time.Now().UnixNano()))
+	n := rand.Intn(10) // n will be between 0 and 10
+	snooze(strconv.Itoa(n))
+}
+
+func snooze(inPollingInterval string) {
+	pollingInterval, _ := strconv.Atoi(inPollingInterval)
+	logger.InfoLogger.Printf("Snooze... Zzzzzz.... %d seconds...", pollingInterval)
+	time.Sleep(time.Duration(pollingInterval) * time.Second)
 }

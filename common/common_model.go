@@ -87,4 +87,13 @@ type Settings struct {
 		Key  string `toml:"key"`
 		Name string `toml:"name"`
 	} `toml:"Locales"`
+	Email struct {
+		Host     string `toml:"host"`
+		Port     int    `toml:"port"`
+		User     string `toml:"user"`
+		Password string `toml:"password"`
+		From     string `toml:"from"`
+		Footer   string `toml:"footer"`
+		Admin    string `toml:"admin"`
+	} `toml:"Email"`
 }

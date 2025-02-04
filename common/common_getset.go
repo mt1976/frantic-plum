@@ -303,3 +303,35 @@ func (s *Settings) GetLocaleName(in string) string {
 	}
 	return ""
 }
+
+func (s *Settings) EmailHost() string {
+	return s.Email.Host
+}
+
+func (s *Settings) EmailPort() int {
+	return s.Email.Port
+}
+
+func (s *Settings) EmailUser() string {
+	return s.Email.User
+}
+
+func (s *Settings) EmailPassword() string {
+	return s.Email.Password
+}
+
+func (s *Settings) EmailFrom() string {
+	return s.Email.From
+}
+
+func (s *Settings) EmailFooter() string {
+	return s.Email.Footer
+}
+
+func (s *Settings) EmailPortString() string {
+	return strconv.Itoa(s.Email.Port)
+}
+
+func (s *Settings) EmailAdmin() string {
+	return s.Email.Admin
+}

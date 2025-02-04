@@ -1,4 +1,4 @@
-package math
+package mathHelpers
 
 import (
 	r "math/rand"
@@ -25,4 +25,20 @@ func RandomBetween(min, max int) int {
 func CoinToss() bool {
 	r.NewSource(time.Now().UnixNano())
 	return r.Intn(2) == 1
+}
+
+func Max(x, y int) int {
+	if x < y {
+		return y
+	}
+	return x
+}
+
+// Min returns the smaller of x or y.
+// The Min function returns the minimum value between two integers.
+func Min(x, y int) int {
+	if x > y {
+		return y
+	}
+	return x
 }

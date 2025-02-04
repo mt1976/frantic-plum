@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/appFrame/fileio"
 	"github.com/mt1976/frantic-plum/common"
 	"github.com/mt1976/frantic-plum/id"
 	"github.com/mt1976/frantic-plum/logger"
@@ -61,7 +60,10 @@ func Dump(tableName string, where paths.FileSystemPath, action string, recordID 
 	}
 	output := string(b)
 
-	fileio.Write(id, path, output)
+	_, err = Write(id, path, output)
+	if err != nil {
+		logger.ErrorLogger.Printf("[SUPPORT] [%v] [Write] Error=[%v]", strings.ToUpper(action), err.Error())
+	}
 }
 
 func Backup(table, location string) {
@@ -146,7 +148,7 @@ func Dir(path string) ([]string, error) {
 
 func DeleteFolder(path string) error {
 	// Delete the folder
-	logger.InfoLogger.Printf("[DELETE][%v] Deleting folder Path=[%v]", strings.ToUpper(name), path)
+	logger.InfoLogger.Printf("[DELETE] [%v] Deleting folder Path=[%v]", strings.ToUpper(name), path)
 	return os.RemoveAll(path)
 	//return nil
 }
