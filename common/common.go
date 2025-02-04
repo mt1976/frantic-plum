@@ -14,6 +14,9 @@ var name = "common"
 var filename = ""
 var commonSettingsFile = "common"
 
+var TRUE = "true"
+var FALSE = "false"
+
 func Get() *Settings {
 
 	var thisConfig Settings
