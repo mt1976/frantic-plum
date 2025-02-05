@@ -26,8 +26,7 @@ func Send(inMessage, inTitle string, key int) error {
 		}
 	}
 
-	logger.InfoLogger.Printf("[%v] Api Token=[%v]", strings.ToUpper(name), poAPIKey)
-	logger.InfoLogger.Printf("[%v] User Key=[%v]", strings.ToUpper(name), poUserKey)
+	logger.InfoLogger.Printf("[%v] Api Token=[%v] User Key=[%v]", strings.ToUpper(name), poAPIKey, poUserKey)
 
 	if poUserKey == "" || poAPIKey == "" {
 		logger.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), "Pushover User Key or API Token not set, message not sent")
@@ -61,7 +60,7 @@ func Send(inMessage, inTitle string, key int) error {
 	}
 	//Spew(*message)
 
-	logger.InfoLogger.Printf("[%v] Message Title=[%v] Message=[%v]", strings.ToUpper(name), message.Title, message.Message)
+	logger.EventLogger.Printf("[%v] Message Title=[%v] Message=[%v]", strings.ToUpper(name), message.Title, message.Message)
 
 	_, err := app.SendMessage(message, recipient)
 	if err != nil {
