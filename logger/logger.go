@@ -7,7 +7,6 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mt1976/frantic-plum/colours"
 	"github.com/mt1976/frantic-plum/common"
 	"github.com/mt1976/frantic-plum/paths"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -66,7 +65,7 @@ func init() {
 		setColoursWindows()
 	}
 
-	msgStructure := log.Ldate | log.Ltime | log.Lshortfile
+	msgStructure := log.Ldate | log.Ltime | log.Lshortfile | log.Lmsgprefix
 
 	InfoLogger = log.New(generalWriter, nameIt(Cyan, "Info"), msgStructure)
 	WarningLogger = log.New(warningWriter, nameIt(Yellow, "Warning"), msgStructure)
@@ -83,19 +82,6 @@ func init() {
 	ApiLogger = log.New(apiWriter, nameIt(Green, "API"), msgStructure)
 }
 
-func fileName(in, name string) string {
-	return in + name + ".log"
-}
-
-func nameIt(colour, name string) string {
-	name = strings.ToUpper(name)
-	return colour + sBracket(name) + Reset
-}
-
-// sBracket adds square brackets to a string
-func sBracket(s string) string {
-	return "[" + s + "]"
-}
 func TestIt() {
 	InfoLogger.Println("Starting the application...")
 	InfoLogger.Println("Something noteworthy happened")
@@ -113,26 +99,16 @@ func TestIt() {
 	ApiLogger.Println("API")
 }
 
-func setColoursNormal() {
-	Reset = colours.Reset
-	Red = colours.Red
-	Green = colours.Green
-	Yellow = colours.Yellow
-	Blue = colours.Blue
-	Magenta = colours.Magenta
-	Cyan = colours.Cyan
-	Gray = colours.Gray
-	White = colours.White
+func Banner(class, name, action string) {
+	hdr := "------------------------------------------------------------------------"
+	InfoLogger.Println(hdr)
+	InfoLogger.Printf("[%v] Activity=[%v] - %v", strings.ToUpper(class), name, action)
+	InfoLogger.Println(hdr)
 }
 
-func setColoursWindows() {
-	Reset = ""
-	Red = ""
-	Green = ""
-	Yellow = ""
-	Blue = ""
-	Magenta = ""
-	Cyan = ""
-	Gray = ""
-	White = ""
+func ServiceBanner(class, name, action string) {
+	hdr := "------------------------------------------------------------------------"
+	ServiceLogger.Println(hdr)
+	ServiceLogger.Printf("[%v] Activity=[%v] - %v", strings.ToUpper(class), name, action)
+	ServiceLogger.Println(hdr)
 }
