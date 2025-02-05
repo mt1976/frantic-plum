@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/mt1976/frantic-plum/colours"
 	"github.com/mt1976/frantic-plum/common"
@@ -44,18 +45,19 @@ func init() {
 	prefix := paths.Application().String() + paths.Logs().String() + string(os.PathSeparator)
 	name := prefix + settings.ApplicationName() + "-"
 
-	generalWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: name + "general.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	timingWriter := io.MultiWriter(&lumberjack.Logger{Filename: name + "timing.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	serviceWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: name + "service.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	auditWriter := io.MultiWriter(&lumberjack.Logger{Filename: name + "audit.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	errorWriter := io.MultiWriter(os.Stdout, os.Stderr, &lumberjack.Logger{Filename: name + "error.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	translationWriter := io.MultiWriter(&lumberjack.Logger{Filename: name + "translation.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	traceWriter := io.MultiWriter(&lumberjack.Logger{Filename: name + "trace.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	warningWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: name + "warning.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	eventWriter := io.MultiWriter(os.Stderr, &lumberjack.Logger{Filename: name + "event.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	securityWriter := io.MultiWriter(os.Stderr, &lumberjack.Logger{Filename: name + "security.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	databaseWriter := io.MultiWriter(&lumberjack.Logger{Filename: name + "database.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
-	apiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: name + "api.log", MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	generalWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: fileName(name, "general"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	timingWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "timing"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	serviceWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: fileName(name, "service"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	auditWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "audit"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	errorWriter := io.MultiWriter(os.Stdout, os.Stderr, &lumberjack.Logger{Filename: fileName(name, "error"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	panicWriter := io.MultiWriter(os.Stdout, os.Stderr, &lumberjack.Logger{Filename: fileName(name, "panic"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	translationWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "translation"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	traceWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "trace"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	warningWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: fileName(name, "warning"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	eventWriter := io.MultiWriter(os.Stderr, &lumberjack.Logger{Filename: fileName(name, "event"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	securityWriter := io.MultiWriter(os.Stderr, &lumberjack.Logger{Filename: fileName(name, "security"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	databaseWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "database"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	apiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: fileName(name, "api"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
 
 	//fmt.Printf("name: %v\n", name)
 	//os.Exit(1)
@@ -66,22 +68,34 @@ func init() {
 
 	msgStructure := log.Ldate | log.Ltime | log.Lshortfile
 
-	InfoLogger = log.New(generalWriter, Cyan+"[INFO       ] "+Reset, msgStructure)
-
-	WarningLogger = log.New(warningWriter, Yellow+"[WARNING !!!] "+Reset, msgStructure)
-	ErrorLogger = log.New(errorWriter, Red+"[ERROR !!!!!] "+Reset, msgStructure)
-	PanicLogger = log.New(generalWriter, Red+"[PANIC      ] "+Reset, msgStructure)
-	TimingLogger = log.New(timingWriter, Blue+"[TIMING     ] "+Reset, msgStructure)
-	EventLogger = log.New(eventWriter, Green+"[EVENT      ] "+Reset, msgStructure)
-	ServiceLogger = log.New(serviceWriter, Green+"[SERVICE    ] "+Reset, msgStructure)
-	TraceLogger = log.New(traceWriter, White+"[TRACE      ] "+Reset, msgStructure)
-	AuditLogger = log.New(auditWriter, Yellow+"[AUDIT      ] "+Reset, msgStructure)
-	TranslationLogger = log.New(translationWriter, Cyan+"[TRANSLATION] "+Reset, msgStructure)
-	SecurityLogger = log.New(securityWriter, Magenta+"[SECURITY   ] "+Reset, msgStructure)
-	DatabaseLogger = log.New(databaseWriter, Blue+"[DATABASE   ] "+Reset, msgStructure)
-	ApiLogger = log.New(apiWriter, Green+"[API        ] "+Reset, msgStructure)
+	InfoLogger = log.New(generalWriter, nameIt(Cyan, "Info"), msgStructure)
+	WarningLogger = log.New(warningWriter, nameIt(Yellow, "Warning"), msgStructure)
+	ErrorLogger = log.New(errorWriter, nameIt(Red, "Error"), msgStructure)
+	PanicLogger = log.New(panicWriter, nameIt(Red, "Panic"), msgStructure)
+	TimingLogger = log.New(timingWriter, nameIt(Gray, "Timing"), msgStructure)
+	EventLogger = log.New(eventWriter, nameIt(Green, "Event"), msgStructure)
+	ServiceLogger = log.New(serviceWriter, nameIt(Green, "Service"), msgStructure)
+	TraceLogger = log.New(traceWriter, nameIt(White, "Trace"), msgStructure)
+	AuditLogger = log.New(auditWriter, nameIt(Yellow, "Audit"), msgStructure)
+	TranslationLogger = log.New(translationWriter, nameIt(Cyan, "Translation"), msgStructure)
+	SecurityLogger = log.New(securityWriter, nameIt(Magenta, "Security"), msgStructure)
+	DatabaseLogger = log.New(databaseWriter, nameIt(Blue, "Database"), msgStructure)
+	ApiLogger = log.New(apiWriter, nameIt(Green, "API"), msgStructure)
 }
 
+func fileName(in, name string) string {
+	return in + name + ".log"
+}
+
+func nameIt(colour, name string) string {
+	name = strings.ToUpper(name)
+	return colour + sBracket(name) + Reset
+}
+
+// sBracket adds square brackets to a string
+func sBracket(s string) string {
+	return "[" + s + "]"
+}
 func TestIt() {
 	InfoLogger.Println("Starting the application...")
 	InfoLogger.Println("Something noteworthy happened")

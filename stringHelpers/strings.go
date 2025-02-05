@@ -1,4 +1,4 @@
-package strings
+package stringHelpers
 
 import (
 	"encoding/base64"
