@@ -14,8 +14,8 @@ import (
 // for 1 million) into its corresponding integer value.
 func AbbrToInt(str string) int {
 	str = strings.ToUpper(str)
-	number := ""
-	number = strings.ReplaceAll(str, "$", "")
+	//number := ""
+	number := strings.ReplaceAll(str, "$", "")
 	number = strings.ReplaceAll(number, "€", "")
 	number = strings.ReplaceAll(number, "£", "")
 	fact := strings.ToUpper(number[len(number)-1:])

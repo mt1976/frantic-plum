@@ -16,44 +16,44 @@ var (
 )
 
 func StringTooLongError(err error, ln int) error {
-	return fmt.Errorf("string too long, max %d characters Error [%w]", ln, err)
+	return fmt.Errorf("string too long, max %d characters error [%w]", ln, err)
 }
 
 func NotFoundError(err error) error {
-	return fmt.Errorf("not found Error [%w]", err)
+	return fmt.Errorf("not found error [%w]", err)
 }
 func ReadError(err error) error {
-	return fmt.Errorf("read Error [%w]", err)
+	return fmt.Errorf("read error [%w]", err)
 }
 func WriteError(err error) error {
-	return fmt.Errorf("write Error [%w]", err)
+	return fmt.Errorf("write error [%w]", err)
 }
 func EmptyError(err error) error {
-	return fmt.Errorf("empty Error [%w]", err)
+	return fmt.Errorf("empty error [%w]", err)
 }
 func ClearError(err error) error {
-	return fmt.Errorf("clear Error [%w]", err)
+	return fmt.Errorf("clear error [%w]", err)
 }
 func UpdateError(err error) error {
-	return fmt.Errorf("update Error [%w]", err)
+	return fmt.Errorf("update error [%w]", err)
 }
 func CreateError(err error) error {
-	return fmt.Errorf("create Error [%w]", err)
+	return fmt.Errorf("create error [%w]", err)
 }
 func DeleteError(err error) error {
-	return fmt.Errorf("delete Error [%w]", err)
+	return fmt.Errorf("delete error [%w]", err)
 }
 func DropError(err error) error {
-	return fmt.Errorf("drop Error [%w]", err)
+	return fmt.Errorf("drop error [%w]", err)
 }
 func ValidateError(err error) error {
-	return fmt.Errorf("validate Error [%w]", err)
+	return fmt.Errorf("validate error [%w]", err)
 }
 func DisconnectError(err error) error {
-	return fmt.Errorf("disconnect Error [%w]", err)
+	return fmt.Errorf("disconnect error [%w]", err)
 }
 func ConnectError(err error) error {
-	return fmt.Errorf("connect Error [%w]", err)
+	return fmt.Errorf("connect error [%w]", err)
 }
 func HandleGoValidatorError(err error) error {
 	return nil
@@ -76,20 +76,28 @@ func HandleGoValidatorError(err error) error {
 	// return nil
 }
 func SendEmailError(err error) error {
-	return fmt.Errorf("send email Error [%w]", err)
+	return fmt.Errorf("send email error [%w]", err)
 }
 func IDGenerationError(err error) error {
-	return fmt.Errorf("ID generation Error [%w]", err)
+	return fmt.Errorf("ID generation error [%w]", err)
 }
 
 func OSError(err error) error {
-	return fmt.Errorf("OS Error [%w]", err)
+	return fmt.Errorf("OS error [%w]", err)
 }
 
 func MockingError(err error) error {
-	return fmt.Errorf("Mocking Error [%w]", err)
+	return fmt.Errorf("mocking error [%w]", err)
 }
 
 func NotificationError(err error) error {
-	return fmt.Errorf("Notification Error [%w]", err)
+	return fmt.Errorf("notification error [%w]", err)
+}
+
+func FunctionalError(err error, f string) error {
+	return fmt.Errorf("functional error - %v [%w]", f, err)
+}
+
+func GeneralError(err error) error {
+	return fmt.Errorf("general error [%w]", err)
 }

@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/mt1976/frantic-plum/commonErrors"
 	"github.com/mt1976/frantic-plum/logger"
 	"github.com/mt1976/frantic-plum/mock"
 )
@@ -154,13 +155,13 @@ func GetLadder(pivotDate time.Time, ccy ...string) ([]FinDate, int, error) {
 		//fmt.Printf("ladder[%v]: %v\n", i, ladder)
 		thisTenor, err := NewTenor(ladder.Code)
 		if err != nil {
-			logger.ErrorLogger.Printf("Error [%v]\n", err.Error())
-			fmt.Errorf("Error [%v]\n", err)
+			logger.ErrorLogger.Printf("error [%v]\n", err.Error())
+			return DateList, 0, commonErrors.FunctionalError(err, "tenor validation")
 		}
 		date, err := GetDateFromTenor(thisTenor, pivotDate, ccy...)
 		if err != nil {
-			logger.ErrorLogger.Printf("Error [%v]\n", err.Error())
-			fmt.Errorf("Error [%v]\n", err)
+			logger.ErrorLogger.Printf("error [%v]\n", err.Error())
+			return DateList, 0, commonErrors.FunctionalError(err, "tenor -> date calculation")
 		}
 		//fmt.Printf("thisTenor: [%v] [%v] -> [%v]\n", ladder.Code, thisTenor.String(), date.Format("2006-01-02"))
 		di := FinDate{}
@@ -245,7 +246,7 @@ func GetTenorFromDate(inDate, baseDate time.Time, ccy ...string) (Tenor, error) 
 		// }
 	}
 	logger.ErrorLogger.Printf("no tenor found [%v] [%v]", inDate, baseDate)
-	return Tenor{}, fmt.Errorf("no tenor found [%w] [%v]", inDate, baseDate)
+	return Tenor{}, commonErrors.FunctionalError(fmt.Errorf("no tenor found"), fmt.Sprintf("no tenor found for [%v][%v]", inDate, baseDate))
 }
 
 func dFormat(d time.Time) string {
@@ -254,15 +255,18 @@ func dFormat(d time.Time) string {
 
 func getTenorFromDateCCY(inDate, pivotDate time.Time, ccy string) (Tenor, error) {
 	// TODO - this is a stub, please write logic
+	logger.TraceLogger.Printf("getTenorFromDateCCY [%v] [%v] [%v]", inDate, pivotDate, ccy)
 	return Tenor{}, nil
 }
 
 func getTenorFromDateCCYPAIR(inDate, pivotDate time.Time, ccy1 string, ccy2 string) (Tenor, error) {
 	// TODO - this is a stub, please write logic
+	logger.TraceLogger.Printf("getTenorFromDateCCYPAIR [%v] [%v] [%v] [%v]", inDate, pivotDate, ccy1, ccy2)
 	return Tenor{}, nil
 }
 
 func getTenorFromDateCCYCROSS(inDate, pivotDate time.Time, ccy1 string, via string, ccy2 string) (Tenor, error) {
 	// TODO - this is a stub, please write logic
+	logger.TraceLogger.Printf("getTenorFromDateCCYCROSS [%v] [%v] [%v] [%v] [%v]", inDate, pivotDate, ccy1, via, ccy2)
 	return Tenor{}, nil
 }
