@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mt1976/frantic-plum/commonErrors"
 	"github.com/mt1976/frantic-plum/date"
 	"github.com/mt1976/frantic-plum/html"
 	"github.com/mt1976/frantic-plum/logger"
@@ -93,17 +94,17 @@ func GetUUIDv2() string {
 
 func GetUUIDv2WithPayload(payload string) (string, error) {
 	// Ensure payload is 16 bytes
-
-	if len(payload) > 16 {
-		return "", fmt.Errorf("Payload must be 16 bytes or less")
+	length := 16
+	if len(payload) > length {
+		return "", commonErrors.IDGenerationError(fmt.Errorf("Payload must be %d bytes or less", length))
 	}
 	if len(payload) < 16 {
 		payload = fmt.Sprintf("%-16s", payload)
 	}
 	ksuid, err := ksuid.FromParts(time.Now(), []byte(payload))
 	if err != nil {
-		logger.ErrorLogger.Println("Error generating KSUID:", err)
-		return "", err
+		logger.ErrorLogger.Printf("Error generating KSUID: [%v]", err.Error())
+		return "", commonErrors.IDGenerationError(err)
 	}
 	return ksuid.String(), nil
 }
@@ -111,7 +112,7 @@ func GetUUIDv2WithPayload(payload string) (string, error) {
 func GetUUIDv2Payload(uuid string) string {
 	ksuid, err := ksuid.Parse(uuid)
 	if err != nil {
-		logger.ErrorLogger.Println("Error parsing KSUID:", err)
+		logger.ErrorLogger.Printf("Error generating KSUID: [%v]", err.Error())
 		return ""
 	}
 	val := fmt.Sprintf("%s", ksuid.Payload())

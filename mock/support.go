@@ -1,7 +1,9 @@
 package mock
 
-import "log"
+import (
+	"github.com/mt1976/frantic-plum/logger"
+)
 
 func report(in string) {
-	log.Printf("Mocking - %s\n", in)
+	logger.InfoLogger.Printf("Mocking - %s\n", in)
 }

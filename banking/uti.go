@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+
+	"github.com/mt1976/frantic-plum/commonErrors"
+	"github.com/mt1976/frantic-plum/logger"
 )
 
 type UTI struct {
@@ -14,7 +17,7 @@ type UTI struct {
 func NewISO23897UTI(generatingEntity string) (UTI, error) {
 
 	if len(generatingEntity) != 20 {
-		return UTI{}, fmt.Errorf("generatingEntity is not 20 chars [%v][%s]", len(generatingEntity), generatingEntity)
+		return UTI{}, commonErrors.ValidateError(fmt.Errorf("generatingEntity is not 20 chars [%v][%s]", len(generatingEntity), generatingEntity))
 	}
 
 	// Generate a random number using the current time as the seed
@@ -31,7 +34,8 @@ func NewISO23897UTI(generatingEntity string) (UTI, error) {
 	uti = fmt.Sprintf("%-52s", uti)
 
 	nu := UTI{uti: uti}
-	fmt.Printf("UTI: %s\n", nu.Formatted())
+	//fmt.Printf("UTI: %s\n", nu.Formatted())
+	logger.InfoLogger.Printf("UTI: %s\n", nu.Formatted())
 
 	return nu, nil
 }
@@ -44,10 +48,10 @@ func (U *UTI) Set(in string) error {
 	U.uti = in
 	val, err := U.IsValid()
 	if err != nil || !val {
-		return fmt.Errorf("invalid UTI [%s]", in)
+		return commonErrors.ValidateError(fmt.Errorf("invalid UTI [%s]", in))
 	}
 	if !val {
-		return fmt.Errorf("invalid UTI [%s]", in)
+		return commonErrors.ValidateError(fmt.Errorf("invalid UTI [%s]", in))
 	}
 	return nil
 }
@@ -59,14 +63,15 @@ func (U *UTI) Get() string {
 func (U *UTI) IsValid() (bool, error) {
 	// Max length is 52
 	if len(U.uti) > 52 {
-		return false, fmt.Errorf("invalid UTI length [%s]", U.uti)
+		return false, commonErrors.ValidateError(fmt.Errorf("invalid UTI length [%s]", U.uti))
 	}
 	// US Min length is 42
 	if len(U.uti) < 42 {
-		return false, fmt.Errorf("invalid UTI length [%s]", U.uti)
+		return false, commonErrors.ValidateError(fmt.Errorf("invalid UTI length [%s]", U.uti))
 	}
 
-	fmt.Printf("UTI: %s\n", U.Formatted())
+	//fmt.Printf("UTI: %s\n", U.Formatted())
+	logger.InfoLogger.Printf("UTI: %s\n", U.Formatted())
 
 	return true, nil
 }

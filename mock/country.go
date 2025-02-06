@@ -3,6 +3,8 @@ package mock
 import (
 	"fmt"
 	"log"
+
+	"github.com/mt1976/frantic-plum/commonErrors"
 )
 
 // Country represents information about the IBAN format for a specific country.
@@ -45,7 +47,7 @@ func GetCountryInfo(countryCode string) (Country, error) {
 
 	if rtn.IBANLength == 0 {
 		log.Printf("[WARN] Invalid country code: [%s]", countryCode)
-		return Country{}, fmt.Errorf("invalid country code: [%s]", countryCode)
+		return Country{}, commonErrors.MockingError(fmt.Errorf("invalid country code: [%s]", countryCode))
 	}
 	return rtn, nil
 }

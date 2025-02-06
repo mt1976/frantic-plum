@@ -2,10 +2,11 @@ package banking
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
+	"github.com/mt1976/frantic-plum/commonErrors"
+	"github.com/mt1976/frantic-plum/logger"
 	"github.com/mt1976/frantic-plum/mock"
 )
 
@@ -22,7 +23,8 @@ func (I *ISIN) IsValid() bool {
 
 	// Check if the ISIN length is valid (it should be 12 characters)
 	if len(val) != 12 {
-		log.Printf("[WARN] ISIN != 12 characters (%v)\n", len(val))
+		//log.Printf("[WARN] ISIN != 12 characters (%v)\n", len(val))
+		logger.WarningLogger.Printf("ISIN != 12 characters (%v)\n", len(val))
 		return false
 	}
 
@@ -30,7 +32,8 @@ func (I *ISIN) IsValid() bool {
 	countryCode := val[:2]
 	countryInfo, err := mock.GetCountryInfo(countryCode)
 	if err != nil || countryCode != countryInfo.ISOCode {
-		log.Printf("[WARN] ISIN prefix not a valid country code (%v)\n", countryCode)
+		//log.Printf("[WARN] ISIN prefix not a valid country code (%v)\n", countryCode)
+		logger.WarningLogger.Printf("ISIN prefix not a valid country code (%v)\n", countryCode)
 		return false
 	}
 	checksum, _ := strconv.Atoi(val[11:])
@@ -46,7 +49,7 @@ func (I *ISIN) String() string {
 func (I *ISIN) Set(in string) error {
 	I.value = in
 	if !I.IsValid() {
-		return fmt.Errorf("invalid ISIN [%s]", in)
+		return commonErrors.ValidateError(fmt.Errorf("invalid ISIN [%s]", in))
 	}
 	return nil
 }

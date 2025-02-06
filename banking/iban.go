@@ -5,6 +5,7 @@ import (
 	"math/big"
 	"strings"
 
+	"github.com/mt1976/frantic-plum/commonErrors"
 	"github.com/mt1976/frantic-plum/mock"
 )
 
@@ -50,7 +51,7 @@ func NewIBAN(iban string) (IBAN, error) {
 	i := IBAN{}
 	i.iban = iban
 	if !i.isValid(iban) {
-		return IBAN{}, fmt.Errorf("invalid IBAN: %s", iban)
+		return IBAN{}, commonErrors.ValidateError(fmt.Errorf("invalid IBAN: %s", iban))
 	}
 	return i, nil
 }

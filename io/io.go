@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/mt1976/frantic-plum/common"
+	"github.com/mt1976/frantic-plum/commonErrors"
 	"github.com/mt1976/frantic-plum/id"
 	"github.com/mt1976/frantic-plum/logger"
 	"github.com/mt1976/frantic-plum/paths"
@@ -108,20 +109,20 @@ func CopyFile(src, dst string) error {
 	var srcinfo os.FileInfo
 
 	if srcfd, err = os.Open(src); err != nil {
-		return err
+		return commonErrors.OSError(err)
 	}
 	defer srcfd.Close()
 
 	if dstfd, err = os.Create(dst); err != nil {
-		return err
+		return commonErrors.OSError(err)
 	}
 	defer dstfd.Close()
 
 	if _, err = io.Copy(dstfd, srcfd); err != nil {
-		return err
+		return commonErrors.OSError(err)
 	}
 	if srcinfo, err = os.Stat(src); err != nil {
-		return err
+		return commonErrors.OSError(err)
 	}
 	return os.Chmod(dst, srcinfo.Mode())
 }
@@ -135,7 +136,7 @@ func Dir(path string) ([]string, error) {
 	// Get all folders in the backup directory
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, err
+		return nil, commonErrors.OSError(err)
 	}
 	var folders []string
 	for _, file := range files {

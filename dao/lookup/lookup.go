@@ -1,8 +1,6 @@
 package dao
 
-import (
-	"github.com/mt1976/frantic-plum/logger"
-)
+import "github.com/mt1976/frantic-plum/logger"
 
 var name = "Lookup"
 

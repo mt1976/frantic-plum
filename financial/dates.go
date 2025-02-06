@@ -245,7 +245,7 @@ func GetTenorFromDate(inDate, baseDate time.Time, ccy ...string) (Tenor, error) 
 		// }
 	}
 	logger.ErrorLogger.Printf("no tenor found [%v] [%v]", inDate, baseDate)
-	return Tenor{}, fmt.Errorf("no tenor found")
+	return Tenor{}, fmt.Errorf("no tenor found [%w] [%v]", inDate, baseDate)
 }
 
 func dFormat(d time.Time) string {

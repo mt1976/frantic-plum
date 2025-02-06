@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"time"
+
+	"github.com/mt1976/frantic-plum/commonErrors"
 )
 
 // Currency represents information about the IBAN format for a specific country.
@@ -69,7 +71,7 @@ func GetCurrency(code string) (Currency, error) {
 
 	if len(rtn.Code) == 0 {
 		log.Printf("[WARN] Invalid currency code: [%s]", code)
-		return Currency{}, fmt.Errorf("invalid currency code: [%s]", code)
+		return Currency{}, commonErrors.MockingError(fmt.Errorf("invalid currency code: [%s]", code))
 	}
 	//fmt.Printf("CurrencyInfo: %v Age %v years\n", rtn, rtn.Age())
 	return rtn, nil

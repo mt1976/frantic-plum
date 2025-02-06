@@ -1,7 +1,6 @@
 package database
 
 import (
-	"os"
 	"strings"
 
 	storm "github.com/asdine/storm/v3"
@@ -31,7 +30,8 @@ func Connect() {
 	if err != nil {
 
 		logger.ErrorLogger.Printf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(domain), err.Error())
-		os.Exit(1)
+		panic(commonErrors.ConnectError(err))
+		//os.Exit(1)
 	}
 	logger.DatabaseLogger.Printf("[%v] Open [%v.db] data connection", strings.ToUpper(domain), domain)
 	connect.Stop(1)
@@ -52,8 +52,8 @@ func Disconnect() {
 	logger.EventLogger.Printf("[%v] Close [%v.db] data file", strings.ToUpper(domain), domain)
 	err := CONNECTION.Close()
 	if err != nil {
-		logger.ErrorLogger.Printf("[%v] Closing %e ", strings.ToUpper(domain), err)
-		panic(err)
+		logger.ErrorLogger.Printf("[%v] Closing %v ", strings.ToUpper(domain), err)
+		panic(commonErrors.DisconnectError(err))
 	}
 	logger.DatabaseLogger.Printf("[%v] Close [%v.db] data connection", strings.ToUpper(domain), domain)
 }
@@ -81,7 +81,7 @@ func Drop(data any) error {
 func Update(data any) error {
 	err := validate(data)
 	if err != nil {
-		return err
+		return commonErrors.UpdateError(err)
 	}
 	logger.DatabaseLogger.Printf("Update [%+v]", data)
 	return CONNECTION.Update(data)
@@ -90,7 +90,7 @@ func Update(data any) error {
 func Create(data any) error {
 	err := validate(data)
 	if err != nil {
-		return err
+		return commonErrors.CreateError(err)
 	}
 	logger.DatabaseLogger.Printf("Create [%+v]", data)
 	return CONNECTION.Save(data)
@@ -100,7 +100,7 @@ func validate(data any) error {
 	err := commonErrors.HandleGoValidatorError(dataValidator.Struct(data))
 	if err != nil {
 		logger.ErrorLogger.Printf("[%v] Validation  %v", strings.ToUpper(domain), err.Error())
-		return err
+		return commonErrors.ValidateError(err)
 	}
 	return nil
 }

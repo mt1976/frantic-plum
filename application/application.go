@@ -8,6 +8,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/mt1976/frantic-plum/commonErrors"
 	"github.com/mt1976/frantic-plum/logger"
 	"github.com/rivo/uniseg"
 )
@@ -54,7 +55,7 @@ func HostName() string {
 	hn, err := os.Hostname()
 	if err != nil {
 		logger.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
-		panic(err)
+		panic(commonErrors.OSError(err))
 	}
 	return strings.ToLower(hn)
 }
@@ -67,7 +68,7 @@ func hostname_windows() string {
 
 	if err != nil {
 		logger.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
-		panic(err)
+		panic(commonErrors.OSError(err))
 	}
 	rtn := string(hostname)
 	rtn = strings.ToLower(strings.TrimSuffix(rtn, "\n"))
@@ -105,6 +106,7 @@ func get_IP() (string, error) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		os.Stderr.WriteString("Oops: " + err.Error() + "\n")
+		logger.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		os.Exit(1)
 	}
 

@@ -77,6 +77,6 @@ func validateAndFormatTenor(tenor string) (string, error) {
 		return clean, nil
 	default:
 		logger.ErrorLogger.Printf("invalid tenor mnemonic [%c]", unit)
-		return "", fmt.Errorf("invalid tenor mnemonic [%c]", unit)
+		return "", fmt.Errorf("invalid tenor mnemonic")
 	}
 }

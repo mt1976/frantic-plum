@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/mt1976/frantic-plum/commonErrors"
+	"github.com/mt1976/frantic-plum/logger"
 	validations "github.com/robfordww/finident"
 )
 
@@ -157,7 +159,6 @@ type GLIEF struct {
 var gliefAPIURI = "https://api.gleif.org/api/v1/lei-records?filter[isin]=%v"
 
 func Lookup_LEI(inISIN string) (string, error) {
-	var e error
 
 	isinOK, err := validations.ValidateISIN(inISIN)
 	if err == nil {
@@ -168,22 +169,24 @@ func Lookup_LEI(inISIN string) (string, error) {
 
 			resp, err := http.Get(uri)
 			if err != nil {
-				fmt.Println("No response from request")
+				//fmt.Println("No response from request")
+				logger.ErrorLogger.Printf("No response from request: %v", err)
 			}
 			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body) // response body is []byte
 			//fmt.Println(string(body))
 			var result GLIEF
 			if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
-				fmt.Println("Can not unmarshal JSON")
+				//				fmt.Println("Can not unmarshal JSON")
+				logger.ErrorLogger.Printf("Can not unmarshal JSON: %v", err)
 			}
 			//fmt.Printf("result: %v\n", result)
 			//spew.Dump(result)
 			return result.Data[0].Attributes.Lei, nil
 		}
 	} else {
-		return "", err
+		return "", commonErrors.ValidateError(err)
 	}
 
-	return "", e
+	return "", nil
 }

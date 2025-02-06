@@ -3,6 +3,7 @@ package banking
 import (
 	"fmt"
 
+	"github.com/mt1976/frantic-plum/commonErrors"
 	zlei "github.com/trisacrypto/lei"
 )
 
@@ -29,14 +30,14 @@ func (l *LEI) Formatted() string {
 	reserved := l.lei[4:6]
 	entity := l.lei[6:18]
 	checksum := l.lei[18:]
-	return fmt.Sprintf("%s %s %s %s", lou, reserved, entity, checksum)
+	return fmt.Sprintf("lou=%s res=%s entity=%s checksum=%s", lou, reserved, entity, checksum)
 }
 
 func NewLEI(lei string) (LEI, error) {
 	l := LEI{}
 	l.lei = lei
 	if !isValidLEI(lei) {
-		return LEI{}, fmt.Errorf("invalid LEI: %s", lei)
+		return LEI{}, commonErrors.ValidateError(fmt.Errorf("invalid LEI: %s", lei))
 	}
 	return l, nil
 }
