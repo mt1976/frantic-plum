@@ -96,25 +96,27 @@ type Settings struct {
 		Footer   string `toml:"footer"`
 		Admin    string `toml:"admin"`
 	} `toml:"Email"`
-	DisableLogging struct {
-		General string `toml:"general"`
-		Timing  string `toml:"timing"`
-		Service string `toml:"service"`
-		Audit   string `toml:"audit"`
-
-		Translation string `toml:"translation"`
-		Trace       string `toml:"trace"`
-		Warning     string `toml:"warning"`
-		Event       string `toml:"event"`
-		Security    string `toml:"security"`
-		Database    string `toml:"database"`
-		Api         string `toml:"api"`
-		All         string `toml:"all"`
-	} `toml:"DisableLogging"`
 	Logging struct {
-		MaxSize    string `toml:"maxSize"`
-		MaxBackups string `toml:"maxBackups"`
-		MaxAge     string `toml:"maxAge"`
-		Compress   string `toml:"compress"`
+		Disable struct {
+			General string `toml:"general"`
+			Timing  string `toml:"timing"`
+			Service string `toml:"service"`
+			Audit   string `toml:"audit"`
+
+			Translation string `toml:"translation"`
+			Trace       string `toml:"trace"`
+			Warning     string `toml:"warning"`
+			Event       string `toml:"event"`
+			Security    string `toml:"security"`
+			Database    string `toml:"database"`
+			Api         string `toml:"api"`
+			All         string `toml:"all"`
+		} `toml:"disable"`
+		Defaults struct {
+			MaxSize    string `toml:"maxSize"`
+			MaxBackups string `toml:"maxBackups"`
+			MaxAge     string `toml:"maxAge"`
+			Compress   string `toml:"compress"`
+		} `toml:"Defaults"`
 	} `toml:"Logging"`
 }

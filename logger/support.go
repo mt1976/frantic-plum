@@ -6,18 +6,13 @@ import (
 	"github.com/mt1976/frantic-plum/colours"
 )
 
-func fileName(in, name string) string {
+func assembleLogFileName(in, name string) string {
 	return in + name + ".log"
 }
 
-func nameIt(colour, name string) string {
+func formatNameWithColor(colour, name string) string {
 	name = strings.ToUpper(name)
-	return colour + sBracket(name) + Reset + " "
-}
-
-// sBracket adds square brackets to a string
-func sBracket(s string) string {
-	return "[" + s + "]"
+	return colour + "[" + name + "]" + Reset + " "
 }
 
 func setColoursNormal() {
