@@ -335,3 +335,84 @@ func (s *Settings) EmailPortString() string {
 func (s *Settings) EmailAdmin() string {
 	return s.Email.Admin
 }
+
+var logTrue = "true"
+var logFalse = "false"
+
+func (s *Settings) DisableLoggingGeneral() bool {
+	if s.DisableLogging.General == logTrue {
+		return true
+	}
+	return false
+}
+
+func (s *Settings) DisableLoggingTiming() bool {
+	return isTrueFalse(s.DisableLogging.General)
+}
+
+func isTrueFalse(s string) bool {
+	// We only disable the logging if the value is "true"
+	if s == logTrue {
+		return true
+	}
+	return false
+}
+
+func (s *Settings) DisableLoggingService() bool {
+	return isTrueFalse(s.DisableLogging.Service)
+}
+
+func (s *Settings) DisableLoggingAudit() bool {
+	return isTrueFalse(s.DisableLogging.Audit)
+}
+
+func (s *Settings) DisableLoggingSecurity() bool {
+	return isTrueFalse(s.DisableLogging.Security)
+}
+
+func (s *Settings) DisableLoggingDatabase() bool {
+	return isTrueFalse(s.DisableLogging.Database)
+}
+
+func (s *Settings) DisableLoggingTranslation() bool {
+	return isTrueFalse(s.DisableLogging.Translation)
+}
+
+func (s *Settings) DisableLoggingTrace() bool {
+	return isTrueFalse(s.DisableLogging.Trace)
+}
+
+func (s *Settings) DisableLoggingWarning() bool {
+	return isTrueFalse(s.DisableLogging.Warning)
+}
+
+func (s *Settings) DisableLoggingEvent() bool {
+	return isTrueFalse(s.DisableLogging.Event)
+}
+
+func (s *Settings) DisableLoggingApi() bool {
+	return isTrueFalse(s.DisableLogging.Api)
+}
+
+func (s *Settings) DisableAllLogging() bool {
+	return isTrueFalse(s.DisableLogging.All)
+}
+
+func (s *Settings) LoggingMaxSize() int {
+	a, _ := strconv.Atoi(s.Logging.MaxSize)
+	return a
+}
+
+func (s *Settings) LoggingMaxBackups() int {
+	a, _ := strconv.Atoi(s.Logging.MaxBackups)
+	return a
+}
+
+func (s *Settings) LoggingMaxAge() int {
+	a, _ := strconv.Atoi(s.Logging.MaxAge)
+	return a
+}
+
+func (s *Settings) LoggingCompress() bool {
+	return isTrueFalse(s.Logging.Compress)
+}

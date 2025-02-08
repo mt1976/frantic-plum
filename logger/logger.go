@@ -45,18 +45,69 @@ func init() {
 	name := prefix + settings.ApplicationName() + "-"
 
 	generalWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: fileName(name, "general"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingGeneral() || settings.DisableAllLogging() {
+		generalWriter = io.MultiWriter(io.Discard)
+	}
+
 	timingWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "timing"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingTiming() || settings.DisableAllLogging() {
+		timingWriter = io.MultiWriter(io.Discard)
+	}
+
 	serviceWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: fileName(name, "service"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingService() || settings.DisableAllLogging() {
+		serviceWriter = io.MultiWriter(io.Discard)
+	}
+
 	auditWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "audit"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingAudit() || settings.DisableAllLogging() {
+		auditWriter = io.MultiWriter(io.Discard)
+	}
+
 	errorWriter := io.MultiWriter(os.Stdout, os.Stderr, &lumberjack.Logger{Filename: fileName(name, "error"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableAllLogging() {
+		errorWriter = io.MultiWriter(io.Discard)
+	}
+
 	panicWriter := io.MultiWriter(os.Stdout, os.Stderr, &lumberjack.Logger{Filename: fileName(name, "panic"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableAllLogging() {
+		panicWriter = io.MultiWriter(io.Discard)
+	}
+
 	translationWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "translation"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingTranslation() || settings.DisableAllLogging() {
+		translationWriter = io.MultiWriter(io.Discard)
+	}
+
 	traceWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "trace"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingTrace() || settings.DisableAllLogging() {
+		traceWriter = io.MultiWriter(io.Discard)
+	}
+
 	warningWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: fileName(name, "warning"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingWarning() || settings.DisableAllLogging() {
+		warningWriter = io.MultiWriter(io.Discard)
+	}
+
 	eventWriter := io.MultiWriter(os.Stderr, &lumberjack.Logger{Filename: fileName(name, "event"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingEvent() || settings.DisableAllLogging() {
+		eventWriter = io.MultiWriter(io.Discard)
+	}
+
 	securityWriter := io.MultiWriter(os.Stderr, &lumberjack.Logger{Filename: fileName(name, "security"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingSecurity() || settings.DisableAllLogging() {
+		securityWriter = io.MultiWriter(io.Discard)
+	}
+
 	databaseWriter := io.MultiWriter(&lumberjack.Logger{Filename: fileName(name, "database"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingDatabase() || settings.DisableAllLogging() {
+		databaseWriter = io.MultiWriter(io.Discard)
+	}
+
 	apiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: fileName(name, "api"), MaxSize: 10, MaxBackups: 3, MaxAge: 28, Compress: true})
+	if settings.DisableLoggingApi() || settings.DisableAllLogging() {
+		apiWriter = io.MultiWriter(io.Discard)
+	}
 
 	//fmt.Printf("name: %v\n", name)
 	//os.Exit(1)
