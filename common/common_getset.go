@@ -11,36 +11,36 @@ const (
 	MODE_TEST
 )
 
-func (s *Settings) ApplicationPort() int {
+func (s *Settings) GetServerPort() int {
 	return s.Server.Port
 }
 
-func (s *Settings) ApplicationPortString() string {
+func (s *Settings) GetServerPortAsString() string {
 	a := s.Server.Port
 	return strconv.Itoa(a)
 }
 
-func (s *Settings) ApplicationName() string {
+func (s *Settings) GetApplicationName() string {
 	return s.Application.Name
 }
 
-func (s *Settings) ApplicationPrefix() string {
+func (s *Settings) GetApplicationPrefix() string {
 	return s.Application.Prefix
 }
 
-func (s *Settings) ApplicationHome() string {
+func (s *Settings) GetApplicationHomePath() string {
 	return s.Application.Home
 }
 
-func (s *Settings) ApplicationDescription() string {
+func (s *Settings) GetApplicationDescription() string {
 	return s.Application.Description
 }
 
-func (s *Settings) ServerProtocol() string {
+func (s *Settings) GetServerProtocol() string {
 	return s.Server.Protocol
 }
 
-func (s *Settings) ApplicationModeIs(inMode string) bool {
+func (s *Settings) IsApplicationMode(inMode string) bool {
 	// If first three chars of environment are "dev" then return "development"
 	if strings.ToLower(s.Server.Environment[:3]) == strings.ToLower(inMode[:3]) {
 		return true
@@ -48,23 +48,23 @@ func (s *Settings) ApplicationModeIs(inMode string) bool {
 	return false
 }
 
-func (s *Settings) AssetsLogo() string {
+func (s *Settings) GetLogoPath() string {
 	return s.Assets.Logo
 }
 
-func (s *Settings) AssetsFavicon() string {
+func (s *Settings) GetFaviconPath() string {
 	return s.Assets.Favicon
 }
 
-func (s *Settings) DateFormatDateTime() string {
+func (s *Settings) GetDateTimeFormat() string {
 	return s.Dates.DateTimeFormat
 }
 
-func (s *Settings) DateFormatDate() string {
+func (s *Settings) GetDateFormat() string {
 	return s.Dates.DateFormat
 }
 
-func (s *Settings) DateFormatTime() string {
+func (s *Settings) GetTimeFormat() string {
 	return s.Dates.TimeFormat
 }
 
@@ -72,67 +72,67 @@ func (s *Settings) DateFormatBackup() string {
 	return s.Dates.Backup
 }
 
-func (s *Settings) DateFormatBackupFolder() string {
+func (s *Settings) GetDateFormatForBackupDirectory() string {
 	return s.Dates.BackupFolder
 }
 
-func (s *Settings) DateFormatHuman() string {
+func (s *Settings) GetHumanReadableDateFormat() string {
 	return s.Dates.Human
 }
 
-func (s *Settings) DateFormatDMY2() string {
+func (s *Settings) GetDateFormatDMY2() string {
 	return s.Dates.DMY2
 }
 
-func (s *Settings) DateFormatYMD() string {
+func (s *Settings) GetDateFormatYMD() string {
 	return s.Dates.YMD
 }
 
-func (s *Settings) DateFormatInternal() string {
+func (s *Settings) GetInternalDateFormat() string {
 	return s.Dates.Internal
 }
 
-func (s *Settings) HistoryMaxEntries() int {
+func (s *Settings) GetMaxHistoryEntries() int {
 	return s.History.MaxEntries
 }
 
-func (s *Settings) DisplayDelimiter() string {
+func (s *Settings) GetDisplayDelimiter() string {
 	return s.Display.Delimiter
 }
 
-func (s *Settings) ApplicationEnvironment() string {
+func (s *Settings) GetApplicationEnvironment() string {
 	return s.Application.Environment
 }
 
-func (s *Settings) ApplicationVersion() string {
+func (s *Settings) GetApplicationVersion() string {
 	return s.Application.Version
 }
 
-func (s *Settings) ApplicationReleaseDate() string {
+func (s *Settings) GetApplicationReleaseDate() string {
 	return s.Application.ReleaseDate
 }
 
-func (s *Settings) ApplicationCopyright() string {
+func (s *Settings) GetApplicationCopyright() string {
 	return s.Application.Copyright
 }
 
-func (s *Settings) ApplicationAuthor() string {
+func (s *Settings) GetApplicationAuthor() string {
 	return s.Application.Author
 }
 
-func (s *Settings) MessageTypeKey() string {
+func (s *Settings) GetMessageTypeKey() string {
 	return s.Message.TypeKey
 }
 
-func (s *Settings) MessageTitleKey() string {
+func (s *Settings) GetMessageTitleKey() string {
 	return s.Message.TitleKey
 }
 
-func (s *Settings) MessageContentKey() string {
+func (s *Settings) GetMessageContentKey() string {
 	return s.Message.ContentKey
 }
 
-func (s *Settings) MessageActionKey() string {
+func (s *Settings) GetMessageActionKey() string {
 	return s.Message.ActionKey
 }
 
@@ -144,110 +144,110 @@ func (s *Settings) Delimiter() string {
 	return s.SEP()
 }
 
-func (s *Settings) ApplicationLocale() string {
+func (s *Settings) GetApplicationLocale() string {
 	return s.Application.Locale
 }
 
-func (s *Settings) ApplicationHost() string {
+func (s *Settings) GetServerHost() string {
 	return s.Server.Host
 }
 
-func (s *Settings) TranslationHost() string {
+func (s *Settings) GetTranslationServerHost() string {
 	return s.Translation.Host
 }
 
-func (s *Settings) TranslationPort() int {
+func (s *Settings) GetTranslationServerPort() int {
 	return s.Translation.Port
 }
 
-func (s *Settings) TranslationLocale() string {
+func (s *Settings) GetTranslationLocale() string {
 	return s.Translation.Locale
 }
 
-func (s *Settings) TranslationProtocol() string {
+func (s *Settings) GetTranslationServerProtocol() string {
 	return s.Translation.Protocol
 }
 
-func (s *Settings) TranslationPortString() string {
+func (s *Settings) GetTranslationServerPortAsString() string {
 	return strconv.Itoa(s.Translation.Port)
 }
 
-func (s *Settings) MaxEntries() int {
-	return s.History.MaxEntries
-}
+// func (s *Settings) MaxEntries() int {
+// 	return s.History.MaxEntries
+// }
 
-func (s *Settings) PushoverUserKey() string {
+func (s *Settings) GetPushoverUserKey() string {
 	return s.Pushover.UserKey
 }
 
-func (s *Settings) PushoverAPIToken() string {
+func (s *Settings) GetPushoverToken() string {
 	return s.Pushover.APIToken
 }
 
-func (s *Settings) StatusUNKNOWN() string {
+func (s *Settings) GetStatus_Unknown() string {
 	if s.Status.UNKNOWN == "" {
 		return "UNKN"
 	}
 	return s.Status.UNKNOWN
 }
 
-func (s *Settings) StatusONLINE() string {
+func (s *Settings) GetStatus_Online() string {
 	if s.Status.ONLINE == "" {
 		return "ONLN"
 	}
 	return s.Status.ONLINE
 }
 
-func (s *Settings) StatusOFFLINE() string {
+func (s *Settings) GetStatus_Offline() string {
 	if s.Status.OFFLINE == "" {
 		return "OFLN"
 	}
 	return s.Status.OFFLINE
 }
 
-func (s *Settings) StatusERROR() string {
+func (s *Settings) GetStatus_Error() string {
 	if s.Status.ERROR == "" {
 		return "ERRO"
 	}
 	return s.Status.ERROR
 }
 
-func (s *Settings) StatusWARNING() string {
+func (s *Settings) GetStatus_Warning() string {
 	if s.Status.WARNING == "" {
 		return "WARN"
 	}
 	return s.Status.WARNING
 }
 
-func (s *Settings) SecurityServiceUserName() string {
+func (s *Settings) GetSecurityServiceUserName() string {
 	return s.Security.ServiceUserName
 }
 
-func (s *Settings) SecurityServiceUserCode() string {
+func (s *Settings) GetSecurityServiceUserCode() string {
 	return s.Security.ServiceUserCode
 }
 
-func (s *Settings) SecuritySessionExpiryPeriod() int {
+func (s *Settings) GetSecuritySessionExpiryPeriodKey() int {
 	return s.Security.SessionExpiry
 }
 
-func (s *Settings) SecuritySessionUserCodeKey() string {
+func (s *Settings) GetSecuritySessionUserCodeKey() string {
 	return s.Security.SessionUserCodeKey
 }
 
-func (s *Settings) SecuritySessionUserIDKey() string {
+func (s *Settings) GetSecuritySessionUserIDKey() string {
 	return s.Security.SessionUserIDKey
 }
 
-func (s *Settings) SecuritySessionExpiryKey() string {
+func (s *Settings) GetSecuritySessionExpiryKey() string {
 	return s.Security.SessionExpiryKey
 }
 
-func (s *Settings) SecuritySessionTokenKey() string {
+func (s *Settings) GetSecuritySessionTokenKey() string {
 	return s.Security.SessionTokenKey
 }
 
-func (s *Settings) SecuritySessionKey() string {
+func (s *Settings) GetSecuritySessionKeyName() string {
 	return s.Security.SessionKeyName
 }
 
@@ -314,35 +314,35 @@ func isTrueFalse(s string) bool {
 	return false
 }
 
-func (s *Settings) EmailHost() string {
+func (s *Settings) GetEmailHost() string {
 	return s.Email.Host
 }
 
-func (s *Settings) EmailPort() int {
+func (s *Settings) GetEmailPort() int {
 	return s.Email.Port
 }
 
-func (s *Settings) EmailUser() string {
+func (s *Settings) GetEmailUser() string {
 	return s.Email.User
 }
 
-func (s *Settings) EmailPassword() string {
+func (s *Settings) GetEmailPassword() string {
 	return s.Email.Password
 }
 
-func (s *Settings) EmailFrom() string {
+func (s *Settings) GetEmailSender() string {
 	return s.Email.From
 }
 
-func (s *Settings) EmailFooter() string {
+func (s *Settings) GetEmailFooter() string {
 	return s.Email.Footer
 }
 
-func (s *Settings) EmailPortString() string {
+func (s *Settings) GetEmailPortAsString() string {
 	return strconv.Itoa(s.Email.Port)
 }
 
-func (s *Settings) EmailAdmin() string {
+func (s *Settings) GetAdminEmail() string {
 	return s.Email.Admin
 }
 
@@ -416,6 +416,6 @@ func (s *Settings) GetLogsMaxAge() int {
 	return a
 }
 
-func (s *Settings) LogsShouldCompress() bool {
+func (s *Settings) IsLogCompressionEnabled() bool {
 	return isTrueFalse(s.Logging.Defaults.Compress)
 }

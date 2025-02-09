@@ -44,12 +44,12 @@ func init() {
 	applicationPath := paths.Application().String()
 	applicationPath += paths.Logs().String()
 	applicationPath += string(os.PathSeparator)
-	applicationPath += settings.ApplicationName() + "-"
+	applicationPath += settings.GetApplicationName() + "-"
 
 	maxSize := settings.GetLogsMaxSize()
 	maxBackups := settings.GetLogsMaxBackups()
 	maxAge := settings.GetLogsMaxAge()
-	compress := settings.LogsShouldCompress()
+	compress := settings.IsLogCompressionEnabled()
 
 	setColoursNormal()
 	if runtime.GOOS == "windows" {

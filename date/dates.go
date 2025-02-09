@@ -26,14 +26,14 @@ type DateFormat struct {
 func init() {
 	cfg = common.Get()
 
-	Format.External = cfg.DateFormatHuman()
-	Format.DMY = cfg.DateFormatDMY2()
-	Format.Internal = cfg.DateFormatHuman()
-	Format.Detail = cfg.DateFormatDateTime()
-	Format.YMD = cfg.DateFormatYMD()
+	Format.External = cfg.GetHumanReadableDateFormat()
+	Format.DMY = cfg.GetDateFormatDMY2()
+	Format.Internal = cfg.GetHumanReadableDateFormat()
+	Format.Detail = cfg.GetDateTimeFormat()
+	Format.YMD = cfg.GetDateFormatYMD()
 	Format.Calendar = "2006-01-02T15:04:05"
 	Format.BackupDate = cfg.DateFormatBackup()
-	Format.BackupFolder = cfg.DateFormatBackupFolder()
+	Format.BackupFolder = cfg.GetDateFormatForBackupDirectory()
 }
 
 // func FormatYMD(in time.Time) string {
@@ -87,7 +87,7 @@ func StartOfDay(t time.Time) time.Time {
 		logger.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		return t
 	}
-	if cfg.ApplicationModeIs(common.MODE_DEVELOPMENT) {
+	if cfg.IsApplicationMode(common.MODE_DEVELOPMENT) {
 		logger.InfoLogger.Printf("[%v] [DateStartOfDay] Date=[%v] Result=[%v]", strings.ToUpper(name), t, r)
 	}
 	return r
@@ -103,7 +103,7 @@ func EndOfDay(t time.Time) time.Time {
 	}
 	r = r.AddDate(0, 0, 1)
 	r = r.Add(-time.Second)
-	if cfg.ApplicationModeIs(common.MODE_DEVELOPMENT) {
+	if cfg.IsApplicationMode(common.MODE_DEVELOPMENT) {
 		logger.InfoLogger.Printf("[%v] [DateEndOfDay] Date=[%v] Result=[%v]", strings.ToUpper(name), t, r)
 	}
 	return r
@@ -111,7 +111,7 @@ func EndOfDay(t time.Time) time.Time {
 
 func IsBeforeOrEqualTo(t1, t2 time.Time) bool {
 	// Purpose: check if a time is before or equal to a time
-	if cfg.ApplicationModeIs(common.MODE_DEVELOPMENT) {
+	if cfg.IsApplicationMode(common.MODE_DEVELOPMENT) {
 		//	logger.InfoLogger.Printf("HLP: [HELPER] Date=[%v] Check=[%v]", DateStartOfDay(t1), DateStartOfDay(t2))
 	}
 	check := StartOfDay(t1)

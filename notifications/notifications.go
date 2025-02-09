@@ -17,10 +17,10 @@ func Send(inMessage, inTitle string, key int) error {
 
 	set := common.Get()
 
-	poUserKey := set.PushoverUserKey()
-	poAPIKey := set.PushoverAPIToken()
+	poUserKey := set.GetPushoverUserKey()
+	poAPIKey := set.GetPushoverToken()
 
-	if set.ApplicationModeIs(common.MODE_TEST) {
+	if set.IsApplicationMode(common.MODE_TEST) {
 		if poUserKey == "" || poAPIKey == "" {
 			poAPIKey = "autd5u19nczbs5v6zq2i7afpzjpe2v"
 			poUserKey = "uyosdopsu9wxxo7b264bmnnhbfz8nj"
@@ -40,9 +40,9 @@ func Send(inMessage, inTitle string, key int) error {
 
 	if key != 0 {
 		//inCallbackUrl = support.Application.BaseURL() + "view/" + key
-		inCallbackUrl = fmt.Sprintf("http://%v:%v/view/%v", set.ApplicationHost(), set.ApplicationPort(), key)
+		inCallbackUrl = fmt.Sprintf("http://%v:%v/view/%v", set.GetServerHost(), set.GetServerPort(), key)
 	} else {
-		inCallbackUrl = fmt.Sprintf("http://%v:%v/dashboard/", set.ApplicationHost(), set.ApplicationPort())
+		inCallbackUrl = fmt.Sprintf("http://%v:%v/dashboard/", set.GetServerHost(), set.GetServerPort())
 	}
 
 	message := &pushover.Message{
@@ -50,7 +50,7 @@ func Send(inMessage, inTitle string, key int) error {
 		Title:      inTitle,
 		Priority:   pushover.PriorityNormal,
 		URL:        inCallbackUrl,
-		URLTitle:   set.ApplicationName(),
+		URLTitle:   set.GetApplicationName(),
 		Timestamp:  time.Now().Unix(),
 		Retry:      60 * time.Second,
 		Expire:     time.Hour,
