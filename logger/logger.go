@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mt1976/frantic-plum/common"
-	"github.com/mt1976/frantic-plum/paths"
+	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/paths"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 

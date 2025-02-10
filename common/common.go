@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/mt1976/frantic-plum/paths"
+	"github.com/mt1976/frantic-core/paths"
 )
 
 // var Data ConfigurationModel

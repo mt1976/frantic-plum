@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/mt1976/frantic-plum/commonErrors"
+	"github.com/mt1976/frantic-core/commonErrors"
 )
 
 // Currency represents information about the IBAN format for a specific country.

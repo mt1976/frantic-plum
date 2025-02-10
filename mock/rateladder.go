@@ -3,7 +3,7 @@ package mock
 import (
 	"fmt"
 
-	"github.com/mt1976/frantic-plum/logger"
+	"github.com/mt1976/frantic-core/logger"
 )
 
 type Rung struct {

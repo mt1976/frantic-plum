@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mt1976/frantic-plum/common"
-	"github.com/mt1976/frantic-plum/commonErrors"
+	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/commonErrors"
 	"gopkg.in/gomail.v2"
 )
 

@@ -3,9 +3,9 @@ package financial
 import (
 	"time"
 
-	"github.com/mt1976/frantic-plum/logger"
-	"github.com/mt1976/frantic-plum/mathHelpers"
-	"github.com/mt1976/frantic-plum/mock"
+	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/mathHelpers"
+	"github.com/mt1976/frantic-core/mock"
 )
 
 // The function adjustSettlementForWeekends adjusts the input date to the next weekday if it falls on a Saturday or

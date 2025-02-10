@@ -3,7 +3,7 @@ package banking
 import (
 	"fmt"
 
-	"github.com/mt1976/frantic-plum/commonErrors"
+	"github.com/mt1976/frantic-core/commonErrors"
 	zlei "github.com/trisacrypto/lei"
 )
 

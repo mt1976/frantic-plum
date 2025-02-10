@@ -3,7 +3,7 @@ package stringHelpers
 import (
 	"strings"
 
-	"github.com/mt1976/frantic-plum/id"
+	"github.com/mt1976/frantic-core/id"
 )
 
 // Lowers the first character of a string

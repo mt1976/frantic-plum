@@ -6,11 +6,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-plum/application"
-	"github.com/mt1976/frantic-plum/common"
-	"github.com/mt1976/frantic-plum/dao/database"
-	"github.com/mt1976/frantic-plum/date"
-	"github.com/mt1976/frantic-plum/logger"
+	"github.com/mt1976/frantic-core/application"
+	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/dao/database"
+	"github.com/mt1976/frantic-core/date"
+	"github.com/mt1976/frantic-core/logger"
 )
 
 var name = "Audit"

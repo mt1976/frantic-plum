@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mt1976/frantic-plum/commonErrors"
-	"github.com/mt1976/frantic-plum/logger"
+	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/logger"
 )
 
 // The Copy function copies a file from one path to another and returns true if the copy was

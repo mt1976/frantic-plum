@@ -6,10 +6,10 @@ import (
 	storm "github.com/asdine/storm/v3"
 	"github.com/asdine/storm/v3/index"
 	validator "github.com/go-playground/validator/v10"
-	"github.com/mt1976/frantic-plum/commonErrors"
-	"github.com/mt1976/frantic-plum/io"
-	"github.com/mt1976/frantic-plum/logger"
-	"github.com/mt1976/frantic-plum/timing"
+	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/io"
+	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/timing"
 )
 
 var Version = 1

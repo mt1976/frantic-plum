@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-plum/common"
-	"github.com/mt1976/frantic-plum/commonErrors"
-	"github.com/mt1976/frantic-plum/id"
-	"github.com/mt1976/frantic-plum/logger"
-	"github.com/mt1976/frantic-plum/paths"
-	"github.com/mt1976/frantic-plum/timing"
+	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/id"
+	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/paths"
+	"github.com/mt1976/frantic-core/timing"
 )
 
 var name = "IO"

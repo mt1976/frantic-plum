@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-plum/logger"
+	"github.com/mt1976/frantic-core/logger"
 	"golang.org/x/exp/rand"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mt1976/frantic-plum/commonErrors"
+	"github.com/mt1976/frantic-core/commonErrors"
 )
 
 // Country represents information about the IBAN format for a specific country.

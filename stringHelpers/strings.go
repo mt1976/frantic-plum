@@ -8,7 +8,7 @@ import (
 	"unicode/utf8"
 
 	ascii "github.com/galsondor/go-ascii"
-	"github.com/mt1976/frantic-plum/logger"
+	"github.com/mt1976/frantic-core/logger"
 )
 
 const (

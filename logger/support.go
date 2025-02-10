@@ -3,7 +3,7 @@ package logger
 import (
 	"strings"
 
-	"github.com/mt1976/frantic-plum/colours"
+	"github.com/mt1976/frantic-core/colours"
 )
 
 func assembleLogFileName(in, name string) string {

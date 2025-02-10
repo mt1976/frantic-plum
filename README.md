@@ -1,2 +1,2 @@
-# frantic-plum
+# frantic-core
 Utility Library

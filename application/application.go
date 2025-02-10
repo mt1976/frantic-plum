@@ -8,8 +8,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/mt1976/frantic-plum/commonErrors"
-	"github.com/mt1976/frantic-plum/logger"
+	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/logger"
 	"github.com/rivo/uniseg"
 )
 

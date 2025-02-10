@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-plum/common"
-	"github.com/mt1976/frantic-plum/logger"
+	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/logger"
 )
 
 var name = "DATE"

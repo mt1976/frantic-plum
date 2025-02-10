@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/mt1976/frantic-plum/commonErrors"
-	"github.com/mt1976/frantic-plum/logger"
-	"github.com/mt1976/frantic-plum/mock"
+	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/mock"
 )
 
 // The "FinDate" type represents a date with various properties and formats.

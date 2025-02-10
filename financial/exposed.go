@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/leekchan/accounting"
-	"github.com/mt1976/frantic-plum/logger"
-	"github.com/mt1976/frantic-plum/mock"
+	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/mock"
 )
 
 // The function AbbrToInt converts a string representation of a number with abbreviations (such as "1M"

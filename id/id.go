@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-plum/commonErrors"
-	"github.com/mt1976/frantic-plum/date"
-	"github.com/mt1976/frantic-plum/html"
-	"github.com/mt1976/frantic-plum/logger"
+	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/date"
+	"github.com/mt1976/frantic-core/html"
+	"github.com/mt1976/frantic-core/logger"
 	"github.com/segmentio/ksuid"
 	"golang.org/x/exp/rand"
 )
