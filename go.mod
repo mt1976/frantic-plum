@@ -1,4 +1,4 @@
-module github.com/mt1976/frantic-plum
+module github.com/mt1976/frantic-core
 
 go 1.23.5
 
@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.4.0
 	github.com/galsondor/go-ascii v0.0.0-20151210013816-e2eb5175fb10
 	github.com/leekchan/accounting v1.0.0
+	github.com/mt1976/frantic-plum v1.1.1
 	github.com/rivo/uniseg v0.4.7
 	github.com/robfordww/finident v0.1.1
 	github.com/segmentio/ksuid v1.0.4
@@ -17,10 +18,11 @@ require (
 
 require (
 	github.com/cockroachdb/apd v1.1.0 // indirect
-	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/gopherjs/gopherjs v1.17.2 // indirect
+	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
-	github.com/smartystreets/goconvey v1.8.1 // indirect
+	github.com/smarty/assertions v1.15.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )
 
