@@ -1,11 +1,12 @@
 package id
 
 import (
-	"encoding/base64"
 	"fmt"
 	"os"
 	"strings"
 	"time"
+
+	"golang.org/x/crypto/sha3"
 
 	"github.com/mt1976/frantic-core/commonErrors"
 	"github.com/mt1976/frantic-core/date"
@@ -27,11 +28,28 @@ func Encode(in string) string {
 		logger.ErrorLogger.Printf("error encoding string: %v", err.Error())
 		return ""
 	}
-	//working := out
 
-	out = base64.StdEncoding.EncodeToString([]byte(out))
+	working := out
+
+	//out = base64.StdEncoding.EncodeToString([]byte(out))
 	// remove padding
-	out = strings.Replace(out, "=", "-", -1)
+	//out = strings.Replace(out, "=", "-", -1)
+
+	// h := sha256.New()
+	// _, _ = h.Write([]byte(working))
+	// bs := h.Sum(nil)
+	// logger.InfoLogger.Println("SHA256:", fmt.Sprintf("%x", bs))
+
+	// x := sha512.New()
+	// _, _ = x.Write([]byte(working))
+	// bs2 := x.Sum(nil)
+	// logger.InfoLogger.Println("SHA512:", fmt.Sprintf("%x", bs2))
+
+	z := sha3.Sum256([]byte(working))
+	//logger.InfoLogger.Println("SHA3-256:", fmt.Sprintf("%x", z))
+	out = fmt.Sprintf("%x", z)
+	// y := sha3.Sum512([]byte(working))
+	// logger.InfoLogger.Println("SHA3-512:", fmt.Sprintf("%x", y))
 
 	//msg := fmt.Sprintf("[ID] Encoding In=[%v] Working=[%v] Encoded=[%v]", in, working, out)
 	//logger.InfoLogger.Println(msg)
