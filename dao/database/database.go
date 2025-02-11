@@ -20,7 +20,7 @@ var dbFileName string
 var dataValidator *validator.Validate
 
 func init() {
-	//	Connect()
+	//	Connect()å
 	dataValidator = validator.New(validator.WithRequiredStructEnabled())
 }
 
@@ -33,6 +33,10 @@ func NamedConnect(name string) {
 }
 
 func connect(name string) {
+	// logger.InfoBanner(name, name, name)
+	// logger.InfoBanner(name, name, name)
+	// logger.InfoBanner(name, name, name)
+
 	dbFileName = name
 	connect := timing.Start(domain, "Connect", "")
 	var err error
@@ -52,7 +56,7 @@ func Backup(loc string) {
 	logger.EventLogger.Printf("[BACKUP] Backup [%v.db] data started...", dbFileName)
 	Disconnect()
 	io.Backup(dbFileName, loc)
-	Connect()
+	connect(dbFileName)
 	logger.EventLogger.Printf("[BACKUP] Backup [%v.db] data ends", dbFileName)
 	timer.Stop(1)
 	logger.DatabaseLogger.Printf("[%v] Backup [%v.db] data connection", strings.ToUpper(domain), dbFileName)
