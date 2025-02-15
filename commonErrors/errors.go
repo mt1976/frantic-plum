@@ -12,7 +12,11 @@ var (
 	ErrorDuplicate              = errors.New("duplicate")
 	ErrorNegativeValue          = errors.New("negative value")
 	//ErrorNotFound               = errors.New("not found %w %w") // Deprecated: use NotFoundError
-	ErrorPasswordMismatch = errors.New("password mismatch")
+	ErrorPasswordMismatch   = errors.New("password mismatch")
+	ErrorUserNotFound       = errors.New("user not found")
+	ErrorUserNotActive      = errors.New("user not active")
+	ErrNoTranslation        = errors.New("no translation available")
+	ErrNoMessageToTranslate = errors.New("no message to translate")
 )
 
 func StringTooLongError(err error, ln int) error {
