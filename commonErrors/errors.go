@@ -124,3 +124,7 @@ func WrapError(err error) error {
 func WrapInvalidFilterError(err error, f string) error {
 	return fmt.Errorf("invalid filter [%v] (%w)", f, err)
 }
+
+func WrapInvalidHttpReturnStatusError(s string) error {
+	return fmt.Errorf("inavalid/unsupported http return status [%v]", s)
+}
