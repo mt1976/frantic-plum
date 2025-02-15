@@ -128,3 +128,7 @@ func WrapInvalidFilterError(err error, f string) error {
 func WrapInvalidHttpReturnStatusError(s string) error {
 	return fmt.Errorf("inavalid/unsupported http return status [%v]", s)
 }
+
+func WrapInvalidHttpReturnStatusWithMessageError(status, message string) error {
+	return fmt.Errorf("inavalid/unsupported http return status [%v] (%v)", status, message)
+}
