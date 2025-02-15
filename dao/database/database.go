@@ -44,7 +44,7 @@ func connect(name string) {
 	if err != nil {
 
 		logger.ErrorLogger.Printf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(dbFileName), err.Error())
-		panic(commonErrors.ConnectError(err))
+		panic(commonErrors.WrapConnectError(err))
 		//os.Exit(1)
 	}
 	logger.DatabaseLogger.Printf("[%v] Open [%v.db] data connection", strings.ToUpper(domain), dbFileName)
@@ -68,7 +68,7 @@ func Disconnect() {
 	err := CONNECTION.Close()
 	if err != nil {
 		logger.ErrorLogger.Printf("[%v] Closing %v ", strings.ToUpper(domain), err)
-		panic(commonErrors.DisconnectError(err))
+		panic(commonErrors.WrapDisconnectError(err))
 	}
 	logger.DatabaseLogger.Printf("[%v] Close [%v.db] data connection", strings.ToUpper(domain), dbFileName)
 	timer.Stop(1)
@@ -97,7 +97,7 @@ func Drop(data any) error {
 func Update(data any) error {
 	err := validate(data)
 	if err != nil {
-		return commonErrors.UpdateError(err)
+		return commonErrors.WrapError(err)
 	}
 	logger.DatabaseLogger.Printf("Update [%+v]", data)
 	return CONNECTION.Update(data)
@@ -106,7 +106,7 @@ func Update(data any) error {
 func Create(data any) error {
 	err := validate(data)
 	if err != nil {
-		return commonErrors.CreateError(err)
+		return commonErrors.WrapCreateError(err)
 	}
 	logger.DatabaseLogger.Printf("Create [%+v]", data)
 	return CONNECTION.Save(data)
@@ -116,7 +116,7 @@ func validate(data any) error {
 	err := commonErrors.HandleGoValidatorError(dataValidator.Struct(data))
 	if err != nil {
 		logger.ErrorLogger.Printf("[%v] Validation  %v", strings.ToUpper(domain), err.Error())
-		return commonErrors.ValidateError(err)
+		return commonErrors.WrapValidationError(err)
 	}
 	return nil
 }

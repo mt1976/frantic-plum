@@ -3,6 +3,8 @@ package commonErrors
 import (
 	"errors"
 	"fmt"
+
+	"github.com/mt1976/frantic-core/logger"
 )
 
 var (
@@ -17,47 +19,59 @@ var (
 	ErrorUserNotActive      = errors.New("user not active")
 	ErrNoTranslation        = errors.New("no translation available")
 	ErrNoMessageToTranslate = errors.New("no message to translate")
+	ErrProtocolIsRequired   = errors.New("protocol is required")
+	ErrInvalidProtocol      = errors.New("invalid protocol")
+	ErrHostIsRequired       = errors.New("host is required")
+	ErrInvalidHost          = errors.New("invalid host")
+	ErrPortIsRequired       = errors.New("port is required")
+	ErrInvalidPort          = errors.New("invalid port")
+	ErrUsernameIsRequired   = errors.New("username is required")
+	ErrInvalidUsername      = errors.New("invalid username")
+	ErrPasswordIsRequired   = errors.New("password is required")
+	ErrInvalidPassword      = errors.New("invalid password")
+	ErrOriginIsRequired     = errors.New("no origin defined, and origin identifier is required")
+	ErrInvalidOrigin        = errors.New("invalid origin")
 )
 
-func StringTooLongError(err error, ln int) error {
-	return fmt.Errorf("string too long, max %d characters error [%w]", ln, err)
+func WrapStringTooLongErr(err error, ln int) error {
+	return fmt.Errorf("string too long, max %d characters error (%w)", ln, err)
 }
 
-func NotFoundError(err error) error {
-	return fmt.Errorf("not found error [%w]", err)
+func WrapNotFoundError(err error) error {
+	return fmt.Errorf("not found error (%w)", err)
 }
-func ReadError(err error) error {
-	return fmt.Errorf("read error [%w]", err)
+func WrapReadError(err error) error {
+	return fmt.Errorf("read error (%w)", err)
 }
-func WriteError(err error) error {
-	return fmt.Errorf("write error [%w]", err)
+func WrapWriteError(err error) error {
+	return fmt.Errorf("write error (%w)", err)
 }
-func EmptyError(err error) error {
-	return fmt.Errorf("empty error [%w]", err)
+func WrapEmptyError(err error) error {
+	return fmt.Errorf("empty error (%w)", err)
 }
-func ClearError(err error) error {
-	return fmt.Errorf("clear error [%w]", err)
+func WrapClearError(err error) error {
+	return fmt.Errorf("clear error (%w)", err)
 }
-func UpdateError(err error) error {
-	return fmt.Errorf("update error [%w]", err)
+func WrapUpdateError(err error) error {
+	return fmt.Errorf("update error (%w)", err)
 }
-func CreateError(err error) error {
-	return fmt.Errorf("create error [%w]", err)
+func WrapCreateError(err error) error {
+	return fmt.Errorf("create error (%w)", err)
 }
-func DeleteError(err error) error {
-	return fmt.Errorf("delete error [%w]", err)
+func WrapDeleteError(err error) error {
+	return fmt.Errorf("delete error (%w)", err)
 }
-func DropError(err error) error {
-	return fmt.Errorf("drop error [%w]", err)
+func WrapDropError(err error) error {
+	return fmt.Errorf("drop error (%w)", err)
 }
-func ValidateError(err error) error {
-	return fmt.Errorf("validate error [%w]", err)
+func WrapValidationError(err error) error {
+	return fmt.Errorf("validate error (%w)", err)
 }
-func DisconnectError(err error) error {
-	return fmt.Errorf("disconnect error [%w]", err)
+func WrapDisconnectError(err error) error {
+	return fmt.Errorf("disconnect error (%w)", err)
 }
-func ConnectError(err error) error {
-	return fmt.Errorf("connect error [%w]", err)
+func WrapConnectError(err error) error {
+	return fmt.Errorf("connect error (%w)", err)
 }
 func HandleGoValidatorError(err error) error {
 	return nil
@@ -79,29 +93,34 @@ func HandleGoValidatorError(err error) error {
 	// }
 	// return nil
 }
-func SendEmailError(err error) error {
-	return fmt.Errorf("send email error [%w]", err)
+func WrapEmailError(err error) error {
+	return fmt.Errorf("send email error (%w)", err)
 }
-func IDGenerationError(err error) error {
-	return fmt.Errorf("ID generation error [%w]", err)
-}
-
-func OSError(err error) error {
-	return fmt.Errorf("OS error [%w]", err)
+func WrapIDGenerationError(err error) error {
+	return fmt.Errorf("ID generation error (%w)", err)
 }
 
-func MockingError(err error) error {
-	return fmt.Errorf("mocking error [%w]", err)
+func WrapOSError(err error) error {
+	return fmt.Errorf("OS error (%w)", err)
 }
 
-func NotificationError(err error) error {
-	return fmt.Errorf("notification error [%w]", err)
+func WrapErrorForMocking(err error) error {
+	return fmt.Errorf("mocking error (%w)", err)
 }
 
-func FunctionalError(err error, f string) error {
-	return fmt.Errorf("functional error - %v [%w]", f, err)
+func WrapNotificationError(err error) error {
+	return fmt.Errorf("notification error (%w)", err)
 }
 
-func GeneralError(err error) error {
-	return fmt.Errorf("general error [%w]", err)
+func WrapFunctionalError(err error, f string) error {
+	return fmt.Errorf("functional error - %v (%w)", f, err)
+}
+
+func WrapError(err error) error {
+	logger.WarningLogger.Println("It is not advised to wrap errors without a specific error message")
+	return fmt.Errorf("error (%w)", err)
+}
+
+func WrapInvalidFilterError(err error, f string) error {
+	return fmt.Errorf("invalid filter [%v] (%w)", f, err)
 }

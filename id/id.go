@@ -114,7 +114,7 @@ func GetUUIDv2WithPayload(payload string) (string, error) {
 	// Ensure payload is 16 bytes
 	length := 16
 	if len(payload) > length {
-		return "", commonErrors.IDGenerationError(fmt.Errorf("Payload must be %d bytes or less", length))
+		return "", commonErrors.WrapIDGenerationError(fmt.Errorf("Payload must be %d bytes or less", length))
 	}
 	if len(payload) < 16 {
 		payload = fmt.Sprintf("%-16s", payload)
@@ -122,7 +122,7 @@ func GetUUIDv2WithPayload(payload string) (string, error) {
 	ksuid, err := ksuid.FromParts(time.Now(), []byte(payload))
 	if err != nil {
 		logger.ErrorLogger.Printf("Error generating KSUID: [%v]", err.Error())
-		return "", commonErrors.IDGenerationError(err)
+		return "", commonErrors.WrapIDGenerationError(err)
 	}
 	return ksuid.String(), nil
 }

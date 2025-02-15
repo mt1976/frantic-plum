@@ -66,7 +66,7 @@ func Send(inMessage, inTitle string, key int) error {
 	_, err := app.SendMessage(message, recipient)
 	if err != nil {
 		logger.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
-		return commonErrors.NotificationError(err)
+		return commonErrors.WrapNotificationError(err)
 	}
 
 	return nil

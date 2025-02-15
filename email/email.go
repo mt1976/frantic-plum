@@ -66,6 +66,6 @@ func SendEmail(to string, name string, subject string, body string) {
 	// Send the email to Bob, Cora and Dan.
 	// This code block is sending the email using the `gomail` package.
 	if err := Emailer.DialAndSend(m); err != nil {
-		panic(commonErrors.SendEmailError(err))
+		panic(commonErrors.WrapEmailError(err))
 	}
 }

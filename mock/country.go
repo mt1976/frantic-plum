@@ -47,7 +47,7 @@ func GetCountryInfo(countryCode string) (Country, error) {
 
 	if rtn.IBANLength == 0 {
 		log.Printf("[WARN] Invalid country code: [%s]", countryCode)
-		return Country{}, commonErrors.MockingError(fmt.Errorf("invalid country code: [%s]", countryCode))
+		return Country{}, commonErrors.WrapErrorForMocking(fmt.Errorf("invalid country code: [%s]", countryCode))
 	}
 	return rtn, nil
 }

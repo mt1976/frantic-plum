@@ -109,20 +109,20 @@ func CopyFile(src, dst string) error {
 	var srcinfo os.FileInfo
 
 	if srcfd, err = os.Open(src); err != nil {
-		return commonErrors.OSError(err)
+		return commonErrors.WrapOSError(err)
 	}
 	defer srcfd.Close()
 
 	if dstfd, err = os.Create(dst); err != nil {
-		return commonErrors.OSError(err)
+		return commonErrors.WrapOSError(err)
 	}
 	defer dstfd.Close()
 
 	if _, err = io.Copy(dstfd, srcfd); err != nil {
-		return commonErrors.OSError(err)
+		return commonErrors.WrapOSError(err)
 	}
 	if srcinfo, err = os.Stat(src); err != nil {
-		return commonErrors.OSError(err)
+		return commonErrors.WrapOSError(err)
 	}
 	return os.Chmod(dst, srcinfo.Mode())
 }
@@ -136,7 +136,7 @@ func Dir(path string) ([]string, error) {
 	// Get all folders in the backup directory
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, commonErrors.OSError(err)
+		return nil, commonErrors.WrapOSError(err)
 	}
 	var folders []string
 	for _, file := range files {

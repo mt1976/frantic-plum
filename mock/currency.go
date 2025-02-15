@@ -71,7 +71,7 @@ func GetCurrency(code string) (Currency, error) {
 
 	if len(rtn.Code) == 0 {
 		log.Printf("[WARN] Invalid currency code: [%s]", code)
-		return Currency{}, commonErrors.MockingError(fmt.Errorf("invalid currency code: [%s]", code))
+		return Currency{}, commonErrors.WrapErrorForMocking(fmt.Errorf("invalid currency code: [%s]", code))
 	}
 	//fmt.Printf("CurrencyInfo: %v Age %v years\n", rtn, rtn.Age())
 	return rtn, nil

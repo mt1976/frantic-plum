@@ -30,7 +30,7 @@ func GetFolders(path string) ([]string, error) {
 	// Get all folders in the backup directory
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return nil, commonErrors.OSError(err)
+		return nil, commonErrors.WrapOSError(err)
 	}
 	var folders []string
 	for _, file := range files {

@@ -51,7 +51,7 @@ func NewIBAN(iban string) (IBAN, error) {
 	i := IBAN{}
 	i.iban = iban
 	if !i.isValid(iban) {
-		return IBAN{}, commonErrors.ValidateError(fmt.Errorf("invalid IBAN: %s", iban))
+		return IBAN{}, commonErrors.WrapValidationError(fmt.Errorf("invalid IBAN: %s", iban))
 	}
 	return i, nil
 }
