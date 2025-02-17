@@ -8,8 +8,11 @@ import (
 	"github.com/mt1976/frantic-core/logHandler"
 )
 
+var defaultsFolder string = "startupPayload"
+var destinationFolder string = "." + string(os.PathSeparator) + "data" + string(os.PathSeparator) + "defaults"
+
 func DeployDefaultsPayload() error {
-	list, err := os.ReadDir("startupPayload")
+	list, err := os.ReadDir(defaultsFolder)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,8 +32,8 @@ func DeployDefaultsPayload() error {
 		}
 
 		//logger.InfoLogger.Printf("Copying %v", entry.Name())
-		from := "./defaults" + string(os.PathSeparator) + entry.Name()
-		to := "./data" + string(os.PathSeparator) + "defaults" + string(os.PathSeparator) + entry.Name()
+		from := "./" + defaultsFolder + string(os.PathSeparator) + entry.Name()
+		to := destinationFolder + string(os.PathSeparator) + entry.Name()
 		logHandler.EventLogger.Printf("Copying [%v] to [%v]", from, to)
 		err = startupCopyFile(from, to)
 		if err != nil {
