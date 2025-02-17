@@ -8,7 +8,7 @@ import (
 	"unicode/utf8"
 
 	ascii "github.com/galsondor/go-ascii"
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 const (
@@ -151,7 +151,7 @@ func strArrayToStringWithSep(inArray []string, inSep string) string {
 func removeSpecialChars(in string) string {
 	reg, err := regexp.Compile(specialChars)
 	if err != nil {
-		logger.ErrorLogger.Printf("Error=[%v]", err.Error())
+		logHandler.ErrorLogger.Printf("Error=[%v]", err.Error())
 	}
 	newStr := reg.ReplaceAllString(in, "-")
 	return newStr
@@ -178,7 +178,7 @@ func encode(rawStr string) string {
 func decode(encodedStr string) string {
 	decodedStr, err := base64.URLEncoding.DecodeString(encodedStr)
 	if err != nil {
-		logger.WarningLogger.Printf("Error=[%v]", err.Error())
+		logHandler.WarningLogger.Printf("Error=[%v]", err.Error())
 	}
 
 	return string(decodedStr)

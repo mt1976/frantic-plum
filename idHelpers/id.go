@@ -1,4 +1,4 @@
-package id
+package idHelpers
 
 import (
 	"fmt"
@@ -9,9 +9,9 @@ import (
 	"golang.org/x/crypto/sha3"
 
 	"github.com/mt1976/frantic-core/commonErrors"
-	"github.com/mt1976/frantic-core/date"
-	"github.com/mt1976/frantic-core/html"
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/dateHelpers"
+	"github.com/mt1976/frantic-core/htmlHelpers"
+	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/segmentio/ksuid"
 	"golang.org/x/exp/rand"
 )
@@ -23,9 +23,9 @@ func Encode(in string) string {
 	out := in
 	out = strings.Replace(out, " ", "", -1)
 	out = strings.Trim(out, " ")
-	out, err := html.ToPathSafe(out)
+	out, err := htmlHelpers.ToPathSafe(out)
 	if err != nil {
-		logger.ErrorLogger.Printf("error encoding string: %v", err.Error())
+		logHandler.ErrorLogger.Printf("error encoding string: %v", err.Error())
 		return ""
 	}
 
@@ -58,9 +58,9 @@ func Encode(in string) string {
 }
 
 func Decode(in string) string {
-	in, err := html.FromPathSafe(in)
+	in, err := htmlHelpers.FromPathSafe(in)
 	if err != nil {
-		logger.ErrorLogger.Printf("error decoding string: %v", err.Error())
+		logHandler.ErrorLogger.Printf("error decoding string: %v", err.Error())
 		return ""
 	}
 	return in
@@ -101,7 +101,7 @@ func UUID2String(uuid string) string {
 	op := fmt.Sprintf(fmtr, uuid[0:6], uuid[6:12], uuid[12:18], uuid[18:24], uuid[24:])
 	day, _ := time.Parse("060102150405", uuid[0:12])
 	fmtr2 := "(Date=[%s]" + " " + "Time=[%s]" + " " + "ms=[%sms]" + " " + "uid=[%s]" + " " + "rnd=[%s])"
-	op2 := fmt.Sprintf(fmtr2, date.FormatHuman(day), day.Format("15:04:05"), uuid[12:18], strings.TrimLeft(uuid[18:24], "0"), uuid[24:])
+	op2 := fmt.Sprintf(fmtr2, dateHelpers.FormatHuman(day), day.Format("15:04:05"), uuid[12:18], strings.TrimLeft(uuid[18:24], "0"), uuid[24:])
 	//logger.InfoLogger.Println("UID: String:", op, len(op))
 	return op + ", " + op2
 }
@@ -121,7 +121,7 @@ func GetUUIDv2WithPayload(payload string) (string, error) {
 	}
 	ksuid, err := ksuid.FromParts(time.Now(), []byte(payload))
 	if err != nil {
-		logger.ErrorLogger.Printf("Error generating KSUID: [%v]", err.Error())
+		logHandler.ErrorLogger.Printf("Error generating KSUID: [%v]", err.Error())
 		return "", commonErrors.WrapIDGenerationError(err)
 	}
 	return ksuid.String(), nil
@@ -130,7 +130,7 @@ func GetUUIDv2WithPayload(payload string) (string, error) {
 func GetUUIDv2Payload(uuid string) string {
 	ksuid, err := ksuid.Parse(uuid)
 	if err != nil {
-		logger.ErrorLogger.Printf("Error generating KSUID: [%v]", err.Error())
+		logHandler.ErrorLogger.Printf("Error generating KSUID: [%v]", err.Error())
 		return ""
 	}
 	val := fmt.Sprintf("%s", ksuid.Payload())
@@ -141,7 +141,7 @@ func GetUUIDv2Payload(uuid string) string {
 func InspectUUIDv2(uuid string) string {
 	ksuid, err := ksuid.Parse(uuid)
 	if err != nil {
-		logger.ErrorLogger.Println("Error parsing KSUID:", err, " got:", len(uuid), " uuid", uuid)
+		logHandler.ErrorLogger.Println("Error parsing KSUID:", err, " got:", len(uuid), " uuid", uuid)
 		return ""
 	}
 	payload := ksuid.Payload()

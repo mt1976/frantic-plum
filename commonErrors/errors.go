@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 var (
@@ -117,7 +117,7 @@ func WrapFunctionalError(err error, f string) error {
 }
 
 func WrapError(err error) error {
-	logger.WarningLogger.Println("It is not advised to wrap errors without a specific error message")
+	logHandler.WarningLogger.Println("It is not advised to wrap errors without a specific error message")
 	return fmt.Errorf("error (%w)", err)
 }
 

@@ -9,7 +9,8 @@ import (
 	"unicode"
 
 	"github.com/mt1976/frantic-core/commonErrors"
-	"github.com/mt1976/frantic-core/logger"
+	dockerhelpers "github.com/mt1976/frantic-core/dockerHelpers"
+	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/rivo/uniseg"
 )
 
@@ -28,17 +29,9 @@ func OS() string {
 	}
 }
 
+// Deprecated: Use dockerHelpers.IsDockerContainer()
 func RunningInDockerContainer() bool {
-	// docker creates a .dockerenv file at the root
-	// of the directory tree inside the container.
-	// if this file exists then the viewer is running
-	// from inside a container so return true
-
-	if _, err := os.Stat("/.dockerenv"); err == nil {
-		return true
-	}
-
-	return false
+	return dockerhelpers.IsDockerContainer()
 }
 
 func IsRunningOnWindows() bool {
@@ -54,7 +47,7 @@ func HostName() string {
 	}
 	hn, err := os.Hostname()
 	if err != nil {
-		logger.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
+		logHandler.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		panic(commonErrors.WrapOSError(err))
 	}
 	return strings.ToLower(hn)
@@ -67,7 +60,7 @@ func hostname_windows() string {
 	hostname, err := cmd.Output()
 
 	if err != nil {
-		logger.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
+		logHandler.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		panic(commonErrors.WrapOSError(err))
 	}
 	rtn := string(hostname)
@@ -106,7 +99,7 @@ func get_IP() (string, error) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		os.Stderr.WriteString("Oops: " + err.Error() + "\n")
-		logger.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
+		logHandler.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		os.Exit(1)
 	}
 

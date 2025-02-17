@@ -7,14 +7,14 @@ import (
 	"time"
 
 	"github.com/mt1976/frantic-core/application"
-	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/dao/database"
-	"github.com/mt1976/frantic-core/date"
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/dateHelpers"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 var name = "Audit"
-var cfg *common.Settings
+var cfg *commonConfig.Settings
 
 type Action struct {
 	code    string
@@ -23,7 +23,7 @@ type Action struct {
 }
 
 func init() {
-	cfg = common.Get()
+	cfg = commonConfig.Get()
 }
 
 func getDBVersion() int {
@@ -111,14 +111,14 @@ func (a *Audit) Action(ctx context.Context, action Action) error {
 	//	start := timing.Start("Audit", action.text, message)
 
 	auditTime := time.Now()
-	auditDisplay := date.FormatAudit(auditTime)
+	auditDisplay := dateHelpers.FormatAudit(auditTime)
 	// auditUser := support.GetActiveUserCode()
 	auditUser := getUser()
 	auditHost := application.HostName()
 
 	if auditUser == "" {
-		logger.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), "No Active User")
-		logger.InfoLogger.Printf("[%v] Action=[%v] Message=[%v]", strings.ToUpper(name), action.code, message)
+		logHandler.ErrorLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), "No Active User")
+		logHandler.InfoLogger.Printf("[%v] Action=[%v] Message=[%v]", strings.ToUpper(name), action.code, message)
 		os.Exit(0)
 	}
 	//updateAction := action
@@ -159,7 +159,7 @@ func (a *Audit) Action(ctx context.Context, action Action) error {
 
 	a.DBVersion = getDBVersion()
 
-	logger.AuditLogger.Printf(AUDITMSG, strings.ToUpper(name), action.code, auditDisplay, auditUser, auditHost, message)
+	logHandler.AuditLogger.Printf(AUDITMSG, strings.ToUpper(name), action.code, auditDisplay, auditUser, auditHost, message)
 	//	start.Stop(1)
 	return nil
 }
@@ -171,7 +171,7 @@ func (a *Audit) Spew() error {
 	if noAudit > 0 {
 		for i := 0; i < noAudit; i++ {
 			upd := a.Updates[i]
-			logger.TraceLogger.Printf(AUDITMSG, strings.ToUpper(name), upd.UpdateAction, upd.UpdatedAtDisplay, upd.UpdatedBy, upd.UpdatedOn, upd.UpdateNotes)
+			logHandler.TraceLogger.Printf(AUDITMSG, strings.ToUpper(name), upd.UpdateAction, upd.UpdatedAtDisplay, upd.UpdatedBy, upd.UpdatedOn, upd.UpdateNotes)
 		}
 	}
 	return nil

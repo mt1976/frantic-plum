@@ -3,7 +3,7 @@ package mock
 import (
 	"fmt"
 
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 type Rung struct {
@@ -98,7 +98,7 @@ func test() bool {
 	noitems := len(Ladder)
 	for i := 1; i <= noitems; i++ {
 		rli := GetRateLadderByIndex(i)
-		logger.InfoLogger.Printf("rate ladder info: rli=[%v] i=[%v]\n", rli, i)
+		logHandler.InfoLogger.Printf("rate ladder info: rli=[%v] i=[%v]\n", rli, i)
 	}
 	return true
 }

@@ -1,4 +1,4 @@
-package io
+package ioHelpers
 
 import (
 	"encoding/json"
@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
-	"github.com/mt1976/frantic-core/id"
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/idHelpers"
+	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/mt1976/frantic-core/paths"
 	"github.com/mt1976/frantic-core/timing"
 )
@@ -23,7 +23,7 @@ func GetDBFileName(name string) string {
 		panic(fmt.Errorf("db name is required"))
 	}
 
-	cfg := common.Get()
+	cfg := commonConfig.Get()
 	sep := "-"
 
 	name = cfg.GetApplicationName() + sep + name
@@ -38,11 +38,11 @@ func GetDBFileName(name string) string {
 }
 
 func Dump(tableName string, where paths.FileSystemPath, action string, recordID string, yy any) {
-	cfg := common.Get()
+	cfg := commonConfig.Get()
 	sep := "-"
 
-	logger.DatabaseLogger.Printf("[SUPPORT] [%v] Dump to '%v'", strings.ToUpper(tableName), where.String())
-	id := id.GetUUID()
+	logHandler.DatabaseLogger.Printf("[SUPPORT] [%v] Dump to '%v'", strings.ToUpper(tableName), where.String())
+	id := idHelpers.GetUUID()
 	if action != "" {
 		id = id + sep + cfg.GetApplicationName() + sep + tableName + sep + strings.ToTitle(action) + sep + recordID
 	}
@@ -56,23 +56,23 @@ func Dump(tableName string, where paths.FileSystemPath, action string, recordID 
 
 	b, err := json.Marshal(yy)
 	if err != nil {
-		logger.WarningLogger.Printf("[SUPPORT] [%v] [Marshalling] Error=[%v]", strings.ToUpper(action), err.Error())
+		logHandler.WarningLogger.Printf("[SUPPORT] [%v] [Marshalling] Error=[%v]", strings.ToUpper(action), err.Error())
 		return
 	}
 	output := string(b)
 
 	_, err = Write(id, path, output)
 	if err != nil {
-		logger.ErrorLogger.Printf("[SUPPORT] [%v] [Write] Error=[%v]", strings.ToUpper(action), err.Error())
+		logHandler.ErrorLogger.Printf("[SUPPORT] [%v] [Write] Error=[%v]", strings.ToUpper(action), err.Error())
 	}
 }
 
 func Backup(table, location string) {
 	//path := BACKUPS.path
 	sep := "-"
-	cfg := common.Get()
+	cfg := commonConfig.Get()
 	table = strings.ToLower(cfg.GetApplicationName() + sep + table)
-	logger.EventLogger.Printf("Backup=[%v] [%v.db] to [%v]", strings.ToLower(table), table, location)
+	logHandler.EventLogger.Printf("Backup=[%v] [%v.db] to [%v]", strings.ToLower(table), table, location)
 
 	// sleep for 1 second
 	time.Sleep(1 * time.Second)
@@ -83,10 +83,10 @@ func Backup(table, location string) {
 
 	fromPath := paths.Database().String()
 	fromFile := paths.Application().String() + paths.Database().String() + paths.Seperator() + table + ".db"
-	logger.EventLogger.Printf("Backup=[%v] Path=[%v]", strings.ToLower(table), paths.Application().String())
-	logger.EventLogger.Printf("Backup=[%v] Database=[%v.db]", strings.ToLower(table), table)
-	logger.EventLogger.Printf("Backup=[%v] From=[%v]", strings.ToLower(table), fromPath)
-	logger.EventLogger.Printf("Backup=[%v] To=[%v]", strings.ToLower(table), toPath)
+	logHandler.EventLogger.Printf("Backup=[%v] Path=[%v]", strings.ToLower(table), paths.Application().String())
+	logHandler.EventLogger.Printf("Backup=[%v] Database=[%v.db]", strings.ToLower(table), table)
+	logHandler.EventLogger.Printf("Backup=[%v] From=[%v]", strings.ToLower(table), fromPath)
+	logHandler.EventLogger.Printf("Backup=[%v] To=[%v]", strings.ToLower(table), toPath)
 
 	// remove last char from path
 	toPath = toPath[:len(toPath)-1]
@@ -94,11 +94,11 @@ func Backup(table, location string) {
 
 	err := CopyFile(fromFile, toFile)
 	if err != nil {
-		logger.ErrorLogger.Printf("Backup=[%v] [%v] to [%v] Error=[%v]", strings.ToLower(name), fromPath, toPath, err.Error())
+		logHandler.ErrorLogger.Printf("Backup=[%v] [%v] to [%v] Error=[%v]", strings.ToLower(name), fromPath, toPath, err.Error())
 		panic(err)
 	}
 	timing.Stop(1)
-	logger.EventLogger.Printf("Backup=[%v] COMPLETE", strings.ToLower(table))
+	logHandler.EventLogger.Printf("Backup=[%v] COMPLETE", strings.ToLower(table))
 }
 
 // File copies a single file from src to dst
@@ -128,7 +128,7 @@ func CopyFile(src, dst string) error {
 }
 
 func MkDir(path string) error {
-	logger.InfoLogger.Printf("[%v] Creating folder Path=[%v]", strings.ToUpper(name), path)
+	logHandler.InfoLogger.Printf("[%v] Creating folder Path=[%v]", strings.ToUpper(name), path)
 	return os.MkdirAll(path, os.ModeSticky|os.ModePerm)
 }
 
@@ -149,7 +149,7 @@ func Dir(path string) ([]string, error) {
 
 func DeleteFolder(path string) error {
 	// Delete the folder
-	logger.InfoLogger.Printf("[DELETE] [%v] Deleting folder Path=[%v]", strings.ToUpper(name), path)
+	logHandler.InfoLogger.Printf("[DELETE] [%v] Deleting folder Path=[%v]", strings.ToUpper(name), path)
 	return os.RemoveAll(path)
 	//return nil
 }

@@ -3,7 +3,7 @@ package stringHelpers
 import (
 	"strings"
 
-	"github.com/mt1976/frantic-core/id"
+	"github.com/mt1976/frantic-core/idHelpers"
 )
 
 // Lowers the first character of a string
@@ -48,7 +48,7 @@ func PadLeft(s string, p string, l int) string {
 
 // Encode encodes a string to base64
 func Encode(rawStr string) string {
-	return id.Encode(rawStr)
+	return idHelpers.Encode(rawStr)
 }
 
 // DQuote wraps the string in double quotes - ""

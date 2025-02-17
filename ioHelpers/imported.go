@@ -1,4 +1,4 @@
-package io
+package ioHelpers
 
 import (
 	"encoding/base64"
@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/mt1976/frantic-core/commonErrors"
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 func base64Encode(str string) string {
@@ -22,7 +22,7 @@ func base64Decode(str string) (string, bool) {
 }
 
 func MkdirAll(path string) error {
-	logger.InfoLogger.Printf("[%v] Creating folder Path=[%v]", strings.ToUpper(name), path)
+	logHandler.InfoLogger.Printf("[%v] Creating folder Path=[%v]", strings.ToUpper(name), path)
 	return os.MkdirAll(path, os.ModeSticky|os.ModePerm)
 }
 

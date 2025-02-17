@@ -1,16 +1,16 @@
-package date
+package dateHelpers
 
 import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-core/common"
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/commonConfig"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 var name = "DATE"
 var Format DateFormat
-var cfg *common.Settings
+var cfg *commonConfig.Settings
 
 type DateFormat struct {
 	External     string
@@ -24,7 +24,7 @@ type DateFormat struct {
 }
 
 func init() {
-	cfg = common.Get()
+	cfg = commonConfig.Get()
 
 	Format.External = cfg.GetHumanReadableDateFormat()
 	Format.DMY = cfg.GetDateFormatDMY2()
@@ -84,11 +84,11 @@ func StartOfDay(t time.Time) time.Time {
 	w := t.Format(Format.DMY)
 	r, err := time.Parse(Format.DMY, w)
 	if err != nil {
-		logger.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
+		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		return t
 	}
-	if cfg.IsApplicationMode(common.MODE_DEVELOPMENT) {
-		logger.InfoLogger.Printf("[%v] [DateStartOfDay] Date=[%v] Result=[%v]", strings.ToUpper(name), t, r)
+	if cfg.IsApplicationMode(commonConfig.MODE_DEVELOPMENT) {
+		logHandler.InfoLogger.Printf("[%v] [DateStartOfDay] Date=[%v] Result=[%v]", strings.ToUpper(name), t, r)
 	}
 	return r
 }
@@ -98,20 +98,20 @@ func EndOfDay(t time.Time) time.Time {
 	w := t.Format(Format.DMY)
 	r, err := time.Parse(Format.DMY, w)
 	if err != nil {
-		logger.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
+		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		return t
 	}
 	r = r.AddDate(0, 0, 1)
 	r = r.Add(-time.Second)
-	if cfg.IsApplicationMode(common.MODE_DEVELOPMENT) {
-		logger.InfoLogger.Printf("[%v] [DateEndOfDay] Date=[%v] Result=[%v]", strings.ToUpper(name), t, r)
+	if cfg.IsApplicationMode(commonConfig.MODE_DEVELOPMENT) {
+		logHandler.InfoLogger.Printf("[%v] [DateEndOfDay] Date=[%v] Result=[%v]", strings.ToUpper(name), t, r)
 	}
 	return r
 }
 
 func IsBeforeOrEqualTo(t1, t2 time.Time) bool {
 	// Purpose: check if a time is before or equal to a time
-	if cfg.IsApplicationMode(common.MODE_DEVELOPMENT) {
+	if cfg.IsApplicationMode(commonConfig.MODE_DEVELOPMENT) {
 		//	logger.InfoLogger.Printf("HLP: [HELPER] Date=[%v] Check=[%v]", DateStartOfDay(t1), DateStartOfDay(t2))
 	}
 	check := StartOfDay(t1)

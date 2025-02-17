@@ -1,4 +1,4 @@
-package html
+package htmlHelpers
 
 import (
 	b64 "encoding/base64"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 var name = "HTML"
@@ -18,7 +18,7 @@ func ValueToInt(s string) int {
 	i, err := strconv.Atoi(s)
 	if err != nil {
 		// ... handle error
-		logger.WarningLogger.Printf("[%v] [Math] Error=[%v]", strings.ToUpper(name), err.Error())
+		logHandler.WarningLogger.Printf("[%v] [Math] Error=[%v]", strings.ToUpper(name), err.Error())
 		return 999999999
 	}
 	return i

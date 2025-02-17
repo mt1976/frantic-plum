@@ -1,11 +1,11 @@
-package email
+package emailHandler
 
 import (
 	"crypto/tls"
 	"fmt"
 	"time"
 
-	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
 	"gopkg.in/gomail.v2"
 )
@@ -28,7 +28,7 @@ const (
 func Email_init() *gomail.Dialer {
 	//fmt.Println("Email Init")
 
-	set := common.Get()
+	set := commonConfig.Get()
 
 	emailService := set.GetEmailHost()
 	emailPort := set.GetEmailPort()
@@ -51,7 +51,7 @@ func Email_init() *gomail.Dialer {
 // `gomail` package in Go.
 func SendEmail(to string, name string, subject string, body string) {
 
-	set := common.Get()
+	set := commonConfig.Get()
 
 	// The code block is creating a new email message using the `gomail` package.
 	m := gomail.NewMessage()

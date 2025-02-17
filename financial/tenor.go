@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 type Tenor struct {
@@ -32,7 +32,7 @@ func (t *Tenor) String() string {
 func (t *Tenor) Set(term string) (*Tenor, error) {
 	newTenor, err := validateAndFormatTenor(term)
 	if err != nil {
-		logger.EventLogger.Printf("invalid tenor [%s] [%v]", term, err.Error())
+		logHandler.EventLogger.Printf("invalid tenor [%s] [%v]", term, err.Error())
 		return nil, err
 	}
 	t.term = newTenor
@@ -44,7 +44,7 @@ func validateAndFormatTenor(tenor string) (string, error) {
 	// Validation is that the string is at least 2 characters long, and the last character is a valid unit
 	// i.e. D, W, M, Y
 	if len(tenor) < 2 {
-		logger.ErrorLogger.Printf("invalid tenor [%s] must be at least 2 characters long", tenor)
+		logHandler.ErrorLogger.Printf("invalid tenor [%s] must be at least 2 characters long", tenor)
 		return "", fmt.Errorf("invalid tenor [%s] must be at least 2 characters long", tenor)
 	}
 	unit := tenor[len(tenor)-1]
@@ -60,7 +60,7 @@ func validateAndFormatTenor(tenor string) (string, error) {
 
 	_, err := strconv.Atoi(factor)
 	if err != nil {
-		logger.ErrorLogger.Printf("supplied value [%s] is not a number %v", factor, err.Error())
+		logHandler.ErrorLogger.Printf("supplied value [%s] is not a number %v", factor, err.Error())
 		return "", fmt.Errorf("supplied value [%s] is not a number", factor)
 	}
 
@@ -76,7 +76,7 @@ func validateAndFormatTenor(tenor string) (string, error) {
 	case 'Y':
 		return clean, nil
 	default:
-		logger.ErrorLogger.Printf("invalid tenor mnemonic [%c]", unit)
+		logHandler.ErrorLogger.Printf("invalid tenor mnemonic [%c]", unit)
 		return "", fmt.Errorf("invalid tenor mnemonic")
 	}
 }

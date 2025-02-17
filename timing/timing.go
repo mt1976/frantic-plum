@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 	"golang.org/x/exp/rand"
 )
 
@@ -30,7 +30,7 @@ func Start(table, action, msg string) Stopwatch {
 func (w *Stopwatch) Stop(count int) {
 	w.end = time.Now()
 	w.duraton = w.end.Sub(w.start)
-	logger.TimingLogger.Printf("Object=[%v] Action=[%v] Msg=[%v] Count=[%v] Duration=[%v]", w.table, strings.ToUpper(w.action), w.msg, count, w.duraton)
+	logHandler.TimingLogger.Printf("Object=[%v] Action=[%v] Msg=[%v] Count=[%v] Duration=[%v]", w.table, strings.ToUpper(w.action), w.msg, count, w.duraton)
 }
 
 // SnoozeFor snoozes the application for a given amount of time
@@ -50,6 +50,6 @@ func Snooze() {
 
 func snooze(inPollingInterval string) {
 	pollingInterval, _ := strconv.Atoi(inPollingInterval)
-	logger.InfoLogger.Printf("Snooze... Zzzzzz.... %d seconds...", pollingInterval)
+	logHandler.InfoLogger.Printf("Snooze... Zzzzzz.... %d seconds...", pollingInterval)
 	time.Sleep(time.Duration(pollingInterval) * time.Second)
 }

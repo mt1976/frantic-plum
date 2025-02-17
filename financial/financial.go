@@ -3,7 +3,7 @@ package financial
 import (
 	"time"
 
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/mt1976/frantic-core/mathHelpers"
 	"github.com/mt1976/frantic-core/mock"
 )
@@ -25,7 +25,7 @@ func getSettlementDaysCCY(ccy1 string) (int, error) {
 	// Validate the two currencues using the mock package
 	days1, err := mock.GetCurrency(ccy1)
 	if err != nil {
-		logger.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
+		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
 		return -1, err
 	}
 
@@ -38,12 +38,12 @@ func getSettlementDaysPAIR(ccy1 string, ccy2 string) (int, error) {
 	// Validate the two currencues using the mock package
 	days1, err := getSettlementDaysCCY(ccy1)
 	if err != nil {
-		logger.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
+		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
 		return -1, err
 	}
 	days2, err := getSettlementDaysCCY(ccy2)
 	if err != nil {
-		logger.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy2, err.Error())
+		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy2, err.Error())
 		return -1, err
 	}
 
@@ -54,12 +54,12 @@ func getSettlementDaysPAIR(ccy1 string, ccy2 string) (int, error) {
 func getSettlementDaysCROSS(ccy1 string, via string, ccy2 string) (int, error) {
 	days1, err := getSettlementDaysPAIR(ccy1, via)
 	if err != nil {
-		logger.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
+		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
 		return -1, err
 	}
 	days2, err := getSettlementDaysPAIR(via, ccy2)
 	if err != nil {
-		logger.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy2, err.Error())
+		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy2, err.Error())
 		return -1, err
 	}
 
@@ -72,7 +72,7 @@ func getSettlementDateCCY(ccy1 string, tradeDate time.Time) (time.Time, error) {
 
 	days, err := getSettlementDaysCCY(ccy1)
 	if err != nil {
-		logger.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
+		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
 		return time.Now(), err
 	}
 
@@ -84,7 +84,7 @@ func getSettlementDatePAIR(ccy1 string, ccy2 string, tradeDate time.Time) (time.
 	// Calculate the settlement days
 	days, err := getSettlementDaysPAIR(ccy1, ccy2)
 	if err != nil {
-		logger.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
+		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
 		return time.Now(), err
 	}
 
@@ -96,7 +96,7 @@ func getSettlementDateCROSS(ccy1 string, via string, ccy2 string, tradeDate time
 	// Calculate the settlement days
 	days, err := getSettlementDaysCROSS(ccy1, via, ccy2)
 	if err != nil {
-		logger.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
+		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
 		return time.Now(), err
 	}
 

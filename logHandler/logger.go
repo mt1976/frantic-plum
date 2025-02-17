@@ -1,4 +1,4 @@
-package logger
+package logHandler
 
 import (
 	"io"
@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/paths"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -39,7 +39,7 @@ var Gray string
 var White string
 
 func init() {
-	settings := common.Get()
+	settings := commonConfig.Get()
 	//applicationPath := "data/logs/"
 	applicationPath := paths.Application().String()
 	applicationPath += paths.Logs().String()

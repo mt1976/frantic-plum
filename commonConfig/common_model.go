@@ -1,4 +1,4 @@
-package common
+package commonConfig
 
 type Settings struct {
 	Application struct {

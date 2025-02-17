@@ -1,6 +1,6 @@
 package dao
 
-import "github.com/mt1976/frantic-core/logger"
+import "github.com/mt1976/frantic-core/logHandler"
 
 var name = "Lookup"
 
@@ -24,7 +24,7 @@ func (a *Lookup) Spew() error {
 	if noAudit > 0 {
 		for i := 0; i < noAudit; i++ {
 			upd := a.Data[i]
-			logger.TraceLogger.Printf("LookupData[%v] Key=[%v] Value=[%v]", i, upd.Key, upd.Value)
+			logHandler.TraceLogger.Printf("LookupData[%v] Key=[%v] Value=[%v]", i, upd.Key, upd.Value)
 		}
 	}
 	return nil

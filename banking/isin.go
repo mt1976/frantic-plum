@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/mt1976/frantic-core/commonErrors"
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/mt1976/frantic-core/mock"
 )
 
@@ -24,7 +24,7 @@ func (I *ISIN) IsValid() bool {
 	// Check if the ISIN length is valid (it should be 12 characters)
 	if len(val) != 12 {
 		//log.Printf("[WARN] ISIN != 12 characters (%v)\n", len(val))
-		logger.WarningLogger.Printf("ISIN != 12 characters (%v)\n", len(val))
+		logHandler.WarningLogger.Printf("ISIN != 12 characters (%v)\n", len(val))
 		return false
 	}
 
@@ -33,7 +33,7 @@ func (I *ISIN) IsValid() bool {
 	countryInfo, err := mock.GetCountryInfo(countryCode)
 	if err != nil || countryCode != countryInfo.ISOCode {
 		//log.Printf("[WARN] ISIN prefix not a valid country code (%v)\n", countryCode)
-		logger.WarningLogger.Printf("ISIN prefix not a valid country code (%v)\n", countryCode)
+		logHandler.WarningLogger.Printf("ISIN prefix not a valid country code (%v)\n", countryCode)
 		return false
 	}
 	checksum, _ := strconv.Atoi(val[11:])

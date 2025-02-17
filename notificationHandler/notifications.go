@@ -1,4 +1,4 @@
-package notifications
+package notificationHandler
 
 import (
 	"fmt"
@@ -6,31 +6,31 @@ import (
 	"time"
 
 	"github.com/gregdel/pushover"
-	"github.com/mt1976/frantic-core/common"
+	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
-	"github.com/mt1976/frantic-core/logger"
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 var name = "Notifications"
 
 func Send(inMessage, inTitle string, key int) error {
 
-	set := common.Get()
+	set := commonConfig.Get()
 
 	poUserKey := set.GetPushoverUserKey()
 	poAPIKey := set.GetPushoverToken()
 
-	if set.IsApplicationMode(common.MODE_TEST) {
+	if set.IsApplicationMode(commonConfig.MODE_TEST) {
 		if poUserKey == "" || poAPIKey == "" {
 			poAPIKey = "autd5u19nczbs5v6zq2i7afpzjpe2v"
 			poUserKey = "uyosdopsu9wxxo7b264bmnnhbfz8nj"
 		}
 	}
 
-	logger.InfoLogger.Printf("[%v] Api Token=[%v] User Key=[%v]", strings.ToUpper(name), poAPIKey, poUserKey)
+	logHandler.InfoLogger.Printf("[%v] Api Token=[%v] User Key=[%v]", strings.ToUpper(name), poAPIKey, poUserKey)
 
 	if poUserKey == "" || poAPIKey == "" {
-		logger.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), "Pushover User Key or API Token not set, message not sent")
+		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), "Pushover User Key or API Token not set, message not sent")
 		return nil
 	}
 
@@ -61,11 +61,11 @@ func Send(inMessage, inTitle string, key int) error {
 	}
 	//Spew(*message)
 
-	logger.EventLogger.Printf("[%v] Message Title=[%v] Message=[%v]", strings.ToUpper(name), message.Title, message.Message)
+	logHandler.EventLogger.Printf("[%v] Message Title=[%v] Message=[%v]", strings.ToUpper(name), message.Title, message.Message)
 
 	_, err := app.SendMessage(message, recipient)
 	if err != nil {
-		logger.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
+		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
 		return commonErrors.WrapNotificationError(err)
 	}
 
