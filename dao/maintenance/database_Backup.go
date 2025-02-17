@@ -26,7 +26,7 @@ func (job DatabaseBackupJob) Run() error {
 
 func (job DatabaseBackupJob) Service() func() {
 	return func() {
-		job.Run()
+		_ = job.Run()
 	}
 }
 
@@ -35,8 +35,8 @@ func (job DatabaseBackupJob) Schedule() string {
 }
 
 func (job DatabaseBackupJob) Name() string {
-	name, _ := translation.Get("Scheduled Database Backup")
-	return name.String()
+	//name, _ := translation.Get("Scheduled Database Backup")
+	return "Database Maintenance - Backup"
 }
 
 func performDatabaseBackup(job DatabaseBackupJob) {

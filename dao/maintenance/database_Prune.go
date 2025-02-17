@@ -28,7 +28,7 @@ func (p DatabaseBackupCleanerJob) Run() error {
 
 func (p DatabaseBackupCleanerJob) Service() func() {
 	return func() {
-		p.Run()
+		_ = p.Run()
 	}
 }
 
@@ -37,8 +37,8 @@ func (p DatabaseBackupCleanerJob) Schedule() string {
 }
 
 func (p DatabaseBackupCleanerJob) Name() string {
-	name, _ := translation.Get("Scheduled Database Maintenance - Prune Old Backups")
-	return name.String()
+	//name, _ := translation.Get("Scheduled Database Maintenance - Prune Old Backups")
+	return "Database Maintenance - Prune Old Backups"
 }
 
 func pruneExpiredBackups() {

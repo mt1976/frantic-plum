@@ -30,9 +30,7 @@ func NextRun(j Job) string {
 }
 
 func Announce(j Job, inAction string) {
-	name, _ := translation.Get(j.Name())
-	action, _ := translation.Get(inAction)
-	logHandler.ServiceBanner(domain, name.String(), action.String())
+	logHandler.ServiceBanner(domain, j.Name(), inAction)
 }
 
 func GetHumanReadableCronFreq(freq string) string {
