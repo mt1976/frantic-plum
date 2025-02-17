@@ -10,7 +10,7 @@ require (
 	github.com/robfordww/finident v0.1.1
 	github.com/segmentio/ksuid v1.0.4
 	github.com/trisacrypto/lei v1.0.0
-	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac
+	golang.org/x/exp v0.0.0-20250215185904-eff6e970281f
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
@@ -21,6 +21,9 @@ require (
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/smarty/assertions v1.16.0 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect
+	go.uber.org/atomic v1.6.0 // indirect
+	go.uber.org/multierr v1.5.0 // indirect
+	go.uber.org/zap v1.15.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )
 
@@ -38,6 +41,8 @@ require (
 require (
 	github.com/asdine/storm/v3 v3.2.1
 	github.com/go-playground/validator/v10 v10.24.0
+	github.com/jsuar/go-cron-descriptor v0.1.0
+	github.com/mt1976/trnsl8r_connect v1.2.4
 	golang.org/x/crypto v0.33.0
 	golang.org/x/sys v0.30.0 // indirect
 )
