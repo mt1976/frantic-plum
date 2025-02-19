@@ -135,9 +135,45 @@ func WrapInvalidHttpReturnStatusWithMessageError(status, message string) error {
 }
 
 func WrapInvalidFieldError(f string) error {
-	return fmt.Errorf("invalid field [%v]", f)
+	return fmt.Errorf("invalid field %v", f)
 }
 
 func WrapRecordNotFoundError(table, field, id string) error {
-	return fmt.Errorf("%v not found where (%v)=(%v)", table, field, id)
+	return fmt.Errorf("%v not found where (%v=%v)", table, field, id)
+}
+
+func WrapDAOUpdateAuditError(table string, id any, auditErr error) error {
+	return fmt.Errorf("updating %v audit failed (ID=%v) %e", table, id, auditErr)
+}
+
+func WrapDAOCreateError(table string, id any, createErr error) error {
+	return fmt.Errorf("creating %v failed (ID=%v) %e", table, id, createErr)
+}
+
+func WrapDAOInitialisationError(table string, initErr error) error {
+	return fmt.Errorf("initialising %v failed %e", table, initErr)
+}
+
+func WrapDAOCaclulationError(table string, calcErr error) error {
+	return fmt.Errorf("calculating %v failed %e", table, calcErr)
+}
+
+func WrapDAOValidationError(table string, valErr error) error {
+	return fmt.Errorf("validating %v failed %e", table, valErr)
+}
+
+func WrapDAOUpdateError(table string, updateErr error) error {
+	return fmt.Errorf("updating %v failed %e", table, updateErr)
+}
+
+func WrapDAODeleteError(table, field string, value any, deleteErr error) error {
+	return fmt.Errorf("deleting %v failed (%v=%v) %e", table, field, value, deleteErr)
+}
+
+func WrapDAOReadError(table, field string, value any, readErr error) error {
+	return fmt.Errorf("reading %v failed (%v=%v) %e", table, field, value, readErr)
+}
+
+func WrapDAOLookupError(table, field string, value any, lookupErr error) error {
+	return fmt.Errorf("builing looking up for %v failed (key=%v,value=%v) %e", table, field, value, lookupErr)
 }
