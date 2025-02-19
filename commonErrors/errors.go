@@ -38,8 +38,8 @@ func WrapStringTooLongErr(err error, ln int) error {
 	return fmt.Errorf("string too long, max %d characters error (%w)", ln, err)
 }
 
-func WrapNotFoundError(err error) error {
-	return fmt.Errorf("not found error (%w)", err)
+func WrapNotFoundError(table string, err error) error {
+	return fmt.Errorf("%v not found (%w)", table, err)
 }
 func WrapReadError(err error) error {
 	return fmt.Errorf("read error (%w)", err)
