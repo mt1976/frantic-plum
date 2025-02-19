@@ -14,23 +14,24 @@ var (
 	ErrorDuplicate              = errors.New("duplicate")
 	ErrorNegativeValue          = errors.New("negative value")
 	//ErrorNotFound               = errors.New("not found %w %w") // Deprecated: use NotFoundError
-	ErrorPasswordMismatch   = errors.New("password mismatch")
-	ErrorUserNotFound       = errors.New("user not found")
-	ErrorUserNotActive      = errors.New("user not active")
-	ErrNoTranslation        = errors.New("no translation available")
-	ErrNoMessageToTranslate = errors.New("no message to translate")
-	ErrProtocolIsRequired   = errors.New("protocol is required")
-	ErrInvalidProtocol      = errors.New("invalid protocol")
-	ErrHostIsRequired       = errors.New("host is required")
-	ErrInvalidHost          = errors.New("invalid host")
-	ErrPortIsRequired       = errors.New("port is required")
-	ErrInvalidPort          = errors.New("invalid port")
-	ErrUsernameIsRequired   = errors.New("username is required")
-	ErrInvalidUsername      = errors.New("invalid username")
-	ErrPasswordIsRequired   = errors.New("password is required")
-	ErrInvalidPassword      = errors.New("invalid password")
-	ErrOriginIsRequired     = errors.New("no origin defined, and origin identifier is required")
-	ErrInvalidOrigin        = errors.New("invalid origin")
+	ErrorPasswordMismatch       = errors.New("password mismatch")
+	ErrorUserNotFound           = errors.New("user not found")
+	ErrorUserNotActive          = errors.New("user not active")
+	ErrNoTranslation            = errors.New("no translation available")
+	ErrNoMessageToTranslate     = errors.New("no message to translate")
+	ErrProtocolIsRequired       = errors.New("protocol is required")
+	ErrInvalidProtocol          = errors.New("invalid protocol")
+	ErrHostIsRequired           = errors.New("host is required")
+	ErrInvalidHost              = errors.New("invalid host")
+	ErrPortIsRequired           = errors.New("port is required")
+	ErrInvalidPort              = errors.New("invalid port")
+	ErrUsernameIsRequired       = errors.New("username is required")
+	ErrInvalidUsername          = errors.New("invalid username")
+	ErrPasswordIsRequired       = errors.New("password is required")
+	ErrInvalidPassword          = errors.New("invalid password")
+	ErrOriginIsRequired         = errors.New("no origin defined, and origin identifier is required")
+	ErrInvalidOrigin            = errors.New("invalid origin")
+	ErrContextCannotGetUserCode = errors.New("cannot get user from context")
 )
 
 func WrapStringTooLongErr(err error, ln int) error {
@@ -131,4 +132,12 @@ func WrapInvalidHttpReturnStatusError(s string) error {
 
 func WrapInvalidHttpReturnStatusWithMessageError(status, message string) error {
 	return fmt.Errorf("inavalid/unsupported http return status [%v] (%v)", status, message)
+}
+
+func WrapInvalidFieldError(f string) error {
+	return fmt.Errorf("invalid field [%v]", f)
+}
+
+func WrapRecordNotFoundError(table, field, id string) error {
+	return fmt.Errorf("%v not found where (%v)=(%v)", table, field, id)
 }

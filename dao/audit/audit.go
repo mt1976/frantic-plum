@@ -2,24 +2,28 @@ package audit
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/mt1976/frantic-core/application"
 	"github.com/mt1976/frantic-core/commonConfig"
+	"github.com/mt1976/frantic-core/commonErrors"
 	"github.com/mt1976/frantic-core/dao/database"
 	"github.com/mt1976/frantic-core/dateHelpers"
 	"github.com/mt1976/frantic-core/logHandler"
+	"github.com/mt1976/frantic-core/timing"
 )
 
 var name = "Audit"
 var cfg *commonConfig.Settings
 
 type Action struct {
-	code    string
-	message string
-	silent  bool
+	code        string
+	short       string
+	description string
+	silent      bool
 }
 
 func init() {
@@ -72,48 +76,55 @@ var (
 	REVOKE       Action
 	PROCESS      Action
 	IMPORT       Action
-
-// REPAIR       Action
+	EXPORT       Action
+	GET          Action
+	REPAIR       Action
+	audit        Action
 )
 
 func init() {
-	CREATE = Action{code: "NEW", message: "New Record", silent: false}
-	DELETE = Action{code: "DEL", message: "Delete Record", silent: false}
-	UPDATE = Action{code: "UPD", message: "Update Record", silent: false}
-	ERASE = Action{code: "ERS", message: "Erase Record", silent: false}
-	CLONE = Action{code: "CLN", message: "Clone Record", silent: false}
-	NOTIFICATION = Action{code: "NTE", message: "Notification Sent", silent: false}
-	SERVICE = Action{code: "SVC", message: "Service Action", silent: false}
-	SILENT = Action{code: "SIL", message: "Silent Action", silent: true}
-	GRANT = Action{code: "GNT", message: "Grant", silent: false}
-	REVOKE = Action{code: "RVK", message: "Revoke", silent: false}
-	PROCESS = Action{code: "PRC", message: "Process", silent: false}
-	IMPORT = Action{code: "IMP", message: "Import", silent: false}
-
-	// REPAIR = Action{text: "REP", message: "Repaired"}
+	CREATE = Action{code: "NEW", description: "New Record", silent: false, short: "Create"}
+	DELETE = Action{code: "DEL", description: "Delete Record", silent: false, short: "Delete"}
+	UPDATE = Action{code: "UPD", description: "Update Record", silent: false, short: "Update"}
+	ERASE = Action{code: "ERS", description: "Erase Record", silent: false, short: "Erase"}
+	CLONE = Action{code: "CLN", description: "Clone Record", silent: false, short: "Clone"}
+	NOTIFICATION = Action{code: "NTE", description: "Notification Sent", silent: false, short: "Notification"}
+	SERVICE = Action{code: "SVC", description: "Service Action", silent: false, short: "Service"}
+	SILENT = Action{code: "SIL", description: "Silent Action", silent: true, short: "Silent"}
+	GRANT = Action{code: "GNT", description: "Grant", silent: false, short: "Grant"}
+	REVOKE = Action{code: "RVK", description: "Revoke", silent: false, short: "Revoke"}
+	PROCESS = Action{code: "PRC", description: "Process", silent: false, short: "Process"}
+	IMPORT = Action{code: "IMP", description: "Import", silent: false, short: "Import"}
+	EXPORT = Action{code: "EXP", description: "Export", silent: false, short: "Export"}
+	GET = Action{code: "GET", description: "Get", silent: true, short: "Get"}
+	REPAIR = Action{code: "REP", description: "Repaired", silent: false, short: "Repair"}
+	audit = Action{code: "AUD", description: "Audit", silent: true, short: "Audit"}
 }
 
 func (a *Action) WithMessage(in string) Action {
-	a.message = in
+	a.description = in
 	return *a
 }
 
 func (a *Action) popMessage() string {
-	message := a.message
-	a.message = ""
+	message := a.description
+	a.description = ""
 	return message
 }
 
 func (a *Audit) Action(ctx context.Context, action Action) error {
 
 	message := action.popMessage()
-
-	//	start := timing.Start("Audit", action.text, message)
+	timingMessage := fmt.Sprintf("Action=[%v] Message=[%v]", action.Code(), message)
+	clock := timing.Start("Audit", audit.Description(), timingMessage)
 
 	auditTime := time.Now()
 	auditDisplay := dateHelpers.FormatAudit(auditTime)
 	// auditUser := support.GetActiveUserCode()
-	auditUser := getUser()
+	auditUser, err := getUser(ctx)
+	if err != nil {
+		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err)
+	}
 	auditHost := application.HostName()
 
 	if auditUser == "" {
@@ -160,7 +171,7 @@ func (a *Audit) Action(ctx context.Context, action Action) error {
 	a.DBVersion = getDBVersion()
 
 	logHandler.AuditLogger.Printf(AUDITMSG, strings.ToUpper(name), action.code, auditDisplay, auditUser, auditHost, message)
-	//	start.Stop(1)
+	clock.Stop(1)
 	return nil
 }
 
@@ -185,16 +196,28 @@ func (a *Action) IsSilent() bool {
 	return a.silent
 }
 
-func (a *Action) Message() string {
-	return a.message
+func (a *Action) Description() string {
+	return a.description
+}
+
+func (a *Action) ShortNameRaw() string {
+	return a.short
+}
+
+func (a *Action) ShortName() string {
+	return strings.ToUpper(a.ShortNameRaw())
 }
 
 func (a *Action) Text() string {
-	return a.code
+	return strings.ToUpper(a.code)
 }
 
 func (a *Action) SetMessage(in string) {
-	a.message = in
+	a.description = in
+}
+
+func (a *Action) GetMessage() string {
+	return a.description
 }
 
 func (a *Action) SetText(in string) {
@@ -205,7 +228,17 @@ func (a *Action) Code() string {
 	return a.code
 }
 
-func getUser() string {
+func getUser(ctx context.Context) (string, error) {
 	// Implement the logic to get the user without importing the dao package
-	return "sys" + "_" + "service"
+	defaultUser := "sys" + "_" + "service"
+	if ctx == context.TODO() || ctx == nil {
+		return defaultUser, nil
+	}
+	// Get the current user from the context
+	userSessionCodeKey := cfg.GetSecuritySessionUserCodeKey()
+	sessionUser := ctx.Value(userSessionCodeKey)
+	if sessionUser != nil {
+		return sessionUser.(string), nil
+	}
+	return defaultUser, commonErrors.ErrContextCannotGetUserCode
 }

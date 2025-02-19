@@ -20,6 +20,9 @@ var LOGIN Action = Action{Name: "Login", userDefined: false}
 var LOGOUT Action = Action{Name: "Logout", userDefined: false}
 var TIMEOUT Action = Action{Name: "Timeout", userDefined: false}
 var API Action = Action{Name: "API", userDefined: false}
+var GET Action = Action{Name: "GET", userDefined: false}
+var EXPORT Action = Action{Name: "EXPORT", userDefined: false}
+var IMPORT Action = Action{Name: "Import", userDefined: false}
 
 func New(name string) Action {
 	return Action{Name: name, userDefined: true}
