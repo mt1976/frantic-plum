@@ -55,3 +55,16 @@ func CheckDAOReadyState(table string, action audit.Action, isDaoReady bool) {
 		logHandler.ErrorLogger.Panic(err)
 	}
 }
+
+func GetStructType(data any) string {
+	rtnType := reflect.TypeOf(data).String()
+	// If the type is a pointer, get the underlying type
+	if strings.Contains(rtnType, "*") {
+		rtnType = reflect.TypeOf(data).Elem().String()
+	}
+	// If the type is a struct, get the name of the struct
+	if strings.Contains(rtnType, ".") {
+		rtnType = strings.Split(rtnType, ".")[1]
+	}
+	return rtnType
+}

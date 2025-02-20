@@ -39,6 +39,7 @@ require (
 )
 
 require (
+	github.com/asdine/storm v2.1.2+incompatible
 	github.com/asdine/storm/v3 v3.2.1
 	github.com/go-playground/validator/v10 v10.24.0
 	github.com/jsuar/go-cron-descriptor v0.1.0
