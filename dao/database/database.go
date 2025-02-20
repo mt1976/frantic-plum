@@ -1,7 +1,7 @@
 package database
 
 import (
-	storm "github.com/asdine/storm/v3"
+	"github.com/asdine/storm/v3"
 	"github.com/asdine/storm/v3/index"
 	"github.com/mt1976/frantic-core/commonErrors"
 	"github.com/mt1976/frantic-core/dao/actions"

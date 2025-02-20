@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"strings"
 
-	storm "github.com/asdine/storm/v3"
+	"github.com/asdine/storm/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
