@@ -69,10 +69,10 @@ func performDatabaseBackup(job *DatabaseBackupJob) {
 	logHandler.ServiceLogger.Printf("[%v] [%v] Completed", domain, job.Name())
 }
 
-func (job *DatabaseBackupJob) AddFunction(f func() (*database.DB, error)) {
-	job.funcs = append(job.funcs, f)
+func (job *DatabaseBackupJob) AddFunction(fn func() (*database.DB, error)) {
+	job.funcs = append(job.funcs, fn)
 }
 
-func (job *DatabaseBackupCleanerJob) Description() string {
-	return "Scheduled Database Maintenance - Prune Old Backups"
+func (job *DatabaseBackupJob) Description() string {
+	return "Scheduled Database Backup, runs at 11:55 daily"
 }

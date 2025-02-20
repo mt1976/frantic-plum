@@ -115,10 +115,10 @@ func getDateFromBackupFolderName(folder string) (date time.Time, err error) {
 	return
 }
 
-func (job *DatabaseBackupCleanerJob) AddFunction(f func() (database.DB, error)) {
-	//Notjng to do
+func (job *DatabaseBackupCleanerJob) AddFunction(fn func() (*database.DB, error)) {
+	// do nothing
 }
 
-func (job *DatabaseBackupJob) Description() string {
-	return "Scheduled Database Backup"
+func (job *DatabaseBackupCleanerJob) Description() string {
+	return "Scheduled Database Maintenance - Prunes Old Backups, Retaining the last 30 days, run at 00:25 every day"
 }
