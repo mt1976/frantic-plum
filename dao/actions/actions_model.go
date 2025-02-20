@@ -39,6 +39,7 @@ var SHUTDOWN Action = Action{Name: "Shutdown", userDefined: false, Code: "SHUTDO
 var RESTART Action = Action{Name: "Restart", userDefined: false, Code: "RESTART"}
 var RELOAD Action = Action{Name: "Reload", userDefined: false, Code: "RELOAD"}
 var CLEAR Action = Action{Name: "Clear", userDefined: false, Code: "CLEAR"}
+var LOOKUP Action = Action{Name: "Lookup", userDefined: false, Code: "LOOKUP"}
 
 func New(name string) Action {
 	return Action{Name: name, userDefined: true}
