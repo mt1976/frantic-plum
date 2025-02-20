@@ -13,7 +13,7 @@ import (
 )
 
 var Version = 1
-var CONNECTION *storm.DB
+var connection *storm.DB
 var domain = "database"
 var dbFileName string
 
@@ -24,31 +24,27 @@ func init() {
 	dataValidator = validator.New(validator.WithRequiredStructEnabled())
 }
 
-func Connect() {
-	connect(domain)
+func Connect() *storm.DB {
+	return connect(domain)
 }
 
-func NamedConnect(name string) {
-	connect(name)
+func NamedConnect(name string) *storm.DB {
+	return connect(name)
 }
 
-func connect(name string) {
-	// logger.InfoBanner(name, name, name)
-	// logger.InfoBanner(name, name, name)
-	// logger.InfoBanner(name, name, name)
-
+func connect(name string) *storm.DB {
 	dbFileName = name
-	connect := timing.Start(domain, "Connect", "")
+	connect := timing.Start(domain, "Connect", name)
 	var err error
-	CONNECTION, err = storm.Open(ioHelpers.GetDBFileName(dbFileName), storm.BoltOptions(0666, nil))
+	connection, err = storm.Open(ioHelpers.GetDBFileName(dbFileName), storm.BoltOptions(0666, nil))
 	if err != nil {
-
-		logHandler.ErrorLogger.Printf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(dbFileName), err.Error())
+		connect.Stop(0)
+		logHandler.ErrorLogger.Panicf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(dbFileName), err.Error())
 		panic(commonErrors.WrapConnectError(err))
-		//os.Exit(1)
 	}
-	logHandler.DatabaseLogger.Printf("[%v] Open [%v.db] data connection", strings.ToUpper(domain), dbFileName)
+	logHandler.DatabaseLogger.Printf("[%v] Opened [%v.db] data connection", strings.ToUpper(domain), dbFileName)
 	connect.Stop(1)
+	return connection
 }
 
 func Backup(loc string) {
@@ -65,7 +61,7 @@ func Backup(loc string) {
 func Disconnect() {
 	timer := timing.Start(domain, "Disconnect", dbFileName)
 	logHandler.EventLogger.Printf("[%v] Close [%v.db] data file", strings.ToUpper(domain), dbFileName)
-	err := CONNECTION.Close()
+	err := connection.Close()
 	if err != nil {
 		logHandler.ErrorLogger.Printf("[%v] Closing %v ", strings.ToUpper(domain), err)
 		panic(commonErrors.WrapDisconnectError(err))
@@ -76,22 +72,22 @@ func Disconnect() {
 
 func Retrieve(fieldName string, value, to any) error {
 	logHandler.DatabaseLogger.Printf("Retrieve [%+v][%+v][%+v]", fieldName, value, to)
-	return CONNECTION.One(fieldName, value, to)
+	return connection.One(fieldName, value, to)
 }
 
 func GetAll(to any, options ...func(*index.Options)) error {
 	logHandler.DatabaseLogger.Printf("GetAll [%+v][%+v]", to, options)
-	return CONNECTION.All(to, options...)
+	return connection.All(to, options...)
 }
 
 func Delete(data any) error {
 	logHandler.DatabaseLogger.Printf("Delete [%+v]", data)
-	return CONNECTION.DeleteStruct(data)
+	return connection.DeleteStruct(data)
 }
 
 func Drop(data any) error {
 	logHandler.DatabaseLogger.Printf("Drop [%+v]", data)
-	return CONNECTION.Drop(data)
+	return connection.Drop(data)
 }
 
 func Update(data any) error {
@@ -100,7 +96,7 @@ func Update(data any) error {
 		return commonErrors.WrapError(err)
 	}
 	logHandler.DatabaseLogger.Printf("Update [%+v]", data)
-	return CONNECTION.Update(data)
+	return connection.Update(data)
 }
 
 func Create(data any) error {
@@ -109,7 +105,7 @@ func Create(data any) error {
 		return commonErrors.WrapCreateError(err)
 	}
 	logHandler.DatabaseLogger.Printf("Create [%+v]", data)
-	return CONNECTION.Save(data)
+	return connection.Save(data)
 }
 
 func validate(data any) error {
