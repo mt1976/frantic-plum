@@ -177,3 +177,7 @@ func WrapDAOReadError(table, field string, value any, readErr error) error {
 func WrapDAOLookupError(table, field string, value any, lookupErr error) error {
 	return fmt.Errorf("builing looking up for %v failed (key=%v,value=%v) %e", table, field, value, lookupErr)
 }
+
+func WrapDAONotInitialisedError(table, action string) error {
+	return fmt.Errorf("%v DAO not initialised (Action=%v)", table, action)
+}
