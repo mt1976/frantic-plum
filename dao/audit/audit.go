@@ -116,8 +116,8 @@ func (a *Action) popMessage() string {
 func (a *Audit) Action(ctx context.Context, action Action) error {
 
 	message := action.popMessage()
-	timingMessage := fmt.Sprintf("Action=[%v] Message=[%v]", actions.AUDIT.GetCode(), message)
-	clock := timing.Start("Audit", audit.Description(), timingMessage)
+	timingMessage := fmt.Sprintf("Action=[%v] Message=[%v]", action.Code(), message)
+	clock := timing.Start("Audit", actions.AUDIT.GetCode(), timingMessage)
 
 	auditTime := time.Now()
 	auditDisplay := dateHelpers.FormatAudit(auditTime)
