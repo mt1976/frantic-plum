@@ -3,26 +3,35 @@ package actions
 type Action struct {
 	Name        string `storm:"Name" csv:"Name"`
 	userDefined bool   `storm:"userDefined" csv:"userDefined"`
+	Code        string `storm:"Code" csv:"Code"`
 }
 
-var LIST Action = Action{Name: "List", userDefined: false}
-var VIEW Action = Action{Name: "View", userDefined: false}
-var EDIT Action = Action{Name: "Edit", userDefined: false}
-var UPDATE Action = Action{Name: "Update", userDefined: false}
-var DELETE Action = Action{Name: "Delete", userDefined: false}
-var CREATE Action = Action{Name: "Create", userDefined: false}
-var ENABLE Action = Action{Name: "Enable", userDefined: false}
-var DISABLE Action = Action{Name: "Disable", userDefined: false}
-var RESET Action = Action{Name: "Reset", userDefined: false}
-var ROUTE Action = Action{Name: "Route", userDefined: false}
-var MESSAGE Action = Action{Name: "Message", userDefined: false}
-var LOGIN Action = Action{Name: "Login", userDefined: false}
-var LOGOUT Action = Action{Name: "Logout", userDefined: false}
-var TIMEOUT Action = Action{Name: "Timeout", userDefined: false}
-var API Action = Action{Name: "API", userDefined: false}
-var GET Action = Action{Name: "GET", userDefined: false}
-var EXPORT Action = Action{Name: "EXPORT", userDefined: false}
-var IMPORT Action = Action{Name: "Import", userDefined: false}
+var LIST Action = Action{Name: "List", userDefined: false, Code: "LIST"}
+var VIEW Action = Action{Name: "View", userDefined: false, Code: "VIEW"}
+var EDIT Action = Action{Name: "Edit", userDefined: false, Code: "EDIT"}
+var UPDATE Action = Action{Name: "Update", userDefined: false, Code: "UPDATE"}
+var DELETE Action = Action{Name: "Delete", userDefined: false, Code: "DELETE"}
+var CREATE Action = Action{Name: "Create", userDefined: false, Code: "CREATE"}
+var ENABLE Action = Action{Name: "Enable", userDefined: false, Code: "ENABLE"}
+var DISABLE Action = Action{Name: "Disable", userDefined: false, Code: "DISABLE"}
+var RESET Action = Action{Name: "Reset", userDefined: false, Code: "RESET"}
+var ROUTE Action = Action{Name: "Route", userDefined: false, Code: "ROUTE"}
+var MESSAGE Action = Action{Name: "Message", userDefined: false, Code: "MESSAGE"}
+var LOGIN Action = Action{Name: "Login", userDefined: false, Code: "LOGIN"}
+var LOGOUT Action = Action{Name: "Logout", userDefined: false, Code: "LOGOUT"}
+var TIMEOUT Action = Action{Name: "Timeout", userDefined: false, Code: "TIMEOUT"}
+var API Action = Action{Name: "API", userDefined: false, Code: "API"}
+var GET Action = Action{Name: "GET", userDefined: false, Code: "GET"}
+var GETALL Action = Action{Name: "GETALL", userDefined: false, Code: "GETALL"}
+var EXPORT Action = Action{Name: "EXPORT", userDefined: false, Code: "EXPORT"}
+var IMPORT Action = Action{Name: "Import", userDefined: false, Code: "IMPORT"}
+var PROCESS Action = Action{Name: "Process", userDefined: false, Code: "PROCESS"}
+var REPAIR Action = Action{Name: "Repair", userDefined: false, Code: "REPAIR"}
+var AUDIT Action = Action{Name: "Audit", userDefined: false, Code: "AUDIT"}
+var CONNECT Action = Action{Name: "Connect", userDefined: false, Code: "CONNECT"}
+var DISCONNECT Action = Action{Name: "Disconnect", userDefined: false, Code: "DISCONNECT"}
+var BACKUP Action = Action{Name: "Backup", userDefined: false, Code: "BACKUP"}
+var VALIDATE Action = Action{Name: "Validate", userDefined: false, Code: "VALIDATE"}
 
 func New(name string) Action {
 	return Action{Name: name, userDefined: true}
@@ -30,6 +39,9 @@ func New(name string) Action {
 
 func (bt Action) GetName() string {
 	return bt.Name
+}
+func (bt Action) GetCode() string {
+	return bt.Code[0:3]
 }
 
 func (bt Action) IsUserDefined() bool {

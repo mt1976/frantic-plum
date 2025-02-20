@@ -7,6 +7,7 @@ import (
 	"github.com/asdine/storm/v3/index"
 	validator "github.com/go-playground/validator/v10"
 	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/dao/actions"
 	"github.com/mt1976/frantic-core/ioHelpers"
 	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/mt1976/frantic-core/timing"
@@ -40,9 +41,9 @@ func connect(name string) *DB {
 	db := DB{}
 	db.name = name
 	db.databaseName = ioHelpers.GetDBFileName(name)
-	connect := timing.Start(domain, "Connect", name)
+	connect := timing.Start(domain, actions.CONNECT.GetCode(), db.databaseName)
 	var err error
-	db.connection, err = storm.Open(ioHelpers.GetDBFileName(db.databaseName), storm.BoltOptions(0666, nil))
+	db.connection, err = storm.Open(db.databaseName, storm.BoltOptions(0666, nil))
 	if err != nil {
 		connect.Stop(0)
 		logHandler.ErrorLogger.Panicf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(db.databaseName), err.Error())
@@ -55,7 +56,7 @@ func connect(name string) *DB {
 }
 
 func (db *DB) Backup(loc string) {
-	timer := timing.Start(domain, "Backup", db.databaseName)
+	timer := timing.Start(domain, actions.BACKUP.GetCode(), db.databaseName)
 	logHandler.DatabaseLogger.Printf("[BACKUP] Backup [%v.db] data started...", db.databaseName)
 	db.Disconnect()
 	ioHelpers.Backup(db.databaseName, loc)
@@ -66,7 +67,7 @@ func (db *DB) Backup(loc string) {
 }
 
 func (db *DB) Disconnect() {
-	timer := timing.Start(domain, "Disconnect", db.databaseName)
+	timer := timing.Start(domain, actions.DISCONNECT.Code, db.databaseName)
 	logHandler.DatabaseLogger.Printf("[%v] Close [%v.db] data file", strings.ToUpper(domain), db.databaseName)
 	err := db.connection.Close()
 	if err != nil {
@@ -116,11 +117,14 @@ func (db *DB) Create(data any) error {
 }
 
 func validate(data any) error {
+	timer := timing.Start(domain, actions.VALIDATE.GetCode(), "")
 	logHandler.DatabaseLogger.Printf("Validate [%+v]", data)
 	err := commonErrors.HandleGoValidatorError(dataValidator.Struct(data))
 	if err != nil {
 		logHandler.ErrorLogger.Printf("[%v] Validation  %v", strings.ToUpper(domain), err.Error())
+		timer.Stop(0)
 		return commonErrors.WrapValidationError(err)
 	}
+	timer.Stop(1)
 	return nil
 }

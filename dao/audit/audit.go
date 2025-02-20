@@ -79,6 +79,9 @@ var (
 	GET          Action
 	REPAIR       Action
 	audit        Action
+	CONNECT      Action
+	DISCONNECT   Action
+	BACKUP       Action
 )
 
 func init() {
@@ -98,6 +101,9 @@ func init() {
 	GET = Action{code: "GET", description: "Get", silent: true, short: "Get"}
 	REPAIR = Action{code: "REP", description: "Repaired", silent: false, short: "Repair"}
 	audit = Action{code: "AUD", description: "Audit", silent: true, short: "Audit"}
+	CONNECT = Action{code: "CON", description: "Connect", silent: true, short: "Connect"}
+	DISCONNECT = Action{code: "DIS", description: "Disconnect", silent: true, short: "Disconnect"}
+	BACKUP = Action{code: "BAK", description: "Backup", silent: true, short: "Backup"}
 }
 
 func (a *Action) WithMessage(in string) Action {
