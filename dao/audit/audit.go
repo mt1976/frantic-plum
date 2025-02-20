@@ -10,7 +10,6 @@ import (
 	"github.com/mt1976/frantic-core/application"
 	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
-	"github.com/mt1976/frantic-core/dao/database"
 	"github.com/mt1976/frantic-core/dateHelpers"
 	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/mt1976/frantic-core/timing"
@@ -32,7 +31,7 @@ func init() {
 
 func getDBVersion() int {
 	// Implement the logic to get the DB version without importing the dao package
-	return database.Version
+	return cfg.GetDatabaseVersion()
 }
 
 type Audit struct {

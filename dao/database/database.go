@@ -12,103 +12,111 @@ import (
 	"github.com/mt1976/frantic-core/timing"
 )
 
-var Version = 1
-var connection *storm.DB
 var domain = "database"
-var dbFileName string
+
+type DB struct {
+	connection   *storm.DB
+	name         string
+	databaseName string
+	initialised  bool
+}
 
 var dataValidator *validator.Validate
 
 func init() {
-	//	Connect()å
+	//	Connect()
 	dataValidator = validator.New(validator.WithRequiredStructEnabled())
 }
 
-func Connect() *storm.DB {
+func Connect() *DB {
 	return connect(domain)
 }
 
-func NamedConnect(name string) *storm.DB {
+func NamedConnect(name string) *DB {
 	return connect(name)
 }
 
-func connect(name string) *storm.DB {
-	dbFileName = name
+func connect(name string) *DB {
+	db := DB{}
+	db.name = name
+	db.databaseName = ioHelpers.GetDBFileName(name)
 	connect := timing.Start(domain, "Connect", name)
 	var err error
-	connection, err = storm.Open(ioHelpers.GetDBFileName(dbFileName), storm.BoltOptions(0666, nil))
+	db.connection, err = storm.Open(ioHelpers.GetDBFileName(db.databaseName), storm.BoltOptions(0666, nil))
 	if err != nil {
 		connect.Stop(0)
-		logHandler.ErrorLogger.Panicf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(dbFileName), err.Error())
+		logHandler.ErrorLogger.Panicf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(db.databaseName), err.Error())
 		panic(commonErrors.WrapConnectError(err))
 	}
-	logHandler.DatabaseLogger.Printf("[%v] Opened [%v.db] data connection", strings.ToUpper(domain), dbFileName)
+	db.initialised = true
+	logHandler.DatabaseLogger.Printf("[%v] Opened [%v.db] data connection", strings.ToUpper(domain), db.databaseName)
 	connect.Stop(1)
-	return connection
+	return &db
 }
 
-func Backup(loc string) {
-	timer := timing.Start(domain, "Backup", dbFileName)
-	logHandler.EventLogger.Printf("[BACKUP] Backup [%v.db] data started...", dbFileName)
-	Disconnect()
-	ioHelpers.Backup(dbFileName, loc)
-	connect(dbFileName)
-	logHandler.EventLogger.Printf("[BACKUP] Backup [%v.db] data ends", dbFileName)
+func (db *DB) Backup(loc string) {
+	timer := timing.Start(domain, "Backup", db.databaseName)
+	logHandler.DatabaseLogger.Printf("[BACKUP] Backup [%v.db] data started...", db.databaseName)
+	db.Disconnect()
+	ioHelpers.Backup(db.databaseName, loc)
+	connect(db.name)
+	logHandler.DatabaseLogger.Printf("[BACKUP] Backup [%v.db] data ends", db.databaseName)
 	timer.Stop(1)
-	logHandler.DatabaseLogger.Printf("[%v] Backup [%v.db] data connection", strings.ToUpper(domain), dbFileName)
+	logHandler.DatabaseLogger.Printf("[%v] Backup [%v.db] data connection", strings.ToUpper(domain), db.databaseName)
 }
 
-func Disconnect() {
-	timer := timing.Start(domain, "Disconnect", dbFileName)
-	logHandler.EventLogger.Printf("[%v] Close [%v.db] data file", strings.ToUpper(domain), dbFileName)
-	err := connection.Close()
+func (db *DB) Disconnect() {
+	timer := timing.Start(domain, "Disconnect", db.databaseName)
+	logHandler.DatabaseLogger.Printf("[%v] Close [%v.db] data file", strings.ToUpper(domain), db.databaseName)
+	err := db.connection.Close()
 	if err != nil {
 		logHandler.ErrorLogger.Printf("[%v] Closing %v ", strings.ToUpper(domain), err)
 		panic(commonErrors.WrapDisconnectError(err))
 	}
-	logHandler.DatabaseLogger.Printf("[%v] Close [%v.db] data connection", strings.ToUpper(domain), dbFileName)
+	logHandler.DatabaseLogger.Printf("[%v] Close [%v.db] data connection", strings.ToUpper(domain), db.databaseName)
 	timer.Stop(1)
 }
 
-func Retrieve(fieldName string, value, to any) error {
+func (db *DB) Retrieve(fieldName string, value, to any) error {
 	logHandler.DatabaseLogger.Printf("Retrieve [%+v][%+v][%+v]", fieldName, value, to)
-	return connection.One(fieldName, value, to)
+	return db.connection.One(fieldName, value, to)
 }
 
-func GetAll(to any, options ...func(*index.Options)) error {
+func (db *DB) GetAll(to any, options ...func(*index.Options)) error {
 	logHandler.DatabaseLogger.Printf("GetAll [%+v][%+v]", to, options)
-	return connection.All(to, options...)
+	return db.connection.All(to, options...)
 }
 
-func Delete(data any) error {
+func (db *DB) Delete(data any) error {
 	logHandler.DatabaseLogger.Printf("Delete [%+v]", data)
-	return connection.DeleteStruct(data)
+	return db.connection.DeleteStruct(data)
 }
 
-func Drop(data any) error {
+func (db *DB) Drop(data any) error {
 	logHandler.DatabaseLogger.Printf("Drop [%+v]", data)
-	return connection.Drop(data)
+	return db.connection.Drop(data)
 }
 
-func Update(data any) error {
+func (db *DB) Update(data any) error {
 	err := validate(data)
 	if err != nil {
 		return commonErrors.WrapError(err)
 	}
 	logHandler.DatabaseLogger.Printf("Update [%+v]", data)
-	return connection.Update(data)
+	return db.connection.Update(data)
 }
 
-func Create(data any) error {
+func (db *DB) Create(data any) error {
 	err := validate(data)
 	if err != nil {
 		return commonErrors.WrapCreateError(err)
 	}
 	logHandler.DatabaseLogger.Printf("Create [%+v]", data)
-	return connection.Save(data)
+	return db.connection.Save(data)
 }
 
 func validate(data any) error {
+	logHandler.DatabaseLogger.Printf("Validate [%+v]", data)
 	err := commonErrors.HandleGoValidatorError(dataValidator.Struct(data))
 	if err != nil {
 		logHandler.ErrorLogger.Printf("[%v] Validation  %v", strings.ToUpper(domain), err.Error())

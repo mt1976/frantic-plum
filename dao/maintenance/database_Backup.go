@@ -14,6 +14,8 @@ import (
 )
 
 type DatabaseBackupJob struct {
+	db   *database.DB
+	name string
 }
 
 func (job DatabaseBackupJob) Run() error {
@@ -36,7 +38,7 @@ func (job DatabaseBackupJob) Schedule() string {
 
 func (job DatabaseBackupJob) Name() string {
 	//name, _ := translation.Get("Scheduled Database Backup")
-	return "Database Maintenance - Backup"
+	return "Maintenace - Backup - " + job.name
 }
 
 func performDatabaseBackup(job DatabaseBackupJob) {
@@ -54,7 +56,7 @@ func performDatabaseBackup(job DatabaseBackupJob) {
 		logHandler.ErrorLogger.Printf("[%v] [%v] Error=[%v]", domain, strings.ToUpper(job.Name()), err.Error())
 	}
 
-	database.Backup(destPath)
+	job.db.Backup(fullBackupPath)
 
 	j.Stop(6)
 }
