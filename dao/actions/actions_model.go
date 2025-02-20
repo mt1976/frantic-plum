@@ -47,7 +47,7 @@ func (bt Action) GetName() string {
 	return strings.ToUpper(bt.Name)
 }
 func (bt Action) GetCode() string {
-	return bt.Code[0:3]
+	return strings.ToUpper(bt.Code[0:4])
 }
 
 func (bt Action) IsUserDefined() bool {
