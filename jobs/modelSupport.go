@@ -22,15 +22,15 @@ func AfterOrEqualTo(t1, t2 time.Time) bool {
 	return dateHelpers.IsAfterOrEqualTo(t1, t2)
 }
 
-func NextRun(j Job) string {
+func NextRun(name, schedule string) string {
 	// Purpose: To determine the next run time of a job
-	rtn := fmt.Sprintf("[%v] [%v] NextRun=[%v]", domain, j.Name(), GetHumanReadableCronFreq(j.Schedule()))
+	rtn := fmt.Sprintf("[%v] [%v] NextRun=[%v]", domain, name, GetHumanReadableCronFreq(schedule))
 	logHandler.ServiceLogger.Println(rtn)
 	return rtn
 }
 
-func Announce(j Job, inAction string) {
-	logHandler.ServiceBanner(domain, j.Name(), inAction)
+func Announce(name, inAction string) {
+	logHandler.ServiceBanner(domain, name, inAction)
 }
 
 func GetHumanReadableCronFreq(freq string) string {

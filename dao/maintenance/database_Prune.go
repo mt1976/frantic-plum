@@ -20,10 +20,10 @@ type DatabaseBackupCleanerJob struct {
 }
 
 func (job *DatabaseBackupCleanerJob) Run() error {
-	jobs.Announce(job, "Started")
+	jobs.Announce(job.Name(), "Started")
 	pruneExpiredBackups()
-	jobs.NextRun(job)
-	jobs.Announce(job, "Completed")
+	jobs.NextRun(job.Name(), job.Schedule())
+	jobs.Announce(job.Name(), "Completed")
 	return nil
 }
 
@@ -117,4 +117,8 @@ func getDateFromBackupFolderName(folder string) (date time.Time, err error) {
 
 func (job *DatabaseBackupCleanerJob) AddFunction(f func() (database.DB, error)) {
 	//Notjng to do
+}
+
+func (job *DatabaseBackupJob) Description() string {
+	return "Scheduled Database Backup"
 }

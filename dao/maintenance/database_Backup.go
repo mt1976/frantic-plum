@@ -15,14 +15,14 @@ import (
 )
 
 type DatabaseBackupJob struct {
-	funcs []func() (database.DB, error)
+	funcs []func() (*database.DB, error)
 }
 
 func (job *DatabaseBackupJob) Run() error {
-	jobs.Announce(job, "Started")
+	jobs.Announce(job.Name(), "Started")
 	performDatabaseBackup(job)
-	jobs.NextRun(job)
-	jobs.Announce(job, "Completed")
+	jobs.NextRun(job.Name(), job.Schedule())
+	jobs.Announce(job.Name(), "Completed")
 	return nil
 }
 
@@ -69,6 +69,10 @@ func performDatabaseBackup(job *DatabaseBackupJob) {
 	logHandler.ServiceLogger.Printf("[%v] [%v] Completed", domain, job.Name())
 }
 
-func (job *DatabaseBackupJob) AddFunction(f func() (database.DB, error)) {
+func (job *DatabaseBackupJob) AddFunction(f func() (*database.DB, error)) {
 	job.funcs = append(job.funcs, f)
+}
+
+func (job *DatabaseBackupCleanerJob) Description() string {
+	return "Scheduled Database Maintenance - Prune Old Backups"
 }

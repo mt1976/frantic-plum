@@ -8,4 +8,5 @@ type Job interface {
 	Schedule() string
 	Name() string
 	AddFunction(f func() (database.DB, error))
+	Description() string
 }
