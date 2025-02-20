@@ -31,8 +31,14 @@ func init() {
 }
 
 func connect(name string) *DB {
-	if connectionPool[domain] != nil {
-		logHandler.DatabaseLogger.Printf("[%v] db already open [%v.db] data connection", strings.ToUpper(domain), connectionPool[domain].name)
+	logHandler.DatabaseLogger.Printf("Opening Connection to [%v.db] data", name)
+	// list the connection pool
+	for key, value := range connectionPool {
+		logHandler.DatabaseLogger.Printf("Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
+	}
+	// check if connection already exists
+	if connectionPool[name] != nil && connectionPool[name].name == name {
+		logHandler.DatabaseLogger.Printf("Connection already open [%v], using connection pool [%v] [codec=%v]", connectionPool[domain].name, connectionPool[domain].databaseName, connectionPool[domain].connection.Node.Codec().Name())
 		return connectionPool[domain]
 	}
 	db := DB{}
@@ -43,23 +49,23 @@ func connect(name string) *DB {
 	db.connection, err = storm.Open(db.databaseName, storm.BoltOptions(0777, nil))
 	if err != nil {
 		connect.Stop(0)
-		logHandler.ErrorLogger.Panicf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(db.databaseName), err.Error())
+		logHandler.ErrorLogger.Panicf("Opening [%v.db] connection Error=[%v]", strings.ToLower(db.databaseName), err.Error())
 		panic(commonErrors.WrapConnectError(err))
 	}
 	db.initialised = true
 	// Add to connection pool
-	storeConnectionInPool(db)
-	logHandler.DatabaseLogger.Printf("[%v] Opened [%v.db] data connection", strings.ToUpper(domain), db.databaseName)
+	storeConnectionInPool(db, name)
+	logHandler.DatabaseLogger.Printf("Opened [%v.db] data connection [codec=%v]", db.databaseName, db.connection.Node.Codec().Name())
 	connect.Stop(1)
 	return &db
 }
 
-func storeConnectionInPool(db DB) {
+func storeConnectionInPool(db DB, key string) {
 	if len(connectionPool) >= connectionPoolMaxSize {
-		logHandler.DatabaseLogger.Panicf("[%v] Connection pool full [%v]", strings.ToUpper(domain), connectionPoolMaxSize)
+		logHandler.DatabaseLogger.Panicf("Connection pool full [%v]", connectionPoolMaxSize)
 		return
 	}
-	connectionPool[domain] = &db
+	connectionPool[key] = &db
 }
 
 func validate(data any, db *DB) error {
@@ -77,5 +83,13 @@ func validate(data any, db *DB) error {
 
 func getType(data any) string {
 	rtnType := reflect.TypeOf(data).String()
+	// If the type is a pointer, get the underlying type
+	if strings.Contains(rtnType, "*") {
+		rtnType = reflect.TypeOf(data).Elem().String()
+	}
+	// If the type is a struct, get the name of the struct
+	if strings.Contains(rtnType, ".") {
+		rtnType = strings.Split(rtnType, ".")[1]
+	}
 	return rtnType
 }
