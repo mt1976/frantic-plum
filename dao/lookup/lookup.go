@@ -1,8 +1,6 @@
-package dao
+package lookup
 
 import "github.com/mt1976/frantic-core/logHandler"
-
-var name = "Lookup"
 
 type Lookup struct {
 	Data []LookupData
@@ -24,7 +22,7 @@ func (a *Lookup) Spew() error {
 	if noAudit > 0 {
 		for i := 0; i < noAudit; i++ {
 			upd := a.Data[i]
-			logHandler.TraceLogger.Printf("LookupData[%v] Key=[%v] Value=[%v]", i, upd.Key, upd.Value)
+			logHandler.TraceLogger.Printf("Lookup Data [%v] Key=[%v] Value=[%v]", i, upd.Key, upd.Value)
 		}
 	}
 	return nil

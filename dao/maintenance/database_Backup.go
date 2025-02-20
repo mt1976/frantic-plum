@@ -38,7 +38,7 @@ func (job DatabaseBackupJob) Schedule() string {
 
 func (job DatabaseBackupJob) Name() string {
 	//name, _ := translation.Get("Scheduled Database Backup")
-	return "Maintenace - Backup - " + job.name
+	return "Maintenance - Backup - " + job.name
 }
 
 func performDatabaseBackup(job DatabaseBackupJob) {

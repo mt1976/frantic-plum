@@ -38,7 +38,7 @@ func (p DatabaseBackupCleanerJob) Schedule() string {
 
 func (p DatabaseBackupCleanerJob) Name() string {
 	//name, _ := translation.Get("Scheduled Database Maintenance - Prune Old Backups")
-	return "Database Maintenance - Prune Old Backups"
+	return "Maintenance - Prune Old Backups"
 }
 
 func pruneExpiredBackups() {
