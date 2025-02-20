@@ -1,5 +1,7 @@
 package actions
 
+import "strings"
+
 type Action struct {
 	Name        string `storm:"Name" csv:"Name"`
 	userDefined bool   `storm:"userDefined" csv:"userDefined"`
@@ -32,13 +34,17 @@ var CONNECT Action = Action{Name: "Connect", userDefined: false, Code: "CONNECT"
 var DISCONNECT Action = Action{Name: "Disconnect", userDefined: false, Code: "DISCONNECT"}
 var BACKUP Action = Action{Name: "Backup", userDefined: false, Code: "BACKUP"}
 var VALIDATE Action = Action{Name: "Validate", userDefined: false, Code: "VALIDATE"}
+var INITIALISE Action = Action{Name: "Initialise", userDefined: false, Code: "INITIALISE"}
+var SHUTDOWN Action = Action{Name: "Shutdown", userDefined: false, Code: "SHUTDOWN"}
+var RESTART Action = Action{Name: "Restart", userDefined: false, Code: "RESTART"}
+var RELOAD Action = Action{Name: "Reload", userDefined: false, Code: "RELOAD"}
 
 func New(name string) Action {
 	return Action{Name: name, userDefined: true}
 }
 
 func (bt Action) GetName() string {
-	return bt.Name
+	return strings.ToUpper(bt.Name)
 }
 func (bt Action) GetCode() string {
 	return bt.Code[0:3]
