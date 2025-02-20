@@ -419,3 +419,39 @@ func (s *Settings) GetLogsMaxAge() int {
 func (s *Settings) IsLogCompressionEnabled() bool {
 	return isTrueFalse(s.Logging.Defaults.Compress)
 }
+
+func (s *Settings) GetDatabaseVersion() int {
+	return s.Database.Version
+}
+
+func (s *Settings) GetDatabaseType() string {
+	return s.Database.Type
+}
+
+func (s *Settings) GetDatabaseName() string {
+	return s.Database.Name
+}
+
+func (s *Settings) GetDatabasePath() string {
+	return s.Database.Path
+}
+
+func (s *Settings) GetDatabaseHost() string {
+	return s.Database.Host
+}
+
+func (s *Settings) GetDatabasePort() int {
+	return s.Database.Port
+}
+
+func (s *Settings) GetDatabaseUser() string {
+	return s.Database.User
+}
+
+func (s *Settings) GetDatabasePassword() string {
+	return s.Database.Pass
+}
+
+func (s *Settings) GetDatabasePortAsString() string {
+	return strconv.Itoa(s.Database.Port)
+}

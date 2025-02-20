@@ -11,6 +11,10 @@ author = "Barbara J. D. Babs"
 license= "MIT"
 locale = "en_GB"
 
+[Database]
+version = 1
+type = "storm"
+
 [Server]
 host = "127.0.0.1"
 port = 5052

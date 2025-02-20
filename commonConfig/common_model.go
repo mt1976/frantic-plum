@@ -14,6 +14,16 @@ type Settings struct {
 		License     string `toml:"license"`
 		Locale      string `toml:"locale"`
 	} `toml:"Application"`
+	Database struct {
+		Version int    `toml:"version"`
+		Type    string `toml:"type"`
+		Host    string `toml:"host"`
+		Port    int    `toml:"port"`
+		Name    string `toml:"name"`
+		User    string `toml:"user"`
+		Pass    string `toml:"pass"`
+		Path    string `toml:"path"`
+	} `toml:"Database"`
 	Server struct {
 		Host        string `toml:"host"`
 		Port        int    `toml:"port"`
