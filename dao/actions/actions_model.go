@@ -49,6 +49,11 @@ func (bt Action) GetName() string {
 	return strings.ToUpper(bt.Name)
 }
 func (bt Action) GetCode() string {
+	// if len is less than 4, return a suffixed code
+	if len(bt.Code) < 4 {
+		return (bt.Code + "___")[0:4]
+	}
+	// return the first 4 characters of the code
 	return bt.Code[0:4]
 }
 

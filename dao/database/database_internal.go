@@ -15,7 +15,6 @@ import (
 )
 
 var (
-	domain                string                 = "database"                                           // domain for this code module
 	connectionPool        map[string]*DB         = make(map[string]*DB)                                 // map of database connections, indexed by domain.
 	connectionPoolMaxSize int                    = 10                                                   // maximum number of connections
 	cfg                   *commonConfig.Settings = commonConfig.Get()                                   // configuration settings
@@ -31,6 +30,8 @@ func init() {
 }
 
 func connect(name string) *DB {
+	// Ensure the name is lowercase
+	name = strings.ToLower(name)
 	logHandler.DatabaseLogger.Printf("Opening Connection to [%v.db] data", name)
 	// list the connection pool
 	for key, value := range connectionPool {
@@ -41,10 +42,11 @@ func connect(name string) *DB {
 		logHandler.DatabaseLogger.Printf("Connection already open [%v], using connection pool [%v] [codec=%v]", connectionPool[name].name, connectionPool[name].databaseName, connectionPool[name].connection.Node.Codec().Name())
 		return connectionPool[name]
 	}
+
 	db := DB{}
 	db.name = name
-	db.databaseName = ioHelpers.GetDBFileName(name)
-	connect := timing.Start(domain, actions.CONNECT.GetCode(), db.databaseName)
+	db.databaseName = ioHelpers.GetDBFileName(db.name)
+	connect := timing.Start(db.name, actions.CONNECT.GetCode(), db.databaseName)
 	var err error
 	db.connection, err = storm.Open(db.databaseName, storm.BoltOptions(0777, nil))
 	if err != nil {
@@ -54,7 +56,7 @@ func connect(name string) *DB {
 	}
 	db.initialised = true
 	// Add to connection pool
-	storeConnectionInPool(db, name)
+	storeConnectionInPool(db, db.name)
 	logHandler.DatabaseLogger.Printf("Opened [%v.db] data connection [codec=%v]", db.databaseName, db.connection.Node.Codec().Name())
 	connect.Stop(1)
 	return &db
@@ -69,7 +71,7 @@ func storeConnectionInPool(db DB, key string) {
 }
 
 func validate(data any, db *DB) error {
-	timer := timing.Start(domain, actions.VALIDATE.GetCode(), "")
+	timer := timing.Start(db.name, actions.VALIDATE.GetCode(), "")
 	logHandler.DatabaseLogger.Printf("Validate [%+v] [%v.db]", getType(data), db.name)
 	err := commonErrors.HandleGoValidatorError(dataValidator.Struct(data))
 	if err != nil {

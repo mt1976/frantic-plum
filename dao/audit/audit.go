@@ -10,6 +10,7 @@ import (
 	"github.com/mt1976/frantic-core/application"
 	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/dao/actions"
 	"github.com/mt1976/frantic-core/dateHelpers"
 	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/mt1976/frantic-core/timing"
@@ -79,8 +80,6 @@ var (
 	GET          Action
 	REPAIR       Action
 	audit        Action
-	CONNECT      Action
-	DISCONNECT   Action
 	BACKUP       Action
 )
 
@@ -98,11 +97,8 @@ func init() {
 	PROCESS = Action{code: "PRC", description: "Process", silent: false, short: "Process"}
 	IMPORT = Action{code: "IMP", description: "Import", silent: false, short: "Import"}
 	EXPORT = Action{code: "EXP", description: "Export", silent: false, short: "Export"}
-	GET = Action{code: "GET", description: "Get", silent: true, short: "Get"}
 	REPAIR = Action{code: "REP", description: "Repaired", silent: false, short: "Repair"}
 	audit = Action{code: "AUD", description: "Audit", silent: true, short: "Audit"}
-	CONNECT = Action{code: "CON", description: "Connect", silent: true, short: "Connect"}
-	DISCONNECT = Action{code: "DIS", description: "Disconnect", silent: true, short: "Disconnect"}
 	BACKUP = Action{code: "BAK", description: "Backup", silent: true, short: "Backup"}
 }
 
@@ -120,7 +116,7 @@ func (a *Action) popMessage() string {
 func (a *Audit) Action(ctx context.Context, action Action) error {
 
 	message := action.popMessage()
-	timingMessage := fmt.Sprintf("Action=[%v] Message=[%v]", action.Code(), message)
+	timingMessage := fmt.Sprintf("Action=[%v] Message=[%v]", actions.AUDIT.GetCode(), message)
 	clock := timing.Start("Audit", audit.Description(), timingMessage)
 
 	auditTime := time.Now()

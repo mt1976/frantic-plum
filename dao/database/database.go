@@ -18,7 +18,7 @@ type DB struct {
 }
 
 func Connect() *DB {
-	return connect(domain)
+	return connect("database")
 }
 
 func NamedConnect(name string) *DB {
@@ -26,7 +26,7 @@ func NamedConnect(name string) *DB {
 }
 
 func (db *DB) Backup(loc string) {
-	timer := timing.Start(domain, actions.BACKUP.GetCode(), db.databaseName)
+	timer := timing.Start(db.name, actions.BACKUP.GetCode(), db.databaseName)
 	logHandler.DatabaseLogger.Printf("Backup [%v.db] data started...", db.databaseName)
 	db.Disconnect()
 	ioHelpers.Backup(db.databaseName, loc)
@@ -37,7 +37,7 @@ func (db *DB) Backup(loc string) {
 }
 
 func (db *DB) Disconnect() {
-	timer := timing.Start(domain, actions.DISCONNECT.Code, db.databaseName)
+	timer := timing.Start(db.name, actions.DISCONNECT.Code, db.databaseName)
 	logHandler.DatabaseLogger.Printf("Closing [%v.db] connection", db.name)
 	err := db.connection.Close()
 	if err != nil {
