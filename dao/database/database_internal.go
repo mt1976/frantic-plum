@@ -38,8 +38,8 @@ func connect(name string) *DB {
 	}
 	// check if connection already exists
 	if connectionPool[name] != nil && connectionPool[name].name == name {
-		logHandler.DatabaseLogger.Printf("Connection already open [%v], using connection pool [%v] [codec=%v]", connectionPool[domain].name, connectionPool[domain].databaseName, connectionPool[domain].connection.Node.Codec().Name())
-		return connectionPool[domain]
+		logHandler.DatabaseLogger.Printf("Connection already open [%v], using connection pool [%v] [codec=%v]", connectionPool[name].name, connectionPool[name].databaseName, connectionPool[name].connection.Node.Codec().Name())
+		return connectionPool[name]
 	}
 	db := DB{}
 	db.name = name
