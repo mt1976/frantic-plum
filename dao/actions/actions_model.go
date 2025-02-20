@@ -38,6 +38,7 @@ var INITIALISE Action = Action{Name: "Initialise", userDefined: false, Code: "IN
 var SHUTDOWN Action = Action{Name: "Shutdown", userDefined: false, Code: "SHUTDOWN"}
 var RESTART Action = Action{Name: "Restart", userDefined: false, Code: "RESTART"}
 var RELOAD Action = Action{Name: "Reload", userDefined: false, Code: "RELOAD"}
+var CLEAR Action = Action{Name: "Clear", userDefined: false, Code: "CLEAR"}
 
 func New(name string) Action {
 	return Action{Name: name, userDefined: true}
@@ -47,7 +48,7 @@ func (bt Action) GetName() string {
 	return strings.ToUpper(bt.Name)
 }
 func (bt Action) GetCode() string {
-	return strings.ToUpper(bt.Code[0:4])
+	return bt.Code[0:4]
 }
 
 func (bt Action) IsUserDefined() bool {
