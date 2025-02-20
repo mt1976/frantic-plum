@@ -7,6 +7,7 @@ import (
 
 	"github.com/mt1976/frantic-core/application"
 	"github.com/mt1976/frantic-core/commonConfig"
+	"github.com/mt1976/frantic-core/dao/database"
 	"github.com/mt1976/frantic-core/dateHelpers"
 	"github.com/mt1976/frantic-core/ioHelpers"
 	"github.com/mt1976/frantic-core/jobs"
@@ -18,25 +19,25 @@ import (
 type DatabaseBackupCleanerJob struct {
 }
 
-func (p DatabaseBackupCleanerJob) Run() error {
-	jobs.Announce(p, "Started")
+func (job *DatabaseBackupCleanerJob) Run() error {
+	jobs.Announce(job, "Started")
 	pruneExpiredBackups()
-	jobs.NextRun(p)
-	jobs.Announce(p, "Completed")
+	jobs.NextRun(job)
+	jobs.Announce(job, "Completed")
 	return nil
 }
 
-func (p DatabaseBackupCleanerJob) Service() func() {
+func (job *DatabaseBackupCleanerJob) Service() func() {
 	return func() {
-		_ = p.Run()
+		_ = job.Run()
 	}
 }
 
-func (p DatabaseBackupCleanerJob) Schedule() string {
+func (job *DatabaseBackupCleanerJob) Schedule() string {
 	return "25 0 * * *"
 }
 
-func (p DatabaseBackupCleanerJob) Name() string {
+func (job *DatabaseBackupCleanerJob) Name() string {
 	//name, _ := translation.Get("Scheduled Database Maintenance - Prune Old Backups")
 	return "Maintenance - Prune Old Backups"
 }
@@ -112,4 +113,8 @@ func getDateFromBackupFolderName(folder string) (date time.Time, err error) {
 		return
 	}
 	return
+}
+
+func (job *DatabaseBackupCleanerJob) AddFunction(f func() (database.DB, error)) {
+	//Notjng to do
 }

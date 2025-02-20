@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mt1976/frantic-core/dao/actions"
 	"github.com/mt1976/frantic-core/dao/database"
 	"github.com/mt1976/frantic-core/dateHelpers"
 	"github.com/mt1976/frantic-core/ioHelpers"
@@ -14,11 +15,10 @@ import (
 )
 
 type DatabaseBackupJob struct {
-	db   *database.DB
-	name string
+	funcs []func() (database.DB, error)
 }
 
-func (job DatabaseBackupJob) Run() error {
+func (job *DatabaseBackupJob) Run() error {
 	jobs.Announce(job, "Started")
 	performDatabaseBackup(job)
 	jobs.NextRun(job)
@@ -26,23 +26,24 @@ func (job DatabaseBackupJob) Run() error {
 	return nil
 }
 
-func (job DatabaseBackupJob) Service() func() {
+func (job *DatabaseBackupJob) Service() func() {
 	return func() {
 		_ = job.Run()
 	}
 }
 
-func (job DatabaseBackupJob) Schedule() string {
+func (job *DatabaseBackupJob) Schedule() string {
 	return "55 11 * * *"
 }
 
-func (job DatabaseBackupJob) Name() string {
+func (job *DatabaseBackupJob) Name() string {
 	//name, _ := translation.Get("Scheduled Database Backup")
-	return "Maintenance - Backup - " + job.name
+	return "Maintenance - Backup Database"
 }
 
-func performDatabaseBackup(job DatabaseBackupJob) {
-	j := timing.Start(job.Name(), "Backup", "All")
+func performDatabaseBackup(job *DatabaseBackupJob) {
+	logHandler.ServiceLogger.Printf("[%v] [%v] Started", domain, job.Name())
+	j := timing.Start(job.Name(), actions.BACKUP.Code, "All")
 
 	dateTime := time.Now().Format(dateHelpers.Format.BackupFolder)
 	logHandler.ServiceLogger.Printf("[%v] [BACKUP] Date=[%v]", domain, dateTime)
@@ -56,7 +57,18 @@ func performDatabaseBackup(job DatabaseBackupJob) {
 		logHandler.ErrorLogger.Printf("[%v] [%v] Error=[%v]", domain, strings.ToUpper(job.Name()), err.Error())
 	}
 
-	job.db.Backup(fullBackupPath)
+	for _, thisFunc := range job.funcs {
+		logHandler.ServiceLogger.Printf("[%v] [%v]", domain, job.Name())
+		db, err := thisFunc()
+		if err != nil {
+			logHandler.ErrorLogger.Panicf("[%v] [%v] Error=[%v]", domain, strings.ToUpper(job.Name()), err.Error())
+		}
+		db.Backup(fullBackupPath)
+	}
+	j.Stop(len(job.funcs))
+	logHandler.ServiceLogger.Printf("[%v] [%v] Completed", domain, job.Name())
+}
 
-	j.Stop(6)
+func (job *DatabaseBackupJob) AddFunction(f func() (database.DB, error)) {
+	job.funcs = append(job.funcs, f)
 }
