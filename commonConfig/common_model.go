@@ -15,14 +15,16 @@ type Settings struct {
 		Locale      string `toml:"locale"`
 	} `toml:"Application"`
 	Database struct {
-		Version int    `toml:"version"`
-		Type    string `toml:"type"`
-		Host    string `toml:"host"`
-		Port    int    `toml:"port"`
-		Name    string `toml:"name"`
-		User    string `toml:"user"`
-		Pass    string `toml:"pass"`
-		Path    string `toml:"path"`
+		Version  int    `toml:"version"`
+		Type     string `toml:"type"`
+		Host     string `toml:"host"`
+		Port     int    `toml:"port"`
+		Name     string `toml:"name"`
+		User     string `toml:"user"`
+		Pass     string `toml:"pass"`
+		Path     string `toml:"path"`
+		PoolSize int    `toml:"poolSize"`
+		Timeout  int    `toml:"timeout"`
 	} `toml:"Database"`
 	Server struct {
 		Host        string `toml:"host"`

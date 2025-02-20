@@ -455,3 +455,17 @@ func (s *Settings) GetDatabasePassword() string {
 func (s *Settings) GetDatabasePortAsString() string {
 	return strconv.Itoa(s.Database.Port)
 }
+
+func (s *Settings) GetDatabasePoolSize() int {
+	if s.Database.PoolSize == 0 {
+		return 10 // Default to 10 connections
+	}
+	return s.Database.PoolSize
+}
+
+func (s *Settings) GetDatabaseTimeout() int {
+	if s.Database.Timeout == 0 {
+		return 30 // Default to 30 seconds
+	}
+	return s.Database.Timeout
+}

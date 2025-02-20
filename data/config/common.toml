@@ -14,6 +14,14 @@ locale = "en_GB"
 [Database]
 version = 1
 type = "storm"
+host = ""
+port = 0
+name = ""
+user = ""
+pass = ""
+path = ""
+poolsize = 0
+timeout = 0
 
 [Server]
 host = "127.0.0.1"

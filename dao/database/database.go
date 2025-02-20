@@ -6,6 +6,7 @@ import (
 	storm "github.com/asdine/storm/v3"
 	"github.com/asdine/storm/v3/index"
 	validator "github.com/go-playground/validator/v10"
+	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
 	"github.com/mt1976/frantic-core/dao/actions"
 	"github.com/mt1976/frantic-core/ioHelpers"
@@ -22,11 +23,19 @@ type DB struct {
 	initialised  bool
 }
 
+var connectionPool map[string]*DB
+var connectionPoolMaxSize int
+var cfg *commonConfig.Settings
+
 var dataValidator *validator.Validate
 
 func init() {
 	//	Connect()
+	cfg := commonConfig.Get()
+
 	dataValidator = validator.New(validator.WithRequiredStructEnabled())
+	connectionPool = make(map[string]*DB)
+	connectionPoolMaxSize = cfg.GetDatabasePoolSize()
 }
 
 func Connect() *DB {
@@ -38,21 +47,35 @@ func NamedConnect(name string) *DB {
 }
 
 func connect(name string) *DB {
+	if connectionPool[domain] != nil {
+		logHandler.DatabaseLogger.Printf("[%v] db already open [%v.db] data connection", strings.ToUpper(domain), connectionPool[domain].name)
+		return connectionPool[domain]
+	}
 	db := DB{}
 	db.name = name
 	db.databaseName = ioHelpers.GetDBFileName(name)
 	connect := timing.Start(domain, actions.CONNECT.GetCode(), db.databaseName)
 	var err error
-	db.connection, err = storm.Open(db.databaseName, storm.BoltOptions(0666, nil))
+	db.connection, err = storm.Open(db.databaseName, storm.BoltOptions(0777, nil))
 	if err != nil {
 		connect.Stop(0)
 		logHandler.ErrorLogger.Panicf("[%v] Opening [%v.db] connection Error=[%v]", strings.ToUpper(domain), strings.ToLower(db.databaseName), err.Error())
 		panic(commonErrors.WrapConnectError(err))
 	}
 	db.initialised = true
+	// Add to connection pool
+	storeConnectionInPool(db)
 	logHandler.DatabaseLogger.Printf("[%v] Opened [%v.db] data connection", strings.ToUpper(domain), db.databaseName)
 	connect.Stop(1)
 	return &db
+}
+
+func storeConnectionInPool(db DB) {
+	if len(connectionPool) >= connectionPoolMaxSize {
+		logHandler.DatabaseLogger.Panicf("[%v] Connection pool full [%v]", strings.ToUpper(domain), connectionPoolMaxSize)
+		return
+	}
+	connectionPool[domain] = &db
 }
 
 func (db *DB) Backup(loc string) {
