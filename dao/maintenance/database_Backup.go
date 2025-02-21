@@ -19,10 +19,14 @@ type DatabaseBackupJob struct {
 }
 
 func (job *DatabaseBackupJob) Run() error {
+
 	jobs.Announce(job.Name(), "Started")
+
 	performDatabaseBackup(job)
+
 	jobs.NextRun(job.Name(), job.Schedule())
 	jobs.Announce(job.Name(), "Completed")
+
 	return nil
 }
 
@@ -42,11 +46,11 @@ func (job *DatabaseBackupJob) Name() string {
 }
 
 func performDatabaseBackup(job *DatabaseBackupJob) {
-	logHandler.ServiceLogger.Printf("[%v] [%v] Started", domain, job.Name())
+	logHandler.InfoLogger.Printf("[%v] [%v] Started", domain, job.Name())
 	j := timing.Start(job.Name(), actions.BACKUP.Code, "All")
 
 	dateTime := time.Now().Format(dateHelpers.Format.BackupFolder)
-	logHandler.ServiceLogger.Printf("[%v] [BACKUP] Date=[%v]", domain, dateTime)
+	logHandler.InfoLogger.Printf("[%v] [BACKUP] Date=[%v]", domain, dateTime)
 
 	destPath := paths.Backups().String() + paths.Seperator() + dateTime
 	fullBackupPath := paths.Application().String() + destPath
@@ -63,10 +67,16 @@ func performDatabaseBackup(job *DatabaseBackupJob) {
 		if err != nil {
 			logHandler.ErrorLogger.Panicf("[%v] [%v] Error=[%v]", domain, strings.ToUpper(job.Name()), err.Error())
 		}
+		logHandler.InfoLogger.Printf("[%v] [%v] Backup [%v]", domain, job.Name(), db.Name)
+		db.Disconnect()
+		logHandler.InfoLogger.Printf("[%v] [%v] Disconnected [%v]", domain, job.Name(), db.Name)
 		db.Backup(fullBackupPath)
+		logHandler.InfoLogger.Printf("[%v] [%v] Backup Done [%v]", domain, job.Name(), db.Name)
+		db.Reconnect()
+		logHandler.InfoLogger.Printf("[%v] [%v] Reconnected [%v]", domain, job.Name(), db.Name)
 	}
 	j.Stop(len(job.funcs))
-	logHandler.ServiceLogger.Printf("[%v] [%v] Completed", domain, job.Name())
+	logHandler.InfoLogger.Printf("[%v] [%v] Completed", domain, job.Name())
 }
 
 func (job *DatabaseBackupJob) AddFunction(fn func() (*database.DB, error)) {

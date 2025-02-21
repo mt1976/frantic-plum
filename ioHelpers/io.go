@@ -78,19 +78,22 @@ func Backup(table, location string) {
 	time.Sleep(1 * time.Second)
 	timing := timing.Start(table, "Backup", "")
 	//dateTime := time.Now().Format("20060102150405")
-	toPath := paths.Application().String() + location
+	toPath := location // location has all the path info
 	toFile := toPath + paths.Seperator() + table + ".db"
 
 	fromPath := paths.Database().String()
 	fromFile := paths.Application().String() + paths.Database().String() + paths.Seperator() + table + ".db"
 	logHandler.EventLogger.Printf("Backup=[%v] Path=[%v]", strings.ToLower(table), paths.Application().String())
 	logHandler.EventLogger.Printf("Backup=[%v] Database=[%v.db]", strings.ToLower(table), table)
-	logHandler.EventLogger.Printf("Backup=[%v] From=[%v]", strings.ToLower(table), fromPath)
+	logHandler.EventLogger.Printf("Backup=[%v] From=[%v] %v", strings.ToLower(table), fromPath, toFile)
 	logHandler.EventLogger.Printf("Backup=[%v] To=[%v]", strings.ToLower(table), toPath)
 
 	// remove last char from path
-	toPath = toPath[:len(toPath)-1]
-	fromPath = fromPath[:len(fromPath)-1]
+	//toPath = toPath[:len(toPath)-1]
+	//fromPath = fromPath[:len(fromPath)-1]
+
+	logHandler.InfoLogger.Printf("BackupPaths=[%v] [%v] to [%v]", strings.ToLower(table), fromPath, toPath)
+	logHandler.InfoLogger.Printf("BackupFiles=[%v] [%v] to [%v]", strings.ToLower(table), fromFile, toFile)
 
 	err := CopyFile(fromFile, toFile)
 	if err != nil {
