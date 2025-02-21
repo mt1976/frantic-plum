@@ -20,7 +20,7 @@ type DB struct {
 }
 
 func Connect() *DB {
-	return connect("database")
+	return connect("main")
 }
 
 func ConnectToNamedDB(name string) *DB {
@@ -28,41 +28,40 @@ func ConnectToNamedDB(name string) *DB {
 }
 
 func (db *DB) Reconnect() {
-	logHandler.InfoLogger.Printf("[RECONNECT] Reconnecting [%v.db] data - %+v", db.Name, db)
-	logHandler.InfoLogger.Printf("[RECONNECT] Connection Pool [%+v]", connectionPool)
+	logHandler.DatabaseLogger.Printf("[RECONNECT] Reconnecting [%v.db] data - %+v", db.Name, db)
+	logHandler.DatabaseLogger.Printf("[RECONNECT] Connection Pool [%+v]", connectionPool)
 	for key, value := range connectionPool {
-		logHandler.InfoLogger.Printf("[RECONNECT] Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
+		logHandler.DatabaseLogger.Printf("[RECONNECT] Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
 	}
 	connect(db.Name)
-	logHandler.InfoLogger.Printf("[RECONNECT] Reconnected [%v.db] data", db.Name)
+	logHandler.DatabaseLogger.Printf("[RECONNECT] Reconnected [%v.db] data", db.Name)
 }
 
 func (db *DB) Backup(loc string) {
 	timer := timing.Start(db.Name, actions.BACKUP.GetCode(), db.databaseName)
-	logHandler.InfoLogger.Printf("Backup [%v.db] data started... %v", db.Name, loc)
+	logHandler.DatabaseLogger.Printf("Backup [%v.db] data started... %v", db.Name, loc)
 	db.Disconnect()
-	logHandler.InfoLogger.Printf("Backup [%v.db] disconnected", db.Name)
+	logHandler.DatabaseLogger.Printf("Backup [%v.db] disconnected", db.Name)
 	ioHelpers.Backup(db.Name, loc)
-	logHandler.InfoLogger.Printf("Backup [%v.db] backup done ends", db.Name)
+	logHandler.DatabaseLogger.Printf("Backup [%v.db] backup done ends", db.Name)
 	db.Reconnect()
-	//connect(db.Name)
-	logHandler.InfoLogger.Printf("Backup [%v.db] (re)connected", db.Name)
+	logHandler.DatabaseLogger.Printf("Backup [%v.db] (re)connected", db.Name)
 	timer.Stop(1)
-	logHandler.InfoLogger.Printf("Backup [%v.db] data connection", db.Name)
+	logHandler.DatabaseLogger.Printf("Backup [%v.db] data connection", db.Name)
 }
 
 func (db *DB) Disconnect() {
 	timer := timing.Start(db.Name, actions.DISCONNECT.Code, db.databaseName)
-	logHandler.InfoLogger.Printf("[DISCONNECT] Disconnecting [%v.db] connection", db.Name)
+	logHandler.DatabaseLogger.Printf("[DISCONNECT] Disconnecting [%v.db] connection", db.Name)
 	err := db.connection.Close()
 	if err != nil {
-		logHandler.ErrorLogger.Printf("[DISCONNECT] Closing [%v.db] %v ", db.Name, err.Error())
+		logHandler.DatabaseLogger.Panicf("[DISCONNECT] Closing [%v.db] %v ", db.Name, err.Error())
 		panic(commonErrors.WrapDisconnectError(err))
 	}
 	releaseFromConnectionPool(db)
-	logHandler.InfoLogger.Printf("[DISCONNECT] Closed [%v.db] connection", db.Name)
+	logHandler.DatabaseLogger.Printf("[DISCONNECT] Closed [%v.db] connection", db.Name)
 	for key, value := range connectionPool {
-		logHandler.InfoLogger.Printf("[DISCONNECT] Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
+		logHandler.DatabaseLogger.Printf("[DISCONNECT] Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
 	}
 	timer.Stop(1)
 }
@@ -88,36 +87,39 @@ func (db *DB) Drop(data any) error {
 }
 
 func (db *DB) Update(data any) error {
+	logHandler.DatabaseLogger.Printf("Update [%+v] [%v.db] - Start", dao.GetStructType(data), db.Name)
 	err := validate(data, db)
 	if err != nil {
+		logHandler.DatabaseLogger.Printf("Update [%+v] [%v.db] - Error", dao.GetStructType(data), db.Name)
 		return commonErrors.WrapError(err)
 	}
-	logHandler.DatabaseLogger.Printf("Update [%+v] [%v.db]", dao.GetStructType(data), db.Name)
+	logHandler.DatabaseLogger.Printf("Update [%+v] [%v.db] - End", dao.GetStructType(data), db.Name)
 	return db.connection.Update(data)
 }
 
 func (db *DB) Create(data any) error {
+	logHandler.DatabaseLogger.Printf("Create [%+v] [%v.db] - Start", dao.GetStructType(data), db.Name)
 	err := validate(data, db)
 	if err != nil {
+		logHandler.DatabaseLogger.Printf("Create [%+v] [%v.db] - Error", dao.GetStructType(data), db.Name)
 		return commonErrors.WrapCreateError(err)
 	}
-	logHandler.DatabaseLogger.Printf("Create [%+v] [%v.db]", dao.GetStructType(data), db.Name)
+	logHandler.DatabaseLogger.Printf("Create [%+v] [%v.db] - End", dao.GetStructType(data), db.Name)
 	return db.connection.Save(data)
 }
 
 func (db *DB) Count(data any) (int, error) {
 	logHandler.DatabaseLogger.Printf("Count [%+v] [%v.db]", dao.GetStructType(data), db.Name)
-	logHandler.InfoLogger.Printf("Count [%+v] [%v.db] [%+v]", dao.GetStructType(data), db.Name, db)
 	for key, value := range connectionPool {
-		logHandler.InfoLogger.Printf("Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
+		logHandler.DatabaseLogger.Printf("Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
 	}
-	//logHandler.InfoLogger.Printf("connectionPool [%+v]", connectionPool)
 	return db.connection.Count(data)
 }
 
 func (db *DB) CountWhere(fieldName string, value any, to any) (int, error) {
 	logHandler.DatabaseLogger.Printf("CountWhere (%+v=%+v)[%+v] [%v.db]", fieldName, value, dao.GetStructType(to), db.Name)
 	if err := dao.IsValidFieldInStruct(fieldName, to); err != nil {
+		logHandler.DatabaseLogger.Printf("CountWhere (%+v=%+v)[%+v] [%v.db] - Error", fieldName, value, dao.GetStructType(to), db.Name)
 		return 0, err
 	}
 	query := db.connection.Select(q.Eq(fieldName, value))

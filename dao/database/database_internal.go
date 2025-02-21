@@ -33,45 +33,45 @@ func init() {
 func connect(name string) *DB {
 	// Ensure the name is lowercase
 	name = strings.ToLower(name)
-	logHandler.InfoLogger.Printf("[CONNECT] Opening Connection to [%v.db] data (%v)", name, len(connectionPool))
+	logHandler.DatabaseLogger.Printf("[CONNECT] Opening Connection to [%v.db] data (%v)", name, len(connectionPool))
 	// list the connection pool
 	for key, value := range connectionPool {
-		logHandler.InfoLogger.Printf("[CONNECT] Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
+		logHandler.DatabaseLogger.Printf("[CONNECT] Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
 	}
 	// check if connection already exists
 	if connectionPool[name] != nil && connectionPool[name].Name == name {
-		logHandler.InfoLogger.Printf("[CONNECT] Connection already open [%v], using connection pool [%v] [codec=%v]", connectionPool[name].Name, connectionPool[name].databaseName, connectionPool[name].connection.Node.Codec().Name())
+		logHandler.DatabaseLogger.Printf("[CONNECT] Connection already open [%v], using connection pool [%v] [codec=%v]", connectionPool[name].Name, connectionPool[name].databaseName, connectionPool[name].connection.Node.Codec().Name())
 		return connectionPool[name]
 	}
 
-	logHandler.InfoLogger.Printf("[CONNECT] (re)Opening [%v.db] data connection", name)
+	logHandler.DatabaseLogger.Printf("[CONNECT] (re)Opening [%v.db] data connection", name)
 	// Open a new connection
 
 	db := DB{}
 	db.Name = name
 	db.databaseName = ioHelpers.GetDBFileName(db.Name)
 	db.initialised = false
-	logHandler.InfoLogger.Printf("[CONNECT]  Opening [%v.db] data connection *%+v*", db.Name, db)
+	logHandler.DatabaseLogger.Printf("[CONNECT]  Opening [%v.db] data connection *%+v*", db.Name, db)
 	connect := timing.Start(db.Name, actions.CONNECT.GetCode(), db.databaseName)
 	var err error
 	db.connection, err = storm.Open(db.databaseName, storm.BoltOptions(0666, nil))
 	if err != nil {
 		connect.Stop(0)
-		logHandler.InfoLogger.Panicf("[CONNECT] Opening [%v.db] connection Error=[%v]", strings.ToLower(db.databaseName), err.Error())
+		logHandler.DatabaseLogger.Fatalf("[CONNECT] Opening [%v.db] connection Error=[%v]", strings.ToLower(db.databaseName), err.Error())
 		panic(commonErrors.WrapConnectError(err))
 	}
 	db.initialised = true
-	logHandler.InfoLogger.Printf("[CONNECT]  Connection Pool [%+v]", connectionPool)
+	logHandler.DatabaseLogger.Printf("[CONNECT]  Connection Pool [%+v]", connectionPool)
 	for key, value := range connectionPool {
-		logHandler.InfoLogger.Printf("[CONNECT]  Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
+		logHandler.DatabaseLogger.Printf("[CONNECT]  Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
 	}
 	// Add to connection pool
 	addConnectionToPool(db, db.Name)
-	logHandler.InfoLogger.Printf("[CONNECT]  Connection Pool [%+v]", connectionPool)
+	logHandler.DatabaseLogger.Printf("[CONNECT]  Connection Pool [%+v]", connectionPool)
 	for key, value := range connectionPool {
-		logHandler.InfoLogger.Printf("[CONNECT]  Connection Pool [%v] [%v] [codec=%v] %v", key, value.databaseName, value.connection.Node.Codec().Name(), value.initialised)
+		logHandler.DatabaseLogger.Printf("[CONNECT]  Connection Pool [%v] [%v] [codec=%v] %v", key, value.databaseName, value.connection.Node.Codec().Name(), value.initialised)
 	}
-	logHandler.InfoLogger.Printf("[CONNECT] Opened [%v.db] data connection [codec=%v] %v", db.databaseName, db.connection.Node.Codec().Name(), db.initialised)
+	logHandler.DatabaseLogger.Printf("[CONNECT] Opened [%v.db] data connection [codec=%v] %v", db.databaseName, db.connection.Node.Codec().Name(), db.initialised)
 	connect.Stop(1)
 	return &db
 }
@@ -87,24 +87,24 @@ func addConnectionToPool(db DB, key string) {
 }
 
 func releaseFromConnectionPool(db *DB) {
-	logHandler.InfoLogger.Printf("[CONNECTIONPOOL] Removing [%v] from connection pool (%v)", db.Name, db.databaseName)
+	logHandler.DatabaseLogger.Printf("[CONNECTIONPOOL] Removing [%v] from connection pool (%v)", db.Name, db.databaseName)
 	for key, value := range connectionPool {
-		logHandler.InfoLogger.Printf("[CONNECTIONPOOL]  Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
+		logHandler.DatabaseLogger.Printf("[CONNECTIONPOOL]  Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
 	}
 	connectionPool[db.Name] = nil
 	delete(connectionPool, db.Name)
-	logHandler.InfoLogger.Printf("[CONNECTIONPOOL] Connection pool [size=%v]", len(connectionPool))
+	logHandler.DatabaseLogger.Printf("[CONNECTIONPOOL] Connection pool [size=%v]", len(connectionPool))
 	for key, value := range connectionPool {
-		logHandler.InfoLogger.Printf("[CONNECTIONPOOL]  Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
+		logHandler.DatabaseLogger.Printf("[CONNECTIONPOOL]  Connection Pool [%v] [%v] [codec=%v]", key, value.databaseName, value.connection.Node.Codec().Name())
 	}
 }
 
 func validate(data any, db *DB) error {
 	timer := timing.Start(db.Name, actions.VALIDATE.GetCode(), "")
-	logHandler.DatabaseLogger.Printf("Validate [%+v] [%v.db]", dao.GetStructType(data), db.Name)
+	logHandler.DatabaseLogger.Printf("validate [%+v] [%v.db]", dao.GetStructType(data), db.Name)
 	err := commonErrors.HandleGoValidatorError(dataValidator.Struct(data))
 	if err != nil {
-		logHandler.ErrorLogger.Printf("Validating %v %v [%v.db]", err.Error(), dao.GetStructType(data), db.Name)
+		logHandler.DatabaseLogger.Printf("error walidating %v %v [%v.db]", err.Error(), dao.GetStructType(data), db.Name)
 		timer.Stop(0)
 		return commonErrors.WrapValidationError(err)
 	}

@@ -1,7 +1,6 @@
 package maintenance
 
 import (
-	"strings"
 	"time"
 
 	"github.com/mt1976/frantic-core/dao/actions"
@@ -19,14 +18,9 @@ type DatabaseBackupJob struct {
 }
 
 func (job *DatabaseBackupJob) Run() error {
-
-	jobs.Announce(job.Name(), "Started")
-
+	jobs.PreRun(job)
 	performDatabaseBackup(job)
-
-	jobs.NextRun(job.Name(), job.Schedule())
-	jobs.Announce(job.Name(), "Completed")
-
+	jobs.PostRun(job)
 	return nil
 }
 
@@ -37,20 +31,23 @@ func (job *DatabaseBackupJob) Service() func() {
 }
 
 func (job *DatabaseBackupJob) Schedule() string {
-	return "55 11 * * *"
+	return "55 23 * * *"
 }
 
 func (job *DatabaseBackupJob) Name() string {
-	//name, _ := translation.Get("Scheduled Database Backup")
 	return "Maintenance - Backup Database"
 }
 
 func performDatabaseBackup(job *DatabaseBackupJob) {
-	logHandler.InfoLogger.Printf("[%v] [%v] Started", domain, job.Name())
-	j := timing.Start(job.Name(), actions.BACKUP.Code, "All")
+	logHandler.ServiceLogger.Printf("[%v] [%v] Started", domain, job.Name())
+
+	// Get a coded name for the job
+	name := jobs.CodedName(job)
+
+	j := timing.Start(name, actions.BACKUP.Code, job.Description())
 
 	dateTime := time.Now().Format(dateHelpers.Format.BackupFolder)
-	logHandler.InfoLogger.Printf("[%v] [BACKUP] Date=[%v]", domain, dateTime)
+	logHandler.ServiceLogger.Printf("[%v] [BACKUP] Date=[%v]", domain, dateTime)
 
 	destPath := paths.Backups().String() + paths.Seperator() + dateTime
 	fullBackupPath := paths.Application().String() + destPath
@@ -58,29 +55,31 @@ func performDatabaseBackup(job *DatabaseBackupJob) {
 	//create a folder
 	err := ioHelpers.MkDir(fullBackupPath)
 	if err != nil {
-		logHandler.ErrorLogger.Printf("[%v] [%v] Error=[%v]", domain, strings.ToUpper(job.Name()), err.Error())
+		logHandler.ServiceLogger.Panicf("[%v] [%v] Error=[%v]", domain, name, err.Error())
 	}
 
 	for _, thisFunc := range job.funcs {
 		logHandler.ServiceLogger.Printf("[%v] [%v]", domain, job.Name())
 		db, err := thisFunc()
 		if err != nil {
-			logHandler.ErrorLogger.Panicf("[%v] [%v] Error=[%v]", domain, strings.ToUpper(job.Name()), err.Error())
+			logHandler.ServiceLogger.Panicf("[%v] [%v] Error=[%v]", domain, name, err.Error())
 		}
-		logHandler.InfoLogger.Printf("[%v] [%v] Backup [%v]", domain, job.Name(), db.Name)
+		logHandler.ServiceLogger.Printf("[%v] [%v] Backup [%v]", domain, name, db.Name)
 		db.Disconnect()
-		logHandler.InfoLogger.Printf("[%v] [%v] Disconnected [%v]", domain, job.Name(), db.Name)
+		logHandler.ServiceLogger.Printf("[%v] [%v] Disconnected [%v]", domain, name, db.Name)
 		db.Backup(fullBackupPath)
-		logHandler.InfoLogger.Printf("[%v] [%v] Backup Done [%v]", domain, job.Name(), db.Name)
+		logHandler.ServiceLogger.Printf("[%v] [%v] Backup Done [%v]", domain, name, db.Name)
 		db.Reconnect()
-		logHandler.InfoLogger.Printf("[%v] [%v] Reconnected [%v]", domain, job.Name(), db.Name)
+		logHandler.ServiceLogger.Printf("[%v] [%v] Reconnected [%v]", domain, name, db.Name)
 	}
 	j.Stop(len(job.funcs))
-	logHandler.InfoLogger.Printf("[%v] [%v] Completed", domain, job.Name())
+	logHandler.ServiceLogger.Printf("[%v] [%v] Completed", domain, job.Name())
 }
 
 func (job *DatabaseBackupJob) AddFunction(fn func() (*database.DB, error)) {
+	logHandler.ServiceLogger.Printf("[%v] [%v] Adding Function", domain, job.Name())
 	job.funcs = append(job.funcs, fn)
+	logHandler.ServiceLogger.Printf("[%v] [%v] Function Added - No Funcs=(%v)", domain, job.Name(), len(job.funcs))
 }
 
 func (job *DatabaseBackupJob) Description() string {
