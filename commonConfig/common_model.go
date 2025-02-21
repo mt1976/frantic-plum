@@ -110,11 +110,10 @@ type Settings struct {
 	} `toml:"Email"`
 	Logging struct {
 		Disable struct {
-			General string `toml:"general"`
-			Timing  string `toml:"timing"`
-			Service string `toml:"service"`
-			Audit   string `toml:"audit"`
-
+			General     string `toml:"general"`
+			Timing      string `toml:"timing"`
+			Service     string `toml:"service"`
+			Audit       string `toml:"audit"`
 			Translation string `toml:"translation"`
 			Trace       string `toml:"trace"`
 			Warning     string `toml:"warning"`
@@ -122,6 +121,8 @@ type Settings struct {
 			Security    string `toml:"security"`
 			Database    string `toml:"database"`
 			Api         string `toml:"api"`
+			Import      string `toml:"import"`
+			Export      string `toml:"export"`
 			All         string `toml:"all"`
 		} `toml:"disable"`
 		Defaults struct {

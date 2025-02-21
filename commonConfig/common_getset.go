@@ -391,6 +391,14 @@ func (s *Settings) IsApiLoggingDisabled() bool {
 	return isTrueFalse(s.Logging.Disable.Api)
 }
 
+func (s *Settings) IsImportLoggingDisabled() bool {
+	return isTrueFalse(s.Logging.Disable.Import)
+}
+
+func (s *Settings) IsExportLoggingDisabled() bool {
+	return isTrueFalse(s.Logging.Disable.Export)
+}
+
 func (s *Settings) AreAllLogsDisabled() bool {
 	return isTrueFalse(s.Logging.Disable.All)
 }

@@ -26,6 +26,8 @@ var (
 	SecurityLogger    *log.Logger
 	DatabaseLogger    *log.Logger
 	ApiLogger         *log.Logger
+	ImportLogger      *log.Logger
+	ExportLogger      *log.Logger
 )
 
 var Reset string
@@ -121,6 +123,16 @@ func init() {
 		apiWriter = io.MultiWriter(io.Discard)
 	}
 
+	importWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "import"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
+	if settings.IsImportLoggingDisabled() || settings.AreAllLogsDisabled() {
+		importWriter = io.MultiWriter(io.Discard)
+	}
+
+	exportWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "export"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
+	if settings.IsExportLoggingDisabled() || settings.AreAllLogsDisabled() {
+		exportWriter = io.MultiWriter(io.Discard)
+	}
+
 	msgStructure := log.Ldate | log.Ltime | log.Lshortfile | log.Lmsgprefix
 
 	InfoLogger = log.New(generalWriter, formatNameWithColor(Cyan, "Info"), msgStructure)
@@ -136,6 +148,8 @@ func init() {
 	SecurityLogger = log.New(securityWriter, formatNameWithColor(Magenta, "Security"), msgStructure)
 	DatabaseLogger = log.New(databaseWriter, formatNameWithColor(Blue, "Database"), msgStructure)
 	ApiLogger = log.New(apiWriter, formatNameWithColor(Green, "API"), msgStructure)
+	ImportLogger = log.New(importWriter, formatNameWithColor(Blue, "Import"), msgStructure)
+	ExportLogger = log.New(exportWriter, formatNameWithColor(Blue, "Export"), msgStructure)
 }
 
 func TestIt() {
@@ -153,6 +167,8 @@ func TestIt() {
 	SecurityLogger.Println("Security")
 	DatabaseLogger.Println("Database")
 	ApiLogger.Println("API")
+	ImportLogger.Println("Import")
+	ExportLogger.Println("Export")
 }
 
 var hdr = "*------------------------------------------------------------------------*"
@@ -167,6 +183,8 @@ func InfoBanner(logCategory, logActivity, logMessage string) {
 	banner(logCategory, logActivity, logMessage, InfoLogger)
 }
 
+// ServiceBanner - log a banner message to the service log
+// Deprecated: No longer to be used
 func ServiceBanner(logCategory, logActivity, logMessage string) {
-	banner(logCategory, logActivity, logMessage, ServiceLogger)
+	// banner(logCategory, logActivity, logMessage, ServiceLogger)
 }
