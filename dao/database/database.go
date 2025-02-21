@@ -46,6 +46,7 @@ func (db *DB) Disconnect() {
 		logHandler.ErrorLogger.Printf("Closing [%v.db] %v ", db.name, err.Error())
 		panic(commonErrors.WrapDisconnectError(err))
 	}
+	deleteFromConnectionPool(db)
 	logHandler.DatabaseLogger.Printf("Closed [%v.db] connection", db.name)
 	timer.Stop(1)
 }

@@ -56,18 +56,24 @@ func connect(name string) *DB {
 	}
 	db.initialised = true
 	// Add to connection pool
-	storeConnectionInPool(db, db.name)
+	addConnectionToPool(db, db.name)
 	logHandler.DatabaseLogger.Printf("Opened [%v.db] data connection [codec=%v]", db.databaseName, db.connection.Node.Codec().Name())
 	connect.Stop(1)
 	return &db
 }
 
-func storeConnectionInPool(db DB, key string) {
+func addConnectionToPool(db DB, key string) {
+	logHandler.DatabaseLogger.Printf("Adding [%v] to connection pool", db.name)
 	if len(connectionPool) >= connectionPoolMaxSize {
 		logHandler.DatabaseLogger.Panicf("Connection pool full [%v]", connectionPoolMaxSize)
 		return
 	}
 	connectionPool[key] = &db
+}
+
+func deleteFromConnectionPool(db *DB) {
+	logHandler.DatabaseLogger.Printf("Deleting [%v] from connection pool", db.name)
+	delete(connectionPool, db.name)
 }
 
 func validate(data any, db *DB) error {
