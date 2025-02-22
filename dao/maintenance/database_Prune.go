@@ -109,7 +109,7 @@ func getDateFromBackupFolderName(folder string) (date time.Time, err error) {
 	// Get the date from the folder name
 	date, err = time.Parse(dateHelpers.Format.BackupFolder, folder)
 	if err != nil {
-		logHandler.ServiceLogger.Panic("[%v] [%v] Error=[%v]", domain, "BACKUP", err.Error())
+		logHandler.ServiceLogger.Panicf("[%v] [%v] Error=[%v]", domain, "BACKUP", err.Error())
 		return
 	}
 	return
