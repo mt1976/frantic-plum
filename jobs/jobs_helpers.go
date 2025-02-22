@@ -98,9 +98,9 @@ func StartScheduler() {
 
 	noEntries := len(scheduledTasks.Entries())
 	// Log the scheduled tasks
-	for x, entry := range scheduledTasks.Entries() {
-		logHandler.ServiceLogger.Printf("(%v/%v) [%v] [%v] [%v]", x+1, noEntries, entry.ID, entry.Next, entry.Job)
-	}
+	// for x, entry := range scheduledTasks.Entries() {
+	// 	logHandler.ServiceLogger.Printf("(%v/%v) [%v] [%v] [%v]", x+1, noEntries, entry.ID, entry.Next, entry.Job)
+	// }
 	logHandler.ServiceLogger.Printf("[%v] Scheduler - Started", domain)
 	clock.Stop(noEntries + 1)
 }
