@@ -76,9 +76,9 @@ func performDatabaseBackup(job *DatabaseBackupJob) {
 	logHandler.ServiceLogger.Printf("[%v] [%v] Completed", domain, job.Name())
 }
 
-func (job *DatabaseBackupJob) AddDatabaseAccessFunctions(fn func() (*database.DB, error)) {
+func (job *DatabaseBackupJob) AddDatabaseAccessFunctions(fn []func() (*database.DB, error)) {
 	logHandler.ServiceLogger.Printf("[%v] [%v] Adding Function", domain, job.Name())
-	job.databaseAccessors = append(job.databaseAccessors, fn)
+	job.databaseAccessors = append(job.databaseAccessors, fn...)
 	logHandler.ServiceLogger.Printf("[%v] [%v] Function Added - No Funcs=(%v)", domain, job.Name(), len(job.databaseAccessors))
 }
 
