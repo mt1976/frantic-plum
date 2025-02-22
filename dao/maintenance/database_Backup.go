@@ -14,7 +14,7 @@ import (
 )
 
 type DatabaseBackupJob struct {
-	databaseAccessors []func() (*database.DB, error)
+	databaseAccessors []func() ([]*database.DB, error)
 }
 
 func (job *DatabaseBackupJob) Run() error {
@@ -57,28 +57,31 @@ func performDatabaseBackup(job *DatabaseBackupJob) {
 	if err != nil {
 		logHandler.ServiceLogger.Panicf("[%v] [%v] Error=[%v]", domain, name, err.Error())
 	}
-
+	count := 0
 	for _, thisFunc := range job.databaseAccessors {
-		logHandler.ServiceLogger.Printf("[%v] [%v]", domain, job.Name())
-		db, err := thisFunc()
+		dbList, err := thisFunc()
 		if err != nil {
 			logHandler.ServiceLogger.Panicf("[%v] [%v] Error=[%v]", domain, name, err.Error())
+			panic(err)
 		}
-		logHandler.ServiceLogger.Printf("[%v] [%v] Backup [%v]", domain, name, db.Name)
-		db.Disconnect()
-		logHandler.ServiceLogger.Printf("[%v] [%v] Disconnected [%v]", domain, name, db.Name)
-		db.Backup(fullBackupPath)
-		logHandler.ServiceLogger.Printf("[%v] [%v] Backup Done [%v]", domain, name, db.Name)
-		db.Reconnect()
-		logHandler.ServiceLogger.Printf("[%v] [%v] Reconnected [%v]", domain, name, db.Name)
+		for _, db := range dbList {
+			count++
+			logHandler.ServiceLogger.Printf("[%v] [%v] Backup [%v]", domain, name, db.Name)
+			db.Disconnect()
+			logHandler.ServiceLogger.Printf("[%v] [%v] Disconnected [%v]", domain, name, db.Name)
+			db.Backup(fullBackupPath)
+			logHandler.ServiceLogger.Printf("[%v] [%v] Backup Done [%v]", domain, name, db.Name)
+			db.Reconnect()
+			logHandler.ServiceLogger.Printf("[%v] [%v] Reconnected [%v]", domain, name, db.Name)
+		}
 	}
-	j.Stop(len(job.databaseAccessors))
+	j.Stop(count)
 	logHandler.ServiceLogger.Printf("[%v] [%v] Completed", domain, job.Name())
 }
 
-func (job *DatabaseBackupJob) AddDatabaseAccessFunctions(fn []func() (*database.DB, error)) {
+func (job *DatabaseBackupJob) AddDatabaseAccessFunctions(fn func() ([]*database.DB, error)) {
 	logHandler.ServiceLogger.Printf("[%v] [%v] Adding Function", domain, job.Name())
-	job.databaseAccessors = append(job.databaseAccessors, fn...)
+	job.databaseAccessors = append(job.databaseAccessors, fn)
 	logHandler.ServiceLogger.Printf("[%v] [%v] Function Added - No Funcs=(%v)", domain, job.Name(), len(job.databaseAccessors))
 }
 
