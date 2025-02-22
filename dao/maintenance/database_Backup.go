@@ -14,7 +14,7 @@ import (
 )
 
 type DatabaseBackupJob struct {
-	funcs []func() (*database.DB, error)
+	databaseAccessors []func() (*database.DB, error)
 }
 
 func (job *DatabaseBackupJob) Run() error {
@@ -58,7 +58,7 @@ func performDatabaseBackup(job *DatabaseBackupJob) {
 		logHandler.ServiceLogger.Panicf("[%v] [%v] Error=[%v]", domain, name, err.Error())
 	}
 
-	for _, thisFunc := range job.funcs {
+	for _, thisFunc := range job.databaseAccessors {
 		logHandler.ServiceLogger.Printf("[%v] [%v]", domain, job.Name())
 		db, err := thisFunc()
 		if err != nil {
@@ -72,14 +72,14 @@ func performDatabaseBackup(job *DatabaseBackupJob) {
 		db.Reconnect()
 		logHandler.ServiceLogger.Printf("[%v] [%v] Reconnected [%v]", domain, name, db.Name)
 	}
-	j.Stop(len(job.funcs))
+	j.Stop(len(job.databaseAccessors))
 	logHandler.ServiceLogger.Printf("[%v] [%v] Completed", domain, job.Name())
 }
 
-func (job *DatabaseBackupJob) AddFunction(fn func() (*database.DB, error)) {
+func (job *DatabaseBackupJob) AddDatabaseAccessFunctions(fn func() (*database.DB, error)) {
 	logHandler.ServiceLogger.Printf("[%v] [%v] Adding Function", domain, job.Name())
-	job.funcs = append(job.funcs, fn)
-	logHandler.ServiceLogger.Printf("[%v] [%v] Function Added - No Funcs=(%v)", domain, job.Name(), len(job.funcs))
+	job.databaseAccessors = append(job.databaseAccessors, fn)
+	logHandler.ServiceLogger.Printf("[%v] [%v] Function Added - No Funcs=(%v)", domain, job.Name(), len(job.databaseAccessors))
 }
 
 func (job *DatabaseBackupJob) Description() string {

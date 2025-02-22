@@ -7,6 +7,6 @@ type Job interface {
 	Service() func()
 	Schedule() string
 	Name() string
-	AddFunction(f func() (*database.DB, error))
+	AddDatabaseAccessFunctions(f func() (*database.DB, error))
 	Description() string
 }

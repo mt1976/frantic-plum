@@ -115,8 +115,9 @@ func getDateFromBackupFolderName(folder string) (date time.Time, err error) {
 	return
 }
 
-func (job *DatabaseBackupCleanerJob) AddFunction(fn func() (*database.DB, error)) {
+func (job *DatabaseBackupCleanerJob) AddDatabaseAccessFunctions(fn func() (*database.DB, error)) {
 	// do nothing
+	panic("Not Implemented")
 }
 
 func (job *DatabaseBackupCleanerJob) Description() string {
