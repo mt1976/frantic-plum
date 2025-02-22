@@ -42,6 +42,10 @@ var CLEAR Action = Action{Name: "Clear", userDefined: false, Code: "CLEAR"}
 var LOOKUP Action = Action{Name: "Lookup", userDefined: false, Code: "LOOKUP"}
 var COUNT Action = Action{Name: "Count", userDefined: false, Code: "COUNT"}
 var MAINTENANCE Action = Action{Name: "Maintenance", userDefined: false, Code: "MAINTENANCE"}
+var START Action = Action{Name: "Start", userDefined: false, Code: "START"}
+var STOP Action = Action{Name: "Stop", userDefined: false, Code: "STOP"}
+var PAUSE Action = Action{Name: "Pause", userDefined: false, Code: "PAUSE"}
+var SCHEDULE Action = Action{Name: "Schedule", userDefined: false, Code: "SCHEDULE"}
 
 func New(name string) Action {
 	return Action{Name: name, userDefined: true}
