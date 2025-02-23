@@ -49,6 +49,19 @@ func IsValidFieldInStruct(fromField string, data any) error {
 	return nil
 }
 
+func IsValidTypeForField(field string, data, forStruct any) error {
+	dataType := reflect.TypeOf(data).String()
+	structField, found := reflect.TypeOf(forStruct).FieldByName(field)
+	if !found {
+		return commonErrors.WrapInvalidFieldError(field)
+	}
+	structFieldType := structField.Type.String()
+	if dataType != structFieldType {
+		return commonErrors.WrapInvalidTypeError(field, dataType, structFieldType)
+	}
+	return nil
+}
+
 func CheckDAOReadyState(table string, action audit.Action, isDaoReady bool) {
 	if !isDaoReady {
 		err := commonErrors.WrapDAONotInitialisedError(table, action.Description())

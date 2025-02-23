@@ -138,6 +138,10 @@ func WrapInvalidFieldError(f string) error {
 	return fmt.Errorf("invalid field %v", f)
 }
 
+func WrapInvalidTypeError(f, d, s string) error {
+	return fmt.Errorf("invalid type for field %v (%v != %v)", f, d, s)
+}
+
 func WrapRecordNotFoundError(table, field, id string) error {
 	return fmt.Errorf("%v not found where (%v=%v)", table, field, id)
 }
