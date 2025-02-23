@@ -110,20 +110,21 @@ type Settings struct {
 	} `toml:"Email"`
 	Logging struct {
 		Disable struct {
-			General     string `toml:"general"`
-			Timing      string `toml:"timing"`
-			Service     string `toml:"service"`
-			Audit       string `toml:"audit"`
-			Translation string `toml:"translation"`
-			Trace       string `toml:"trace"`
-			Warning     string `toml:"warning"`
-			Event       string `toml:"event"`
-			Security    string `toml:"security"`
-			Database    string `toml:"database"`
-			Api         string `toml:"api"`
-			Import      string `toml:"import"`
-			Export      string `toml:"export"`
-			All         string `toml:"all"`
+			General        string `toml:"general"`
+			Timing         string `toml:"timing"`
+			Service        string `toml:"service"`
+			Audit          string `toml:"audit"`
+			Translation    string `toml:"translation"`
+			Trace          string `toml:"trace"`
+			Warning        string `toml:"warning"`
+			Event          string `toml:"event"`
+			Security       string `toml:"security"`
+			Database       string `toml:"database"`
+			Api            string `toml:"api"`
+			Import         string `toml:"import"`
+			Export         string `toml:"export"`
+			Communications string `toml:"comms"`
+			All            string `toml:"all"`
 		} `toml:"disable"`
 		Defaults struct {
 			MaxSize    string `toml:"maxSize"`

@@ -191,6 +191,7 @@ database = "true"
 api = "false"
 import = "false"
 export = "false"
+comms = "false"
 all = ""
 
 [Logging.Defaults]

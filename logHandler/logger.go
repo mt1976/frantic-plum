@@ -13,21 +13,22 @@ import (
 )
 
 var (
-	WarningLogger     *log.Logger
-	InfoLogger        *log.Logger
-	ErrorLogger       *log.Logger
-	PanicLogger       *log.Logger
-	TimingLogger      *log.Logger
-	EventLogger       *log.Logger
-	ServiceLogger     *log.Logger
-	TraceLogger       *log.Logger
-	AuditLogger       *log.Logger
-	TranslationLogger *log.Logger
-	SecurityLogger    *log.Logger
-	DatabaseLogger    *log.Logger
-	ApiLogger         *log.Logger
-	ImportLogger      *log.Logger
-	ExportLogger      *log.Logger
+	WarningLogger        *log.Logger
+	InfoLogger           *log.Logger
+	ErrorLogger          *log.Logger
+	PanicLogger          *log.Logger
+	TimingLogger         *log.Logger
+	EventLogger          *log.Logger
+	ServiceLogger        *log.Logger
+	TraceLogger          *log.Logger
+	AuditLogger          *log.Logger
+	TranslationLogger    *log.Logger
+	SecurityLogger       *log.Logger
+	DatabaseLogger       *log.Logger
+	ApiLogger            *log.Logger
+	ImportLogger         *log.Logger
+	ExportLogger         *log.Logger
+	CommunicationsLogger *log.Logger
 )
 
 var Reset string
@@ -133,23 +134,29 @@ func init() {
 		exportWriter = io.MultiWriter(io.Discard)
 	}
 
+	communicationsWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "communications"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
+	if settings.IsCommunicationsLoggingDisabled() || settings.AreAllLogsDisabled() {
+		communicationsWriter = io.MultiWriter(io.Discard)
+	}
+
 	msgStructure := log.Ldate | log.Ltime | log.Lshortfile | log.Lmsgprefix
 
-	InfoLogger = log.New(generalWriter, formatNameWithColor(Cyan, "Info"), msgStructure)
+	InfoLogger = log.New(generalWriter, formatNameWithColor(White, "Info"), msgStructure)
 	WarningLogger = log.New(warningWriter, formatNameWithColor(Yellow, "Warning"), msgStructure)
 	ErrorLogger = log.New(errorWriter, formatNameWithColor(Red, "Error"), msgStructure)
 	PanicLogger = log.New(panicWriter, formatNameWithColor(Red, "Panic"), msgStructure)
 	TimingLogger = log.New(timingWriter, formatNameWithColor(Gray, "Timing"), msgStructure)
-	EventLogger = log.New(eventWriter, formatNameWithColor(Green, "Event"), msgStructure)
+	EventLogger = log.New(eventWriter, formatNameWithColor(Magenta, "Event"), msgStructure)
 	ServiceLogger = log.New(serviceWriter, formatNameWithColor(Green, "Service"), msgStructure)
 	TraceLogger = log.New(traceWriter, formatNameWithColor(White, "Trace"), msgStructure)
 	AuditLogger = log.New(auditWriter, formatNameWithColor(Yellow, "Audit"), msgStructure)
 	TranslationLogger = log.New(translationWriter, formatNameWithColor(Cyan, "Translation"), msgStructure)
 	SecurityLogger = log.New(securityWriter, formatNameWithColor(Magenta, "Security"), msgStructure)
-	DatabaseLogger = log.New(databaseWriter, formatNameWithColor(Blue, "Database"), msgStructure)
+	DatabaseLogger = log.New(databaseWriter, formatNameWithColor(Gray, "Database"), msgStructure)
 	ApiLogger = log.New(apiWriter, formatNameWithColor(Green, "API"), msgStructure)
 	ImportLogger = log.New(importWriter, formatNameWithColor(Blue, "Import"), msgStructure)
 	ExportLogger = log.New(exportWriter, formatNameWithColor(Blue, "Export"), msgStructure)
+	CommunicationsLogger = log.New(communicationsWriter, formatNameWithColor(White, "Communications"), msgStructure)
 }
 
 func TestIt() {

@@ -399,6 +399,10 @@ func (s *Settings) IsExportLoggingDisabled() bool {
 	return isTrueFalse(s.Logging.Disable.Export)
 }
 
+func (s *Settings) IsCommunicationsLoggingDisabled() bool {
+	return isTrueFalse(s.Logging.Disable.Communications)
+}
+
 func (s *Settings) AreAllLogsDisabled() bool {
 	return isTrueFalse(s.Logging.Disable.All)
 }
