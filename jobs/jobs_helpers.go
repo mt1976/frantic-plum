@@ -68,12 +68,12 @@ func CodedName(job Job) string {
 }
 
 func AddJobToScheduler(j Job) {
-	logHandler.ServiceLogger.Printf("[%v] Scheduling Job [%v] [%v]", domain, j.Name(), j.Schedule())
+	//logHandler.ServiceLogger.Printf("[%v] Scheduling Job [%v] [%v]", domain, j.Name(), j.Schedule())
 	clock := timing.Start(domain, actions.SCHEDULE.GetCode(), j.Name())
 	// Start the job
 	jobID, err := scheduledTasks.AddFunc(j.Schedule(), j.Service())
 	if err != nil {
-		logHandler.ErrorLogger.Printf("[%v] Job [%v] Schedule [%v] Error [%v]", domain, j.Name(), j.Schedule(), err.Error())
+		logHandler.ErrorLogger.Printf("[%v] Job %v Scheduling Error=[%v]", domain, stringHelpers.DQuote(j.Name()), err.Error())
 		return
 	}
 	nextRun := GetHumanReadableCronFreq(j.Schedule())
