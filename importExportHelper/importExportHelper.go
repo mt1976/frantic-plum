@@ -115,8 +115,9 @@ func ImportCSV[T any](importName string, entryTypeToInsert T, importProcessor fu
 			logHandler.ImportLogger.Panicf("Error importing %v [%v] Error=[%v]", importName, entryIdentifier, err.Error())
 			continue
 		}
+		logHandler.ImportLogger.Printf("Imported %v (%v/%v) %v=[%v]", importName, thisPos+1, totalImportEntries, importName, entryIdentifier)
+
 		count++
-		logHandler.ImportLogger.Printf("Importing %v (%v/%v) %v=[%v]", importName, thisPos+1, totalImportEntries, importName, entryIdentifier)
 	}
 
 	logHandler.ImportLogger.Printf("Imported (%v/%v) %v(s) from [%v]", count, totalImportEntries, importName, importFile.Name())
