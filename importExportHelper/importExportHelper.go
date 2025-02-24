@@ -29,7 +29,7 @@ func ExportCSV(exportName string, exports []any) error {
 
 	// initialiser(context.TODO())
 
-	exportFile := openTargetFile(exportString, exportName, logHandler.ExportLogger)
+	exportFile := openTargetFile(exportName, exportString, logHandler.ExportLogger)
 	defer exportFile.Close()
 
 	// exports, err := getter()
@@ -77,10 +77,12 @@ func openTargetFile(in, action string, useLog *log.Logger) *os.File {
 	return dataFileHandle
 }
 
-func ImportCSV(importName string, entriesToInsert []any, importMapper func(any) (string, error)) error {
-	logHandler.ImportLogger.Printf("Importing %v", importName)
+func ImportCSV[T any](importName string, entryTypeToInsert T, importProcessor func(*T) (string, error)) error {
 
-	csvFile := openTargetFile(importString, importName, logHandler.ImportLogger)
+	// Create a slice of entryTypeToInsert to hold the data from the CSV file
+	insertEntriesList := []T{}
+
+	csvFile := openTargetFile(importName, importString, logHandler.ImportLogger)
 	defer csvFile.Close()
 
 	gocsv.SetCSVReader(func(in io.Reader) gocsv.CSVReader {
@@ -91,7 +93,7 @@ func ImportCSV(importName string, entriesToInsert []any, importMapper func(any) 
 		return r                  // Allows use pipe as delimiter
 	})
 
-	if err := gocsv.UnmarshalFile(csvFile, &entriesToInsert); err != nil { // Load clients from file
+	if err := gocsv.UnmarshalFile(csvFile, &insertEntriesList); err != nil { // Load clients from file
 		logHandler.ImportLogger.Printf("Importing %v: %v - No Content, nothing to import.", domain, err.Error())
 		csvFile.Close()
 		return nil
@@ -101,19 +103,24 @@ func ImportCSV(importName string, entriesToInsert []any, importMapper func(any) 
 		logHandler.ImportLogger.Printf("Importing %v: %v", domain, err.Error())
 		panic(err)
 	}
-	totalImportEntries := len(entriesToInsert)
-	for thisPos, insertEntry := range entriesToInsert {
-		logHandler.ImportLogger.Printf("Importing %v (%v/%v)", domain, thisPos+1, totalImportEntries)
+
+	totalImportEntries := len(insertEntriesList)
+
+	count := 0
+	for thisPos, insertEntry := range insertEntriesList {
+		logHandler.ImportLogger.Printf("Import %v (%v/%v)", domain, thisPos+1, totalImportEntries)
 		// the load function is a helper function to create a new entry instance and save it to the database
 		// the parameters should be customised to suit the specific requirements of the entryination table/DAO.
-		entryIdentifier, err := importMapper(insertEntry)
+		entryIdentifier, err := importProcessor(&insertEntry)
 		if err != nil {
 			logHandler.ImportLogger.Panicf("Error importing %v [%v] [%v]", domain, entryIdentifier, err.Error())
+			continue
 		}
-		logHandler.ImportLogger.Printf("Imported %v [%v]", domain, entryIdentifier)
+		count++
+		logHandler.ImportLogger.Printf("Import %v (%v/%v) - %v=[%v]", domain, thisPos, totalImportEntries, domain, entryIdentifier)
 	}
 
-	logHandler.ImportLogger.Printf("Imported (%v) %v", len(entriesToInsert), domain)
+	logHandler.ImportLogger.Printf("Imported (%v/%v) %v", count, totalImportEntries, domain)
 	csvFile.Close()
 	return nil
 }
