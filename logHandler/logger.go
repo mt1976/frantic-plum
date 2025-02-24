@@ -139,7 +139,7 @@ func init() {
 		communicationsWriter = io.MultiWriter(io.Discard)
 	}
 
-	msgStructure := log.Ldate | log.Ltime | log.Lshortfile | log.Lmsgprefix
+	msgStructure := log.Lmsgprefix | log.Ldate | log.Lmicroseconds | log.Lshortfile
 
 	InfoLogger = log.New(generalWriter, formatNameWithColor(White, "Info"), msgStructure)
 	WarningLogger = log.New(warningWriter, formatNameWithColor(Yellow, "Warning"), msgStructure)
@@ -176,6 +176,7 @@ func TestIt() {
 	ApiLogger.Println("API")
 	ImportLogger.Println("Import")
 	ExportLogger.Println("Export")
+	CommunicationsLogger.Println("Communications")
 }
 
 var hdr = "*------------------------------------------------------------------------*"
@@ -194,4 +195,8 @@ func InfoBanner(logCategory, logActivity, logMessage string) {
 // Deprecated: No longer to be used
 func ServiceBanner(logCategory, logActivity, logMessage string) {
 	// banner(logCategory, logActivity, logMessage, ServiceLogger)
+}
+
+func Break() {
+	InfoLogger.Println(formatNameWithColor(Cyan, hdr))
 }

@@ -7,12 +7,16 @@ import (
 
 	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/dao/actions"
+	"github.com/mt1976/frantic-core/logHandler"
+	"github.com/mt1976/frantic-core/timing"
 	"gopkg.in/gomail.v2"
 )
 
 var EMAIL_From string
 var EMAIL_Footer string
 var Emailer *gomail.Dialer
+var domain = "Notification"
 
 // The `const` block defines a set of constants used in the email package.
 const (
@@ -27,7 +31,8 @@ const (
 // The function initializes and returns a gomail.Dialer object for sending emails.
 func Email_init() *gomail.Dialer {
 	//fmt.Println("Email Init")
-
+	clock := timing.Start("Email", actions.MESSAGE.GetCode(), "Initialise")
+	logHandler.CommunicationsLogger.Printf("[%v] Email - Initialising...", domain)
 	set := commonConfig.Get()
 
 	emailService := set.GetEmailHost()
@@ -44,13 +49,16 @@ func Email_init() *gomail.Dialer {
 
 	Emailer = gomail.NewDialer(emailService, emailPort, emailUser, emailPassword)
 	Emailer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	logHandler.CommunicationsLogger.Printf("[%v] Email - Initialised", domain)
+	clock.Stop(1)
 	return Emailer
 }
 
 // The function `SendEmail` sends an email with the specified recipient, subject, and body, using the
 // `gomail` package in Go.
 func SendEmail(to string, name string, subject string, body string) {
-
+	clock := timing.Start("Email", actions.MESSAGE.GetCode(), "Send")
+	logHandler.CommunicationsLogger.Printf("[%v] Email - Sending...", domain)
 	set := commonConfig.Get()
 
 	// The code block is creating a new email message using the `gomail` package.
@@ -68,4 +76,6 @@ func SendEmail(to string, name string, subject string, body string) {
 	if err := Emailer.DialAndSend(m); err != nil {
 		panic(commonErrors.WrapEmailError(err))
 	}
+	logHandler.CommunicationsLogger.Printf("[%v] Email - Sent to [%v] Subject [%v]", domain, to, subject)
+	clock.Stop(1)
 }

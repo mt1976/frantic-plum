@@ -8,12 +8,16 @@ import (
 	"github.com/gregdel/pushover"
 	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/dao/actions"
 	"github.com/mt1976/frantic-core/logHandler"
+	"github.com/mt1976/frantic-core/timing"
 )
 
-var name = "Notifications"
+var domain = "Notification"
 
 func Send(inMessage, inTitle string, key int) error {
+	clock := timing.Start(domain, actions.MESSAGE.GetCode(), "Pushover Notification")
+	logHandler.CommunicationsLogger.Printf("[%v] Pushover - Sending...", domain)
 
 	set := commonConfig.Get()
 
@@ -27,10 +31,10 @@ func Send(inMessage, inTitle string, key int) error {
 		}
 	}
 
-	logHandler.InfoLogger.Printf("[%v] Api Token=[%v] User Key=[%v]", strings.ToUpper(name), poAPIKey, poUserKey)
+	logHandler.CommunicationsLogger.Printf("[%v] Api Token=[%v] User Key=[%v]", strings.ToUpper(domain), poAPIKey, poUserKey)
 
 	if poUserKey == "" || poAPIKey == "" {
-		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), "Pushover User Key or API Token not set, message not sent")
+		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(domain), "Pushover User Key or API Token not set, message not sent")
 		return nil
 	}
 
@@ -61,13 +65,15 @@ func Send(inMessage, inTitle string, key int) error {
 	}
 	//Spew(*message)
 
-	logHandler.EventLogger.Printf("[%v] Message Title=[%v] Message=[%v]", strings.ToUpper(name), message.Title, message.Message)
+	logHandler.CommunicationsLogger.Printf("[%v] Pusover - Message [Title=%v] [Message=%v]", domain, message.Title, message.Message)
 
 	_, err := app.SendMessage(message, recipient)
 	if err != nil {
-		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err.Error())
+		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(domain), err.Error())
 		return commonErrors.WrapNotificationError(err)
 	}
+
+	clock.Stop(1)
 
 	return nil
 }
