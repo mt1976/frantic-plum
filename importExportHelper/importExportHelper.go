@@ -24,18 +24,11 @@ var domain = "impex"
 var importString = "Import"
 var exportString = "Export"
 
-func ExportCSV(exportName string, exports []any) error {
+func ExportCSV[T any](exportName string, exportList []T) error {
 	logHandler.ExportLogger.Printf("Exporting %v", exportName)
-
-	// initialiser(context.TODO())
 
 	exportFile := openTargetFile(exportName, exportString, logHandler.ExportLogger)
 	defer exportFile.Close()
-
-	// exports, err := getter()
-	// if err != nil {
-	// 	logHandler.ExportLogger.Panicf("Error Getting all texts: %v", err.Error())
-	// }
 
 	gocsv.SetCSVWriter(func(out io.Writer) *gocsv.SafeCSVWriter {
 		writer := csv.NewWriter(out)
@@ -44,22 +37,22 @@ func ExportCSV(exportName string, exports []any) error {
 		return gocsv.NewSafeCSVWriter(writer)
 	})
 
-	_, err := gocsv.MarshalString(exports) // Get all texts as CSV string
+	_, err := gocsv.MarshalString(exportList) // Get all texts as CSV string
 	if err != nil {
-		logHandler.ExportLogger.Panicf("error exporting texts: %v", err.Error())
+		logHandler.ExportLogger.Panicf("error exporting %v: %v", exportName, err.Error())
 	}
 
-	err = gocsv.MarshalFile(&exports, exportFile) // Get all texts as CSV string
+	err = gocsv.MarshalFile(exportList, exportFile) // Get all texts as CSV string
 	if err != nil {
-		logHandler.ExportLogger.Panicf("error exporting texts: %v", err.Error())
+		logHandler.ExportLogger.Panicf("error exporting %v: %v", exportName, err.Error())
 	}
 
-	msg := fmt.Sprintf("# Generated (%v) %vs at %v on %v", len(exports), exportName, time.Now().Format("15:04:05"), time.Now().Format("2006-01-02"))
+	msg := fmt.Sprintf("# Generated (%v) %vs at %v on %v", len(exportList), exportName, time.Now().Format("15:04:05"), time.Now().Format("2006-01-02"))
 	exportFile.WriteString(msg)
 
 	exportFile.Close()
 
-	logHandler.ExportLogger.Printf("Exported (%v) %vs", len(exports), exportName)
+	logHandler.ExportLogger.Printf("Exported (%v) %vs", len(exportList), exportName)
 	return nil
 }
 
@@ -94,13 +87,13 @@ func ImportCSV[T any](importName string, entryTypeToInsert T, importProcessor fu
 	})
 
 	if err := gocsv.UnmarshalFile(csvFile, &insertEntriesList); err != nil { // Load clients from file
-		logHandler.ImportLogger.Printf("Importing %v: %v - No Content, nothing to import.", domain, err.Error())
+		logHandler.ImportLogger.Printf("Importing %v: %v - No Content, nothing to import.", importName, err.Error())
 		csvFile.Close()
 		return nil
 	}
 
 	if _, err := csvFile.Seek(0, 0); err != nil { // Go to the start of the file
-		logHandler.ImportLogger.Printf("Importing %v: %v", domain, err.Error())
+		logHandler.ImportLogger.Printf("Importing %v: %v", importName, err.Error())
 		panic(err)
 	}
 
@@ -108,19 +101,19 @@ func ImportCSV[T any](importName string, entryTypeToInsert T, importProcessor fu
 
 	count := 0
 	for thisPos, insertEntry := range insertEntriesList {
-		logHandler.ImportLogger.Printf("Import %v (%v/%v)", domain, thisPos+1, totalImportEntries)
+		logHandler.ImportLogger.Printf("Import %v (%v/%v)", importName, thisPos+1, totalImportEntries)
 		// the load function is a helper function to create a new entry instance and save it to the database
 		// the parameters should be customised to suit the specific requirements of the entryination table/DAO.
 		entryIdentifier, err := importProcessor(&insertEntry)
 		if err != nil {
-			logHandler.ImportLogger.Panicf("Error importing %v [%v] [%v]", domain, entryIdentifier, err.Error())
+			logHandler.ImportLogger.Panicf("Error importing %v [%v] [%v]", importName, entryIdentifier, err.Error())
 			continue
 		}
 		count++
-		logHandler.ImportLogger.Printf("Import %v (%v/%v) - %v=[%v]", domain, thisPos, totalImportEntries, domain, entryIdentifier)
+		logHandler.ImportLogger.Printf("Import %v (%v/%v) - %v=[%v]", importName, thisPos, totalImportEntries, domain, entryIdentifier)
 	}
 
-	logHandler.ImportLogger.Printf("Imported (%v/%v) %v", count, totalImportEntries, domain)
+	logHandler.ImportLogger.Printf("Imported (%v/%v) %v", count, totalImportEntries, importName)
 	csvFile.Close()
 	return nil
 }
