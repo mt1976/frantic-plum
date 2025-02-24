@@ -22,7 +22,6 @@ import (
 // this struct should be customised to suit the specific requirements of the entryination table/DAO.
 
 var FIELDSEPARATOR = '|'
-var domain = "Import/Export"
 var importString = "Import"
 var exportString = "Export"
 
