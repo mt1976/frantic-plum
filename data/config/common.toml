@@ -35,13 +35,19 @@ host = "192.168.1.145"
 port = 5050
 protocol = "http"
 
-[[Translation.Permitted]]
+[Translation.Permitted]
 [[Translation.Permitted.Origins]]
 name = "demon_pear"
 [[Translation.Permitted.Origins]]
 name = "trnsl8r_connect"
 [[Translation.Permitted.Origins]]
 name = "cosmic-orange"
+[[Translation.Permitted.Origins]]
+name = "frantic-aegis"
+[[Translation.Permitted.Origins]]
+name = "frantic-core"
+[[Translation.Permitted.Origins]]
+name = "frantic-template"
 
 
 [[Translation.Permitted.Locales]]

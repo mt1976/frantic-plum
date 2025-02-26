@@ -41,3 +41,25 @@ func (s *Settings) Spew() {
 	fmt.Printf("[%v][APPLICATION]\n", nm)
 	fmt.Printf("[%v] Name: %+v\n", nm, s)
 }
+
+func isTrueFalse(s string) bool {
+	// We only disable the logging if the value is "true"/"t" or "yes"/"y"
+
+	if s == "" {
+		return false
+	}
+
+	logTrue := "true"
+	if strings.EqualFold(s[:1], "y") {
+		logTrue = "yes"
+	}
+
+	if strings.EqualFold(s, logTrue[:1]) {
+		return true
+	}
+	if strings.EqualFold(s, logTrue) {
+		return true
+	}
+
+	return false
+}

@@ -1,7 +1,5 @@
 package commonConfig
 
-import "strings"
-
 func (s *Settings) GetHistory_MaxHistoryEntries() int {
 	return s.History.MaxEntries
 }
@@ -30,20 +28,4 @@ func (s *Settings) SEP() string {
 // Deprecated: Use GetDefault_Delimiter instead
 func (s *Settings) Delimiter() string {
 	return s.GetDefault_Delimiter()
-}
-
-func isTrueFalse(s string) bool {
-	// We only disable the logging if the value is "true"/"t" or "yes"/"y"
-	logTrue := "true"
-	if strings.EqualFold(s[:1], "y") {
-		logTrue = "yes"
-	}
-
-	if strings.EqualFold(s, logTrue[:1]) {
-		return true
-	}
-	if strings.EqualFold(s, logTrue) {
-		return true
-	}
-	return false
 }
