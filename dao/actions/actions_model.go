@@ -46,6 +46,14 @@ var START Action = Action{Name: "Start", userDefined: false, Code: "START"}
 var STOP Action = Action{Name: "Stop", userDefined: false, Code: "STOP"}
 var PAUSE Action = Action{Name: "Pause", userDefined: false, Code: "PAUSE"}
 var SCHEDULE Action = Action{Name: "Schedule", userDefined: false, Code: "SCHEDULE"}
+var RUN Action = Action{Name: "Run", userDefined: false, Code: "RUN"}
+var EXECUTE Action = Action{Name: "Execute", userDefined: false, Code: "EXECUTE"}
+var SUBMIT Action = Action{Name: "Submit", userDefined: false, Code: "SUBMIT"}
+var APPROVE Action = Action{Name: "Approve", userDefined: false, Code: "APPROVE"}
+var REJECT Action = Action{Name: "Reject", userDefined: false, Code: "REJECT"}
+var CANCEL Action = Action{Name: "Cancel", userDefined: false, Code: "CANCEL"}
+var CLOSE Action = Action{Name: "Close", userDefined: false, Code: "CLOSE"}
+var OPEN Action = Action{Name: "Open", userDefined: false, Code: "OPEN"}
 
 func New(name string) Action {
 	return Action{Name: name, userDefined: true}

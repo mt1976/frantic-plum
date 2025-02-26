@@ -26,7 +26,7 @@ func init() {
 	//	cfg = commonConfig.Get()
 	//dataValidator = validator.New(validator.WithRequiredStructEnabled())
 	//connectionPool = make(map[string]*DB)
-	connectionPoolMaxSize = cfg.GetDatabasePoolSize()
+	connectionPoolMaxSize = cfg.GetDatabase_PoolSize()
 	logHandler.DatabaseLogger.Printf("Database Connection Pool Size [%v]", connectionPoolMaxSize)
 }
 

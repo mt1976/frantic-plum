@@ -7,7 +7,7 @@ import (
 
 	"github.com/mt1976/frantic-core/commonErrors"
 	"github.com/mt1976/frantic-core/logHandler"
-	"github.com/mt1976/frantic-core/mock"
+	"github.com/mt1976/frantic-core/mockData"
 )
 
 type ISIN struct {
@@ -30,7 +30,7 @@ func (I *ISIN) IsValid() bool {
 
 	//Validate the ISIN prefix, first two characters are a valud countrycode
 	countryCode := val[:2]
-	countryInfo, err := mock.GetCountryInfo(countryCode)
+	countryInfo, err := mockData.GetCountryInfo(countryCode)
 	if err != nil || countryCode != countryInfo.ISOCode {
 		//log.Printf("[WARN] ISIN prefix not a valid country code (%v)\n", countryCode)
 		logHandler.WarningLogger.Printf("ISIN prefix not a valid country code (%v)\n", countryCode)

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	storm "github.com/asdine/storm/v3"
+	"github.com/asdine/storm/v3"
 	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
 	"github.com/mt1976/frantic-core/dao/audit"
@@ -22,8 +22,8 @@ func Initialise(cfg *commonConfig.Settings) error {
 	clock := timing.Start(name, "Initialise", "")
 	logHandler.InfoLogger.Printf("[%v] Initialising...", strings.ToUpper(name))
 
-	DBVersion = cfg.GetDatabaseVersion()
-	DBName = cfg.GetDatabaseName()
+	DBVersion = cfg.GetDatabase_Version()
+	DBName = cfg.GetDatabase_Name()
 
 	logHandler.InfoLogger.Printf("[%v] Initialised", strings.ToUpper(name))
 	clock.Stop(1)

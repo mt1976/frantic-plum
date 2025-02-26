@@ -1,4 +1,4 @@
-package mock
+package mockData
 
 import (
 	"github.com/mt1976/frantic-core/logHandler"

@@ -14,6 +14,7 @@ type Settings struct {
 		License     string `toml:"license"`
 		Locale      string `toml:"locale"`
 	} `toml:"Application"`
+
 	Database struct {
 		Version  int    `toml:"version"`
 		Type     string `toml:"type"`
@@ -26,33 +27,58 @@ type Settings struct {
 		PoolSize int    `toml:"poolSize"`
 		Timeout  int    `toml:"timeout"`
 	} `toml:"Database"`
+
 	Server struct {
 		Host        string `toml:"host"`
 		Port        int    `toml:"port"`
 		Protocol    string `toml:"protocol"`
 		Environment string `toml:"environment"`
 	} `toml:"Server"`
+
+	Message struct {
+		Keys struct {
+			Type    string `toml:"type"`
+			Title   string `toml:"title"`
+			Content string `toml:"content"`
+			Action  string `toml:"action"`
+		} `toml:"Keys"`
+	} `toml:"Message"`
+
 	Translation struct {
-		Host     string `toml:"host"`
-		Port     int    `toml:"port"`
-		Locale   string `toml:"locale"`
-		Protocol string `toml:"protocol"`
+		Host      string `toml:"host"`
+		Port      int    `toml:"port"`
+		Locale    string `toml:"locale"`
+		Protocol  string `toml:"protocol"`
+		Permitted struct {
+			Origins []struct {
+				Name string `toml:"name"`
+			} `toml:"Origins"`
+			Locales []struct {
+				Key  string `toml:"key"`
+				Name string `toml:"name"`
+			} `toml:"Locales"`
+		} `toml:"Permitted"`
 	} `toml:"Translation"`
+
 	Assets struct {
 		Logo    string `toml:"logo"`
 		Favicon string `toml:"favicon"`
 	} `toml:"Assets"`
+
 	Dates struct {
-		DateTimeFormat string `toml:"dateTimeFormat"`
-		DateFormat     string `toml:"dateFormat"`
-		TimeFormat     string `toml:"timeFormat"`
-		Backup         string `toml:"backup"`
-		BackupFolder   string `toml:"backupFolder"`
-		Human          string `toml:"human"`
-		DMY2           string `toml:"dmy2"`
-		YMD            string `toml:"ymd"`
-		Internal       string `toml:"internal"`
+		Formats struct {
+			DateTime     string `toml:"dateTime"`
+			Date         string `toml:"date"`
+			Time         string `toml:"time"`
+			Backup       string `toml:"backup"`
+			BackupFolder string `toml:"backupFolder"`
+			Human        string `toml:"human"`
+			DMY2         string `toml:"dmy2"`
+			YMD          string `toml:"ymd"`
+			Internal     string `toml:"internal"`
+		} `toml:"Formats"`
 	} `toml:"Dates"`
+
 	History struct {
 		MaxEntries int `toml:"maxEntries"`
 	} `toml:"History"`
@@ -63,28 +89,26 @@ type Settings struct {
 		Zone string `toml:"zone"`
 	} `toml:"Hosts"`
 	Security struct {
-		SessionKeyName     string `toml:"sessionKey"`
-		SessionUserIDKey   string `toml:"sessionUserIDKey"`
-		SessionUserCodeKey string `toml:"sessionUserCodeKey"`
-		SessionTokenKey    string `toml:"sessionTokenKey"`
-		SessionExpiry      int    `toml:"sessionExpiry"`
-		ServiceUserName    string `toml:"serviceUserName"`
-		ServiceUserCode    string `toml:"serviceUserCode"`
-		SessionExpiryKey   string `toml:"sessionExpiryKey"`
+		Sessions struct {
+			ExpiryPeriod int `toml:"expiryPeriod"`
+			Keys         struct {
+				Session      string `toml:"session"`
+				UserKey      string `toml:"userKey"`
+				UserCode     string `toml:"userCode"`
+				Token        string `toml:"token"`
+				ExpiryPeriod string `toml:"expiryPeriod"`
+			} `toml:"Keys"`
+		} `toml:"Sessions"`
+		Service struct {
+			UserUID  string `toml:"userUID"`
+			UserName string `toml:"userName"`
+		} `toml:"Service"`
 	} `toml:"Security"`
-	Message struct {
-		TypeKey    string `toml:"typeKey"`
-		TitleKey   string `toml:"titleKey"`
-		ContentKey string `toml:"contentKey"`
-		ActionKey  string `toml:"actionKey"`
-	} `toml:"Message"`
+
 	Display struct {
 		Delimiter string `toml:"delim"`
 	} `toml:"Display"`
-	Pushover struct {
-		UserKey  string `toml:"userKey"`
-		APIToken string `toml:"apiToken"`
-	} `toml:"Pushover"`
+
 	Status struct {
 		UNKNOWN string `toml:"unknown"`
 		ONLINE  string `toml:"online"`
@@ -92,22 +116,22 @@ type Settings struct {
 		ERROR   string `toml:"error"`
 		WARNING string `toml:"warning"`
 	} `toml:"Status"`
-	AllowedOrigins []struct {
-		Name string `toml:"name"`
-	} `toml:"Origins"`
-	Locales []struct {
-		Key  string `toml:"key"`
-		Name string `toml:"name"`
-	} `toml:"Locales"`
-	Email struct {
-		Host     string `toml:"host"`
-		Port     int    `toml:"port"`
-		User     string `toml:"user"`
-		Password string `toml:"password"`
-		From     string `toml:"from"`
-		Footer   string `toml:"footer"`
-		Admin    string `toml:"admin"`
-	} `toml:"Email"`
+
+	Communications struct {
+		Pushover struct {
+			UserKey  string `toml:"userKey"`
+			APIToken string `toml:"apiToken"`
+		} `toml:"Pushover"`
+		Email struct {
+			Host     string `toml:"host"`
+			Port     int    `toml:"port"`
+			User     string `toml:"user"`
+			Password string `toml:"password"`
+			From     string `toml:"from"`
+			Footer   string `toml:"footer"`
+			Admin    string `toml:"admin"`
+		} `toml:"Email"`
+	} `toml:"Communications"`
 	Logging struct {
 		Disable struct {
 			General        string `toml:"general"`

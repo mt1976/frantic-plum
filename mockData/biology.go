@@ -1,4 +1,4 @@
-package mock
+package mockData
 
 // BiologicalSex represents information of an indivual biology.
 type BiologicalSex struct {

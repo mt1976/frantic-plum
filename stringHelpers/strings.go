@@ -7,13 +7,11 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	ascii "github.com/galsondor/go-ascii"
+	"github.com/galsondor/go-ascii"
 	"github.com/mt1976/frantic-core/logHandler"
 )
 
 const (
-	// dateFormat is the date format used in Siena
-	dateFormat = "2006-01-02"
 	// specialChars is a list of special characters that are not allowed
 	specialChars = "[^A-Za-z0-9]+"
 	// wildcardOpen is the open wildcard

@@ -26,14 +26,14 @@ type DateFormat struct {
 func init() {
 	cfg = commonConfig.Get()
 
-	Format.External = cfg.GetHumanReadableDateFormat()
-	Format.DMY = cfg.GetDateFormatDMY2()
-	Format.Internal = cfg.GetHumanReadableDateFormat()
-	Format.Detail = cfg.GetDateTimeFormat()
-	Format.YMD = cfg.GetDateFormatYMD()
+	Format.External = cfg.GetDateFormat_Human()
+	Format.DMY = cfg.GetDateFormat_DMY2()
+	Format.Internal = cfg.GetDateFormat_Internal()
+	Format.Detail = cfg.GetDateFormat_DateTime()
+	Format.YMD = cfg.GetDateFormat_YMD()
 	Format.Calendar = "2006-01-02T15:04:05"
-	Format.BackupDate = cfg.DateFormatBackup()
-	Format.BackupFolder = cfg.GetDateFormatForBackupDirectory()
+	Format.BackupDate = cfg.GetDateFormat_Backup()
+	Format.BackupFolder = cfg.GetDateFormat_BackupDirectory()
 }
 
 // func FormatYMD(in time.Time) string {

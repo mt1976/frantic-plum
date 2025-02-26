@@ -26,7 +26,7 @@ func GetDBFileName(name string) string {
 	cfg := commonConfig.Get()
 	sep := "-"
 
-	name = cfg.GetApplicationName() + sep + name
+	name = cfg.GetApplication_Name() + sep + name
 
 	name = strings.ToLower(name)
 
@@ -44,7 +44,7 @@ func Dump(tableName string, where paths.FileSystemPath, action string, recordID 
 	logHandler.DatabaseLogger.Printf("[SUPPORT] [%v] Dump to '%v'", strings.ToUpper(tableName), where.String())
 	id := idHelpers.GetUUID()
 	if action != "" {
-		id = id + sep + cfg.GetApplicationName() + sep + tableName + sep + strings.ToTitle(action) + sep + recordID
+		id = id + sep + cfg.GetApplication_Name() + sep + tableName + sep + strings.ToTitle(action) + sep + recordID
 	}
 	id = id + ".json"
 
@@ -71,7 +71,7 @@ func Backup(table, location string) {
 	//path := BACKUPS.path
 	sep := "-"
 	cfg := commonConfig.Get()
-	table = strings.ToLower(cfg.GetApplicationName() + sep + table)
+	table = strings.ToLower(cfg.GetApplication_Name() + sep + table)
 	logHandler.EventLogger.Printf("Backup=[%v] [%v.db] to [%v]", strings.ToLower(table), table, location)
 
 	// sleep for 1 second

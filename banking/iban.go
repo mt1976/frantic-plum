@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/mt1976/frantic-core/commonErrors"
-	"github.com/mt1976/frantic-core/mock"
+	"github.com/mt1976/frantic-core/mockData"
 )
 
 type IBAN struct {
@@ -22,7 +22,7 @@ func (I *IBAN) isValid(iban string) bool {
 
 	// Check if the IBAN length is valid for the country code
 	countryCode := iban[:2]
-	countryInfo, err := mock.GetCountryInfo(countryCode)
+	countryInfo, err := mockData.GetCountryInfo(countryCode)
 	if err != nil || len(iban) != countryInfo.IBANLength {
 		return false
 	}

@@ -1,8 +1,7 @@
 package mathHelpers
 
 import (
-	r "math/rand"
-	rand "math/rand/v2"
+	"math/rand"
 	"time"
 )
 
@@ -11,20 +10,20 @@ func RandomInt(max int) int {
 }
 
 func randomInt(min, max int) int {
-	return rand.IntN(max-min) + min
+	return rand.Intn(max-min) + min
 }
 
 func RandomBetween(min, max int) int {
-	r.NewSource(int64(max))
-	for i := 0; i < r.Intn(100); i++ {
-		r.NewSource(int64(i))
+	rand.NewSource(int64(max))
+	for i := range rand.Intn(100) {
+		rand.NewSource(int64(i))
 	}
-	return r.Intn(max-min) + min
+	return rand.Intn(max-min) + min
 }
 
 func CoinToss() bool {
-	r.NewSource(time.Now().UnixNano())
-	return r.Intn(2) == 1
+	rand.NewSource(time.Now().UnixNano())
+	return rand.Intn(2) == 1
 }
 
 func Max(x, y int) int {

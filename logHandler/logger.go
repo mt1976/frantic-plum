@@ -47,11 +47,11 @@ func init() {
 	applicationPath := paths.Application().String()
 	applicationPath += paths.Logs().String()
 	applicationPath += string(os.PathSeparator)
-	applicationPath += settings.GetApplicationName() + "-"
+	applicationPath += settings.GetApplication_Name() + "-"
 
-	maxSize := settings.GetLogsMaxSize()
-	maxBackups := settings.GetLogsMaxBackups()
-	maxAge := settings.GetLogsMaxAge()
+	maxSize := settings.GetLogging_MaxSize()
+	maxBackups := settings.GetLogging_MaxBackups()
+	maxAge := settings.GetLogging_MaxAge()
 	compress := settings.IsLogCompressionEnabled()
 
 	setColoursNormal()
@@ -60,82 +60,82 @@ func init() {
 	}
 
 	generalWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "general"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsGeneralLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsGeneralLoggingDisabled() || settings.IsLoggingDisabled() {
 		generalWriter = io.MultiWriter(io.Discard)
 	}
 
 	timingWriter := io.MultiWriter(&lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "timing"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsTimingLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsTimingLoggingDisabled() || settings.IsLoggingDisabled() {
 		timingWriter = io.MultiWriter(io.Discard)
 	}
 
 	serviceWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "service"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsServiceLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsServiceLoggingDisabled() || settings.IsLoggingDisabled() {
 		serviceWriter = io.MultiWriter(io.Discard)
 	}
 
 	auditWriter := io.MultiWriter(&lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "audit"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsAuditLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsAuditLoggingDisabled() || settings.IsLoggingDisabled() {
 		auditWriter = io.MultiWriter(io.Discard)
 	}
 
 	errorWriter := io.MultiWriter(os.Stdout, os.Stderr, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "error"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.AreAllLogsDisabled() {
+	if settings.IsLoggingDisabled() {
 		errorWriter = io.MultiWriter(io.Discard)
 	}
 
 	panicWriter := io.MultiWriter(os.Stdout, os.Stderr, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "panic"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.AreAllLogsDisabled() {
+	if settings.IsLoggingDisabled() {
 		panicWriter = io.MultiWriter(io.Discard)
 	}
 
 	translationWriter := io.MultiWriter(&lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "translation"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsTranslationLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsTranslationLoggingDisabled() || settings.IsLoggingDisabled() {
 		translationWriter = io.MultiWriter(io.Discard)
 	}
 
 	traceWriter := io.MultiWriter(&lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "trace"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsTraceLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsTraceLoggingDisabled() || settings.IsLoggingDisabled() {
 		traceWriter = io.MultiWriter(io.Discard)
 	}
 
 	warningWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "warning"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsWarningLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsWarningLoggingDisabled() || settings.IsLoggingDisabled() {
 		warningWriter = io.MultiWriter(io.Discard)
 	}
 
 	eventWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "event"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsEventLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsEventLoggingDisabled() || settings.IsLoggingDisabled() {
 		eventWriter = io.MultiWriter(io.Discard)
 	}
 
 	securityWriter := io.MultiWriter(&lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "security"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsSecurityLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsSecurityLoggingDisabled() || settings.IsLoggingDisabled() {
 		securityWriter = io.MultiWriter(io.Discard)
 	}
 
 	databaseWriter := io.MultiWriter(&lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "database"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsDatabaseLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsDatabaseLoggingDisabled() || settings.IsLoggingDisabled() {
 		databaseWriter = io.MultiWriter(io.Discard)
 	}
 
 	apiWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "api"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsApiLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsApiLoggingDisabled() || settings.IsLoggingDisabled() {
 		apiWriter = io.MultiWriter(io.Discard)
 	}
 
 	importWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "import"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsImportLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsImportLoggingDisabled() || settings.IsLoggingDisabled() {
 		importWriter = io.MultiWriter(io.Discard)
 	}
 
 	exportWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "export"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsExportLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsExportLoggingDisabled() || settings.IsLoggingDisabled() {
 		exportWriter = io.MultiWriter(io.Discard)
 	}
 
 	communicationsWriter := io.MultiWriter(os.Stdout, &lumberjack.Logger{Filename: assembleLogFileName(applicationPath, "communications"), MaxSize: maxSize, MaxBackups: maxBackups, MaxAge: maxAge, Compress: compress})
-	if settings.IsCommunicationsLoggingDisabled() || settings.AreAllLogsDisabled() {
+	if settings.IsCommunicationsLoggingDisabled() || settings.IsLoggingDisabled() {
 		communicationsWriter = io.MultiWriter(io.Discard)
 	}
 

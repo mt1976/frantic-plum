@@ -9,7 +9,7 @@ import (
 	"unicode"
 
 	"github.com/mt1976/frantic-core/commonErrors"
-	dockerhelpers "github.com/mt1976/frantic-core/dockerHelpers"
+	"github.com/mt1976/frantic-core/dockerHelpers"
 	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/rivo/uniseg"
 )
@@ -31,7 +31,7 @@ func OS() string {
 
 // Deprecated: Use dockerHelpers.IsDockerContainer()
 func RunningInDockerContainer() bool {
-	return dockerhelpers.IsDockerContainer()
+	return dockerHelpers.IsDockerContainer()
 }
 
 func IsRunningOnWindows() bool {

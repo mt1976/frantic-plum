@@ -5,7 +5,7 @@ import (
 
 	"github.com/mt1976/frantic-core/logHandler"
 	"github.com/mt1976/frantic-core/mathHelpers"
-	"github.com/mt1976/frantic-core/mock"
+	"github.com/mt1976/frantic-core/mockData"
 )
 
 // The function adjustSettlementForWeekends adjusts the input date to the next weekday if it falls on a Saturday or
@@ -23,7 +23,7 @@ func adjustSettlementForWeekends(inDate time.Time) time.Time {
 func getSettlementDaysCCY(ccy1 string) (int, error) {
 
 	// Validate the two currencues using the mock package
-	days1, err := mock.GetCurrency(ccy1)
+	days1, err := mockData.GetCurrency(ccy1)
 	if err != nil {
 		logHandler.ErrorLogger.Printf("error getting settlement days for currency [%s] [%v]", ccy1, err.Error())
 		return -1, err

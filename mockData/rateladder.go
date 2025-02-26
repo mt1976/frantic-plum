@@ -1,4 +1,4 @@
-package mock
+package mockData
 
 import (
 	"fmt"

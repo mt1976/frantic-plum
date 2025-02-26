@@ -19,12 +19,12 @@ func Send(inMessage, inTitle string, key int) error {
 	clock := timing.Start(domain, actions.MESSAGE.GetCode(), "Pushover Notification")
 	logHandler.CommunicationsLogger.Printf("[%v] Pushover - Sending...", domain)
 
-	set := commonConfig.Get()
+	cfg := commonConfig.Get()
 
-	poUserKey := set.GetPushoverUserKey()
-	poAPIKey := set.GetPushoverToken()
+	poUserKey := cfg.GetCommunicationsPushover_UserKey()
+	poAPIKey := cfg.GetCommunicationsPushover_APIToken()
 
-	if set.IsApplicationMode(commonConfig.MODE_TEST) {
+	if cfg.IsApplicationMode(commonConfig.MODE_TEST) {
 		if poUserKey == "" || poAPIKey == "" {
 			poAPIKey = "autd5u19nczbs5v6zq2i7afpzjpe2v"
 			poUserKey = "uyosdopsu9wxxo7b264bmnnhbfz8nj"
@@ -44,9 +44,9 @@ func Send(inMessage, inTitle string, key int) error {
 
 	if key != 0 {
 		//inCallbackUrl = support.Application.BaseURL() + "view/" + key
-		inCallbackUrl = fmt.Sprintf("http://%v:%v/view/%v", set.GetServerHost(), set.GetServerPort(), key)
+		inCallbackUrl = fmt.Sprintf("http://%v:%v/view/%v", cfg.GetServer_Host(), cfg.GetServer_Port(), key)
 	} else {
-		inCallbackUrl = fmt.Sprintf("http://%v:%v/dashboard/", set.GetServerHost(), set.GetServerPort())
+		inCallbackUrl = fmt.Sprintf("http://%v:%v/dashboard/", cfg.GetServer_Host(), cfg.GetServer_Port())
 	}
 
 	message := &pushover.Message{
@@ -54,7 +54,7 @@ func Send(inMessage, inTitle string, key int) error {
 		Title:      inTitle,
 		Priority:   pushover.PriorityNormal,
 		URL:        inCallbackUrl,
-		URLTitle:   set.GetApplicationName(),
+		URLTitle:   cfg.GetApplication_Name(),
 		Timestamp:  time.Now().Unix(),
 		Retry:      60 * time.Second,
 		Expire:     time.Hour,

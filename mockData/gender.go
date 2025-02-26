@@ -1,4 +1,4 @@
-package mock
+package mockData
 
 // GenderInfo represents information of an individuals gender.
 

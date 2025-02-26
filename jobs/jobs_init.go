@@ -21,7 +21,7 @@ func Initialise(cfg *commonConfig.Settings) error {
 		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
 	)))
 
-	appName = cfg.GetApplicationName()
+	appName = cfg.GetApplication_Name()
 	logHandler.InfoLogger.Printf("[%v] %v - Initialise - Complete", domain, appName)
 	clock.Stop(1)
 	return nil

@@ -32,7 +32,7 @@ func init() {
 
 func getDBVersion() int {
 	// Implement the logic to get the DB version without importing the dao package
-	return cfg.GetDatabaseVersion()
+	return cfg.GetDatabase_Version()
 }
 
 type Audit struct {
@@ -122,7 +122,7 @@ func (a *Audit) Action(ctx context.Context, action Action) error {
 	auditTime := time.Now()
 	auditDisplay := dateHelpers.FormatAudit(auditTime)
 	// auditUser := support.GetActiveUserCode()
-	auditUser, err := getUser(ctx)
+	auditUser, err := getAuditUserCode(ctx)
 	if err != nil {
 		logHandler.WarningLogger.Printf("[%v] Error=[%v]", strings.ToUpper(name), err)
 	}
@@ -229,15 +229,14 @@ func (a *Action) Code() string {
 	return a.code
 }
 
-func getUser(ctx context.Context) (string, error) {
+func getAuditUserCode(ctx context.Context) (string, error) {
 	// Implement the logic to get the user without importing the dao package
-	defaultUser := "sys" + "_" + "service"
+	defaultUser := cfg.GetServiceUser_UserCode()
 	if ctx == context.TODO() || ctx == nil {
 		return defaultUser, nil
 	}
 	// Get the current user from the context
-	userSessionCodeKey := cfg.GetSecuritySessionUserCodeKey()
-	sessionUser := ctx.Value(userSessionCodeKey)
+	sessionUser := ctx.Value(cfg.GetSecuritySessionKey_UserCode())
 	if sessionUser != nil {
 		return sessionUser.(string), nil
 	}

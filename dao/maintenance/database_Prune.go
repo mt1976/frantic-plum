@@ -50,7 +50,7 @@ func pruneExpiredBackups(job *DatabaseBackupCleanerJob) {
 	j := timing.Start(job.Name(), actions.MAINTENANCE.GetCode(), job.Description())
 	// Get Settings
 
-	retainBackupDays := settings.GetMaxHistoryEntries()
+	retainBackupDays := settings.GetHistory_MaxHistoryEntries()
 
 	logHandler.ServiceLogger.Printf("[%v] RetainBackupDays=[%v]", name, retainBackupDays)
 	today := jobs.StartOfDay(time.Now())

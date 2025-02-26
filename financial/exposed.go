@@ -7,7 +7,7 @@ import (
 
 	"github.com/leekchan/accounting"
 	"github.com/mt1976/frantic-core/logHandler"
-	"github.com/mt1976/frantic-core/mock"
+	"github.com/mt1976/frantic-core/mockData"
 )
 
 // The function AbbrToInt converts a string representation of a number with abbreviations (such as "1M"
@@ -100,7 +100,7 @@ func FormatAmountToDPS(inAmount string, inCCY string, inPrec string) string {
 }
 
 func FormatAmount(inAmount float64, inCCY string) string {
-	ccyInfo, err := mock.GetCurrency(inCCY)
+	ccyInfo, err := mockData.GetCurrency(inCCY)
 	if err != nil {
 		logHandler.ErrorLogger.Printf("Accounting Currenty Error=[%v]", err.Error())
 	}

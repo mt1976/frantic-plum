@@ -7,16 +7,6 @@ import (
 
 var name = "Paths"
 
-// type Paths struct {
-// 	html        FileSystemPath
-// 	images      FileSystemPath
-// 	backups     FileSystemPath
-// 	dumps       FileSystemPath
-// 	database    FileSystemPath
-// 	data        FileSystemPath
-// 	application FileSystemPath
-// }
-
 type FileSystemPath struct {
 	path string
 }
@@ -93,7 +83,7 @@ func fullPath() string {
 	// Get the full path of the current directory
 	dir, err := os.Getwd()
 	if err != nil {
-		fmt.Printf("[%v] Getting current directory", err)
+		fmt.Printf("[%v] Error getting current directory [%v]", name, err.Error())
 		panic(err)
 	}
 	return dir

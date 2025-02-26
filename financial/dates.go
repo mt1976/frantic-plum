@@ -7,7 +7,7 @@ import (
 
 	"github.com/mt1976/frantic-core/commonErrors"
 	"github.com/mt1976/frantic-core/logHandler"
-	"github.com/mt1976/frantic-core/mock"
+	"github.com/mt1976/frantic-core/mockData"
 )
 
 // The "FinDate" type represents a date with various properties and formats.
@@ -57,7 +57,7 @@ func GetDateFromTenor(tenor Tenor, tradeDate time.Time, ccy ...string) (time.Tim
 	// Calculate the settlement days, and adjust the date based on the term string provided i.e. 1D, 1W, 1M, 1Y
 	// loop thgouth currencies
 
-	if !mock.IsValidPeriod(tenor.String()) {
+	if !mockData.IsValidPeriod(tenor.String()) {
 		logHandler.ErrorLogger.Printf("invalid tenor [%s]", tenor.String())
 		return time.Now(), fmt.Errorf("invalid tenor [%s]", tenor.String())
 	}
@@ -150,8 +150,8 @@ func GetLadder(pivotDate time.Time, ccy ...string) ([]FinDate, int, error) {
 	//fmt.Printf("pivotDate: %v\n", pivotDate.Format("2006-01-02"))
 	// range over the ladder
 
-	for i := 1; i < mock.LadderSize; i++ {
-		ladder := mock.GetRateLadderByIndex(i)
+	for i := 1; i < mockData.LadderSize; i++ {
+		ladder := mockData.GetRateLadderByIndex(i)
 		//fmt.Printf("ladder[%v]: %v\n", i, ladder)
 		thisTenor, err := NewTenor(ladder.Code)
 		if err != nil {

@@ -1,4 +1,4 @@
-package mock
+package mockData
 
 // Title represents information of an indivual title.
 type Title struct {
