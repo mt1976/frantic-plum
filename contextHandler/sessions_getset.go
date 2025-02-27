@@ -3,6 +3,8 @@ package contextHandler
 import (
 	"context"
 	"time"
+
+	"github.com/mt1976/frantic-core/logHandler"
 )
 
 // sessionKey      = new(cfg.GetSecuritySessionKey_Session())
@@ -12,23 +14,52 @@ import (
 // expiryPeriodKey = new(cfg.GetSecuritySessionKey_ExpiryPeriod())
 
 func GetUserCode(ctx context.Context) string {
-	return ctx.Value(userCodeKey).(string)
+	value := ctx.Value(userCodeKey)
+	if value == nil {
+		logHandler.WarningLogger.Printf("User code requested but not found in context, returning empty string")
+		return ""
+	}
+	return value.(string)
 }
 
 func GetUserKey(ctx context.Context) string {
-	return ctx.Value(userKeyKey).(string)
+	value := ctx.Value(userKeyKey)
+	if value == nil {
+		logHandler.WarningLogger.Printf("User key requested but not found in context, returning empty string")
+		return ""
+	}
+	return value.(string)
 }
 
 func GetSessionID(ctx context.Context) string {
-	return ctx.Value(sessionIDKey).(string)
+	value := ctx.Value(sessionIDKey)
+	if value == nil {
+		logHandler.WarningLogger.Printf("Session ID requested but not found in context, returning empty string")
+		return ""
+	}
+	return value.(string)
 }
 
 func GetSessionToken(ctx context.Context) any {
-	return ctx.Value(tokenKey)
+	value := ctx.Value(tokenKey)
+	if value == nil {
+		logHandler.WarningLogger.Printf("Session token requested but not found in context, returning nil")
+		return nil
+	}
+	return value
 }
 
 func GetSessionExpiry(ctx context.Context) time.Time {
-	return ctx.Value(expiryPeriodKey).(time.Time)
+	value := ctx.Value(expiryPeriodKey)
+	if value == nil {
+		logHandler.WarningLogger.Printf("Session expiry requested but not found in context, returning zero time")
+		return time.Time{}
+	}
+	return value.(time.Time)
+}
+
+func GetSessionIdentifier() string {
+	return sessionIDKey.name
 }
 
 // Setters

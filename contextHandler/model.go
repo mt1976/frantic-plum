@@ -1,10 +1,13 @@
 package contextHandler
 
-import "github.com/mt1976/frantic-core/commonConfig"
+import (
+	"github.com/mt1976/frantic-core/commonConfig"
+	"github.com/mt1976/frantic-core/idHelpers"
+)
 
 type fartFarmer struct {
-	name string
-	id   string
+	name                string
+	pointlessIdentifier string
 }
 
 var cfg *commonConfig.Settings
@@ -22,7 +25,7 @@ var (
 func new(in string) fartFarmer {
 	var out fartFarmer
 	out.name = in
-	out.id = in
+	out.pointlessIdentifier = idHelpers.Encode(in)
 	return out
 }
 
