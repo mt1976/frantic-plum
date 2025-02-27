@@ -10,6 +10,7 @@ import (
 	"github.com/mt1976/frantic-core/application"
 	"github.com/mt1976/frantic-core/commonConfig"
 	"github.com/mt1976/frantic-core/commonErrors"
+	"github.com/mt1976/frantic-core/contextHandler"
 	"github.com/mt1976/frantic-core/dao/actions"
 	"github.com/mt1976/frantic-core/dateHelpers"
 	"github.com/mt1976/frantic-core/logHandler"
@@ -237,9 +238,10 @@ func getAuditUserCode(ctx context.Context) (string, error) {
 	}
 
 	// Get the current user from the context
-	sessionUser := ctx.Value(cfg.GetSecuritySessionKey_UserCode())
-	if sessionUser != nil {
-		return sessionUser.(string), nil
+	sessionUser := contextHandler.GetUserCode(ctx)
+	//ctx.Value(cfg.GetSecuritySessionKey_UserCode())
+	if sessionUser != "" {
+		return sessionUser, nil
 	}
 	return defaultUser, commonErrors.ErrContextCannotGetUserCode
 }
