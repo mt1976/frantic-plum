@@ -16,6 +16,8 @@ var DELETE Action = Action{Name: "Delete", userDefined: false, Code: "DELETE"}
 var CREATE Action = Action{Name: "Create", userDefined: false, Code: "CREATE"}
 var ENABLE Action = Action{Name: "Enable", userDefined: false, Code: "ENABLE"}
 var DISABLE Action = Action{Name: "Disable", userDefined: false, Code: "DISABLE"}
+var GRANT Action = Action{Name: "Grant", userDefined: false, Code: "GRANT"}
+var REVOKE Action = Action{Name: "Revoke", userDefined: false, Code: "REVOKE"}
 var RESET Action = Action{Name: "Reset", userDefined: false, Code: "RESET"}
 var ROUTE Action = Action{Name: "Route", userDefined: false, Code: "ROUTE"}
 var MESSAGE Action = Action{Name: "Message", userDefined: false, Code: "MESSAGE"}
@@ -54,6 +56,8 @@ var REJECT Action = Action{Name: "Reject", userDefined: false, Code: "REJECT"}
 var CANCEL Action = Action{Name: "Cancel", userDefined: false, Code: "CANCEL"}
 var CLOSE Action = Action{Name: "Close", userDefined: false, Code: "CLOSE"}
 var OPEN Action = Action{Name: "Open", userDefined: false, Code: "OPEN"}
+var CLONE Action = Action{Name: "Clone", userDefined: false, Code: "CLONE"}
+var NOTIFY Action = Action{Name: "Notify", userDefined: false, Code: "NOTIFY"}
 
 func New(name string) Action {
 	return Action{Name: name, userDefined: true}
@@ -62,6 +66,18 @@ func New(name string) Action {
 func (bt Action) GetName() string {
 	return strings.ToUpper(bt.Name)
 }
+
+func (bt Action) GetDescription(in string) string {
+	if in == "" {
+		return bt.Name
+	}
+	return bt.Name + " " + in
+}
+
+func (bt Action) GetShortName() string {
+	return bt.Name
+}
+
 func (bt Action) GetCode() string {
 	// if len is less than 4, return a suffixed code
 	if len(bt.Code) < 4 {
